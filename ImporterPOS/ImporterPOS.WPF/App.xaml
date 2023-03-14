@@ -2,8 +2,21 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ImporterPOS.WPF"
+             xmlns:viewmodels="clr-namespace:ImporterPOS.WPF.ViewModels"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/ButtonStyles.xaml"/>
+                <ResourceDictionary Source="/Styles/ColorPicker.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+
+
+            <DataTemplate DataType="{x:Type viewmodels:MainViewModel}">
+                <local:MainWindow/>
+            </DataTemplate>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
