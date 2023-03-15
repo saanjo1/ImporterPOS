@@ -1,0 +1,160 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp">
+    <!--Background Colors-->
+    <Color x:Key="primaryBackColor1">#094da6</Color>
+    <Color x:Key="primaryBackColor2">#3462dc</Color>
+    <Color x:Key="secondaryBackColor1">#010d29</Color>
+    <Color x:Key="secondaryBackColor2">#010d29</Color>
+    <!--Window Border Colors-->
+    <Color x:Key="winBorderColor1">#6D2FFF</Color>
+    <Color x:Key="winBorderColor2">#537cfb</Color>
+    <Color x:Key="winBorderColor3">#836EFB</Color>
+    <!--Color Palette-->
+    <SolidColorBrush x:Key="color1" Color="#E285DE"/>
+    <SolidColorBrush x:Key="color2" Color="#784DFD"/>
+    <SolidColorBrush x:Key="color3" Color="#4ADAEC"/>
+    <SolidColorBrush x:Key="color4" Color="#FB539B"/>
+    <SolidColorBrush x:Key="color5" Color="#7E82FC"/>
+    <SolidColorBrush x:Key="color6" Color="#FFC047"/>
+    <SolidColorBrush x:Key="color7" Color="#EF6C96"/>
+    <SolidColorBrush x:Key="color8" Color="#78A3FC"/>
+    <SolidColorBrush x:Key="color9" Color="#07F3C0"/>
+    <SolidColorBrush x:Key="color10" Color="#FBA1AA"/>
+    <!--Font Colors-->
+    <SolidColorBrush x:Key="titleColor1" Color="#E0E1F1"/>
+    <SolidColorBrush x:Key="titleColor2" Color="#D5CFF5"/>
+    <SolidColorBrush x:Key="titleColor3" Color="#BCBEE0"/>
+    <SolidColorBrush x:Key="plainTextColor1" Color="#9497CD"/>
+    <SolidColorBrush x:Key="plainTextColor2" Color="#7C80C2"/>
+    <SolidColorBrush x:Key="plainTextColor3" Color="#7376BD"/>
+    <!--Panel Colors-->
+    <SolidColorBrush x:Key="panelColor" Color="white"/>
+    <SolidColorBrush x:Key="panelOverColor" Color="white"/>
+    <SolidColorBrush x:Key="panelActiveColor" Color="white"/>
+    <!--Button Colors-->
+    <!--TextBox Colors-->
+    <!--Etc-->
+
+    <!--Menu button-->
+    <Style x:Key="menuButton" TargetType="RadioButton">
+        <!--Normal button style-->
+        <Setter Property="Height" Value="50"/>
+        <Setter Property="Margin" Value="-5,0,0,5"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource plainTextColor3}"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderThickness="4,0,0,0"
+                            BorderBrush="{TemplateBinding BorderBrush}">
+                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!--Control button icon-->
+    <Style x:Key="controlButtonIcon" TargetType="fa:IconImage">
+        <Setter Property="Foreground" Value="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+        <Setter Property="Width" Value="9"/>
+        <Setter Property="Height" Value="9"/>
+    </Style>
+
+    <!--Menu button text-->
+    <Style x:Key="menuButtonText" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/>
+        <Setter Property="FontFamily" Value="Montserrat"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="FontSize" Value="13.5"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="controlButton" TargetType="Button">
+        <!--Normal button style-->
+        <Setter Property="Width" Value="35"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource plainTextColor3}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="4">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <!--Button Style on hover-->
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource plainTextColor3}"/>
+                <Setter Property="Foreground" Value="{Binding Path=Tag, RelativeSource={RelativeSource Self}}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="menuButtonIcon" TargetType="fa:IconImage">
+        <Setter Property="Foreground" Value="{Binding Path=Tag, RelativeSource={RelativeSource AncestorType=RadioButton}}"/>
+        <Setter Property="Width" Value="22"/>
+        <Setter Property="Height" Value="22"/>
+        <Setter Property="Margin" Value="35,0,20,0"/>
+    </Style>
+    <Style x:Key="radioButton1" TargetType="RadioButton">
+        <!--Normal button style-->
+        <Setter Property="Height" Value="50"/>
+        <Setter Property="Margin" Value="-5,0,0,5"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderThickness="4,0,0,0"
+                            BorderBrush="{TemplateBinding BorderBrush}">
+                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <!--Button Style on hover-->
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Margin" Value="0,0,0,5"/>
+                <Setter Property="Background" Value="{StaticResource plainTextColor1}"/>
+                <Setter Property="Foreground" Value="{StaticResource titleColor3}"/>
+                <Setter Property="BorderBrush" Value="{Binding Path=Tag, RelativeSource={RelativeSource Self}}"/>
+            </Trigger>
+            <!--Activated button style-->
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Margin" Value="0,0,0,5"/>
+                <Setter Property="Background" Value="{StaticResource primaryBackColor1}"/>
+                <Setter Property="Foreground" Value="LightGray"/>
+                <Setter Property="BorderBrush" Value="{Binding Path=Tag, RelativeSource={RelativeSource Self}}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="radioButtonIcon" TargetType="fa:IconImage">
+        <Setter Property="Foreground" Value="{Binding Path=Tag, RelativeSource={RelativeSource AncestorType=RadioButton}}"/>
+        <Setter Property="Width" Value="22"/>
+        <Setter Property="Height" Value="22"/>
+        <Setter Property="Margin" Value="35,0,20,0"/>
+    </Style>
+
+    <!--Menu button text-->
+    <Style x:Key="radioButtonText" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/>
+        <Setter Property="FontFamily" Value="Montserrat"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="FontSize" Value="13.5"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+</ResourceDictionary>

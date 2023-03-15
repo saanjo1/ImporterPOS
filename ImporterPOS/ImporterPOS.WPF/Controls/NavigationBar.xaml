@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="ImporterPOS.WPF.Controls.NavigationBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+             xmlns:nav="clr-namespace:ImporterPOS.WPF.States"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border CornerRadius="50" Grid.Row="0">
+
+            <StackPanel>
+                <Separator HorizontalAlignment="Center" Height="150" Width="150" Foreground="White" Margin="0 -50 0 -30"/>
+                <RadioButton Style="{StaticResource radioButton1}"
+                     Tag="{StaticResource color2}"
+                     Command="{Binding EditCurrentViewModelCommand}" 
+                     CommandParameter="{x:Static nav:ViewType.Home}">
+
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Icon="Home" Style="{StaticResource radioButtonIcon}" Foreground="{StaticResource color2}"/>
+                        <TextBlock Text="Dashboard" Style="{StaticResource radioButtonText}"/>
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton Style="{StaticResource radioButton1}"
+                     Tag="{StaticResource color2}"
+                     Command="{Binding EditCurrentViewModelCommand}" 
+                     CommandParameter="{x:Static nav:ViewType.Articles}">
+
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Icon="TableList" Style="{StaticResource radioButtonIcon}" Foreground="{StaticResource color3}"/>
+                        <TextBlock Text="Storages" Style="{StaticResource radioButtonText}"/>
+                    </StackPanel>
+                </RadioButton>
+
+
+                <RadioButton Style="{StaticResource radioButton1}"
+                     Tag="{StaticResource color2}"
+                     Command="{Binding EditCurrentViewModelCommand}" 
+                     CommandParameter="{x:Static nav:ViewType.Discounts}">
+
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Icon="Percentage" Style="{StaticResource radioButtonIcon}"  Foreground="{StaticResource color4}"/>
+                        <TextBlock Text="Discounts" Style="{StaticResource radioButtonText}"/>
+                    </StackPanel>
+                </RadioButton>
+
+                <RadioButton Style="{StaticResource radioButton1}"
+                     Tag="{StaticResource color2}"
+                     Command="{Binding EditCurrentViewModelCommand}" 
+                     CommandParameter="{x:Static nav:ViewType.ImportArticles}">
+
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Icon="Upload" Style="{StaticResource radioButtonIcon}"  Foreground="{StaticResource color6}"/>
+                        <TextBlock Text="Articles" Style="{StaticResource radioButtonText}"/>
+                    </StackPanel>
+                </RadioButton>
+
+                <RadioButton Style="{StaticResource radioButton1}"
+                     Tag="{StaticResource color2}"
+                     Command="{Binding EditCurrentViewModelCommand}" 
+                     CommandParameter="{x:Static nav:ViewType.Settings}">
+
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Icon="Gear" Style="{StaticResource radioButtonIcon}" Foreground="{StaticResource color10}"/>
+                        <TextBlock Text="Settings" Style="{StaticResource radioButtonText}"/>
+                    </StackPanel>
+                </RadioButton>
+
+                <Separator HorizontalAlignment="Center" Height="150" Width="150" Foreground="White"/>
+            </StackPanel>
+        </Border>
+
+
+    </Grid>
+
+
+</UserControl>

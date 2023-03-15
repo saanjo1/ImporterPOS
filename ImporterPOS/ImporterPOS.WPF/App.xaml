@@ -7,12 +7,10 @@
     <Application.Resources>
 
         <ResourceDictionary>
+
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/ButtonStyles.xaml"/>
-                <ResourceDictionary Source="/Styles/ColorPicker.xaml"/>
+                <ResourceDictionary Source="\Styles\CustomStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-
 
             <DataTemplate DataType="{x:Type viewmodels:MainViewModel}">
                 <local:MainWindow/>
