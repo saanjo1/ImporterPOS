@@ -13,24 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ImporterPOS.WPF
+namespace ImporterPOS.WPF.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for HomeView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class HomeView : UserControl
     {
-
-        public MainWindow(object dataContext)
+        public HomeView()
         {
             InitializeComponent();
-
-            DataContext = dataContext;
-        }
-
-        public MainWindow()
-        {
-
         }
     }
 }

@@ -2,10 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp">
     <!--Background Colors-->
-    <Color x:Key="primaryBackColor1">#094da6</Color>
-    <Color x:Key="primaryBackColor2">#3462dc</Color>
-    <Color x:Key="secondaryBackColor1">#010d29</Color>
-    <Color x:Key="secondaryBackColor2">#010d29</Color>
+    <Color x:Key="primaryBackColor1">#003D64</Color>
+    <Color x:Key="primaryBackColor2">#1073B1</Color>
+    <Color x:Key="secondaryBackColor1">#003D64</Color>
+    <Color x:Key="secondaryBackColor2">#1073B1</Color>
     <!--Window Border Colors-->
     <Color x:Key="winBorderColor1">#6D2FFF</Color>
     <Color x:Key="winBorderColor2">#537cfb</Color>
@@ -127,14 +127,14 @@
             <!--Button Style on hover-->
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Margin" Value="0,0,0,5"/>
-                <Setter Property="Background" Value="{StaticResource plainTextColor1}"/>
+                <Setter Property="Background" Value="#003D64"/>
                 <Setter Property="Foreground" Value="{StaticResource titleColor3}"/>
                 <Setter Property="BorderBrush" Value="{Binding Path=Tag, RelativeSource={RelativeSource Self}}"/>
             </Trigger>
             <!--Activated button style-->
             <Trigger Property="IsChecked" Value="True">
                 <Setter Property="Margin" Value="0,0,0,5"/>
-                <Setter Property="Background" Value="{StaticResource primaryBackColor1}"/>
+                <Setter Property="Background" Value="#003D64"/>
                 <Setter Property="Foreground" Value="LightGray"/>
                 <Setter Property="BorderBrush" Value="{Binding Path=Tag, RelativeSource={RelativeSource Self}}"/>
             </Trigger>

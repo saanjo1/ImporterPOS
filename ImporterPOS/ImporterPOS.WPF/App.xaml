@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ImporterPOS.WPF"
              xmlns:viewmodels="clr-namespace:ImporterPOS.WPF.ViewModels"
+             xmlns:views="clr-namespace:ImporterPOS.WPF.Views"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
 
@@ -15,6 +16,33 @@
             <DataTemplate DataType="{x:Type viewmodels:MainViewModel}">
                 <local:MainWindow/>
             </DataTemplate>
+
+
+            <DataTemplate DataType="{x:Type viewmodels:ArticlesViewModel}">
+                <views:ImportArticlesView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewmodels:HomeViewModel}">
+                <views:HomeView/>
+            </DataTemplate>
+
+
+            <DataTemplate DataType="{x:Type viewmodels:SettingsViewModel}">
+                <views:SettingsView/>
+            </DataTemplate>
+
+
+            <DataTemplate DataType="{x:Type viewmodels:StoreViewModel}">
+                <views:StorageView/>
+            </DataTemplate>
+
+
+            <DataTemplate DataType="{x:Type viewmodels:DiscountViewModel}">
+                <views:DiscountsView/>
+            </DataTemplate>
+
+
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
