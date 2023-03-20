@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using ImporterPOS.WPF.States;
 using System;
 using System.Collections.Concurrent;
@@ -34,7 +35,7 @@ namespace ImporterPOS.WPF.ViewModels
 
         public MainViewModel()
         {
-
+            Navigator = new Navigator(notifier);
 
         }
 

@@ -27,10 +27,5 @@ namespace ImporterPOS.WPF
 
             DataContext = dataContext;
         }
-
-        public MainWindow()
-        {
-
-        }
     }
 }

@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ImporterPOS.WPF"
              xmlns:viewmodels="clr-namespace:ImporterPOS.WPF.ViewModels"
-             xmlns:views="clr-namespace:ImporterPOS.WPF.Views"
-             StartupUri="MainWindow.xaml">
+             xmlns:views="clr-namespace:ImporterPOS.WPF.Views">
+    
     <Application.Resources>
 
         <ResourceDictionary>

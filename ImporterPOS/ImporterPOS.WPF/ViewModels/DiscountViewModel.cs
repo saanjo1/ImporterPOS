@@ -1,4 +1,5 @@
-﻿using ImporterPOS.Domain.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using ImporterPOS.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace ImporterPOS.WPF.ViewModels
 {
-    public class DiscountViewModel : BaseViewModel
+    [ObservableObject]
+    public partial class DiscountViewModel : BaseViewModel
     {
         public DiscountViewModel()
         {
