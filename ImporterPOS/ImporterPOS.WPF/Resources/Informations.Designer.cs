@@ -22,14 +22,14 @@ namespace ImporterPOS.WPF.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Translations {
+    internal class Informations {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Translations() {
+        internal Informations() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace ImporterPOS.WPF.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ImporterPOS.WPF.Resources.Translations", typeof(Translations).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ImporterPOS.WPF.Resources.Informations", typeof(Informations).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,56 +61,47 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Articles.
+        ///   Looks up a localized string similar to /ServerItem/Database.
         /// </summary>
-        internal static string Articles {
+        internal static string DatabasePath {
             get {
-                return ResourceManager.GetString("Articles", resourceCulture);
+                return ResourceManager.GetString("DatabasePath", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dashboard.
+        ///   Looks up a localized string similar to /ServerItem/DataSource.
         /// </summary>
-        internal static string Dashboard {
+        internal static string DataSourcePath {
             get {
-                return ResourceManager.GetString("Dashboard", resourceCulture);
+                return ResourceManager.GetString("DataSourcePath", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Discounts.
+        ///   Looks up a localized string similar to /ServerItem/Port.
         /// </summary>
-        internal static string Discounts {
+        internal static string PortPath {
             get {
-                return ResourceManager.GetString("Discounts", resourceCulture);
+                return ResourceManager.GetString("PortPath", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select.
+        ///   Looks up a localized string similar to Local\POSSector\DatabaseSettings.xml.
         /// </summary>
-        internal static string Select {
+        internal static string POSFolderPath {
             get {
-                return ResourceManager.GetString("Select", resourceCulture);
+                return ResourceManager.GetString("POSFolderPath", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Settings.
+        ///   Looks up a localized string similar to /ServerItem/FullServerName.
         /// </summary>
-        internal static string Settings {
+        internal static string ServerInstancePath {
             get {
-                return ResourceManager.GetString("Settings", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Storages.
-        /// </summary>
-        internal static string Storages {
-            get {
-                return ResourceManager.GetString("Storages", resourceCulture);
+                return ResourceManager.GetString("ServerInstancePath", resourceCulture);
             }
         }
     }
