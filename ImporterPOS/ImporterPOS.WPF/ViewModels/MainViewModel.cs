@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ImporterPOS.WPF.Services.Excel;
 using ImporterPOS.WPF.States;
 using System;
 using System.Collections.Concurrent;
@@ -33,9 +34,10 @@ namespace ImporterPOS.WPF.ViewModels
         });
 
 
-        public MainViewModel()
+        public MainViewModel(IExcelService excelService)
         {
-            Navigator = new Navigator(notifier);
+            myDictionary = new ConcurrentDictionary<string, string>();
+            Navigator = new Navigator(notifier, excelService, myDictionary);
 
         }
 

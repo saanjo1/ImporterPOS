@@ -70,6 +70,15 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CurrentExcelFile.
+        /// </summary>
+        internal static string CurrentExcelFile {
+            get {
+                return ResourceManager.GetString("CurrentExcelFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dashboard.
         /// </summary>
         internal static string Dashboard {
@@ -88,11 +97,47 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred. Please try again..
+        /// </summary>
+        internal static string ErrorMessage {
+            get {
+                return ResourceManager.GetString("ErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select Excel file.
+        /// </summary>
+        internal static string OpenDialogTitle {
+            get {
+                return ResourceManager.GetString("OpenDialogTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select.
         /// </summary>
         internal static string Select {
             get {
                 return ResourceManager.GetString("Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Excel file is successfully selected..
+        /// </summary>
+        internal static string SelectExcelFileSuccess {
+            get {
+                return ResourceManager.GetString("SelectExcelFileSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to set.
+        /// </summary>
+        internal static string Set {
+            get {
+                return ResourceManager.GetString("Set", resourceCulture);
             }
         }
         
@@ -111,6 +156,24 @@ namespace ImporterPOS.WPF.Resources {
         internal static string Storages {
             get {
                 return ResourceManager.GetString("Storages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Excel file successfully updated..
+        /// </summary>
+        internal static string UpdatedExcelFile {
+            get {
+                return ResourceManager.GetString("UpdatedExcelFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Excel file successfully updated..
+        /// </summary>
+        internal static string UpdatedSameFile {
+            get {
+                return ResourceManager.GetString("UpdatedSameFile", resourceCulture);
             }
         }
     }

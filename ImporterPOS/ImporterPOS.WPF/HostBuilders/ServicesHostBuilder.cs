@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using ImporterPOS.WPF.Services.Excel;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,23 +15,8 @@ namespace ImporterPOS.WPF.HostBuilders
         {
             host.ConfigureServices(services =>
             {
-                services.AddSingleton<IGenericBaseInterface<Article>, ArticleService>();
-                services.AddSingleton<IArticleService, ArticleService>();
+                services.AddSingleton<IExcelService, ExcelService>();
 
-                services.AddSingleton<IExcelServiceProvider<MapColumnForDiscountViewModel>, ExcelDataService>();
-                services.AddSingleton<IExcelDataService, ExcelDataService>();
-
-                services.AddSingleton<IGenericBaseInterface<Rule>, RuleService>();
-                services.AddSingleton<IRuleService, RuleService>();
-
-                services.AddSingleton<IGenericBaseInterface<Category>, CategoryService>();
-                services.AddSingleton<ICategoryService, CategoryService>();
-
-                services.AddSingleton<IGenericBaseInterface<Storage>, StorageService>();
-                services.AddSingleton<IStorageService, StorageService>();
-
-                services.AddSingleton<IGenericBaseInterface<Supplier>, SupplierService>();
-                services.AddSingleton<ISupplierService, SupplierService>();
             });
 
             return host;

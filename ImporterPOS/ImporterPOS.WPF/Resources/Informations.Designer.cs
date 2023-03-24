@@ -79,6 +79,15 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Excel Worksheets|*.xls;*.xlsx;*.xlsm.
+        /// </summary>
+        internal static string OpenDialogFilter {
+            get {
+                return ResourceManager.GetString("OpenDialogFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /ServerItem/Port.
         /// </summary>
         internal static string PortPath {
@@ -102,6 +111,15 @@ namespace ImporterPOS.WPF.Resources {
         internal static string ServerInstancePath {
             get {
                 return ResourceManager.GetString("ServerInstancePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set.
+        /// </summary>
+        internal static string Set {
+            get {
+                return ResourceManager.GetString("Set", resourceCulture);
             }
         }
     }

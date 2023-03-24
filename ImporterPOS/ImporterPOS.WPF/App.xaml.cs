@@ -28,6 +28,7 @@ namespace ImporterPOS.WPF
             _host = Host.CreateDefaultBuilder()
                 .AddConfiguration()
                 .AddDbContext()
+                .AddServices()
                 .AddViewModels()
                 .AddViews()
                 .Build();

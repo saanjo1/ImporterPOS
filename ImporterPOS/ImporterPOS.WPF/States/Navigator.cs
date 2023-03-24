@@ -6,6 +6,7 @@ using ImporterPOS.Domain.Models;
 using FontAwesome.Sharp;
 using ImporterPOS.WPF.ViewModels;
 using ImporterPOS.WPF.Resources;
+using ImporterPOS.WPF.Services.Excel;
 
 namespace ImporterPOS.WPF.States
 {
@@ -23,10 +24,14 @@ namespace ImporterPOS.WPF.States
 
 
         private ConcurrentDictionary<string, string> _myDictionary;
+        private IExcelService _excelService;
         private Notifier _notifier;
 
-        public Navigator (Notifier notifier)
+        public Navigator(Notifier notifier, IExcelService excelService, ConcurrentDictionary<string, string> myDictionary)
         {
+            _notifier = notifier;
+            _excelService = excelService;
+            _myDictionary = myDictionary;
             DefaultLoad();
         }
 
@@ -60,7 +65,7 @@ namespace ImporterPOS.WPF.States
                         Icon = IconChar.FileExcel;
                         break;
                     case ViewType.Settings:
-                        this.CurrentViewModel = new SettingsViewModel(_notifier);
+                        this.CurrentViewModel = new SettingsViewModel(_notifier, _excelService, _myDictionary);
                         Caption = Translations.Settings;
                         Icon = IconChar.Gear;
                         break;

@@ -2,7 +2,9 @@
 using CommunityToolkit.Mvvm.Input;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.WPF.Resources;
+using ImporterPOS.WPF.Services.Excel;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
@@ -11,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using ToastNotifications;
+using ToastNotifications.Messages;
 
 namespace ImporterPOS.WPF.ViewModels
 {
@@ -18,6 +21,11 @@ namespace ImporterPOS.WPF.ViewModels
     public partial class SettingsViewModel : BaseViewModel
     {
         private readonly Notifier _notifier;
+        private IExcelService _excelService;
+        private ConcurrentDictionary<string, string> _myDictionary;
+
+
+
 
         ResourceManager rm = new ResourceManager(typeof(Translations));
 
@@ -34,9 +42,11 @@ namespace ImporterPOS.WPF.ViewModels
         private string excelFile;
 
 
-        public SettingsViewModel(Notifier notifier)
+        public SettingsViewModel(Notifier notifier, IExcelService excelService, ConcurrentDictionary<string, string> myDictionary)
         {
             _notifier = notifier;
+            _myDictionary = myDictionary;
+            _excelService = excelService;
             GetDatabaseInfo();
         }
 
@@ -46,7 +56,31 @@ namespace ImporterPOS.WPF.ViewModels
         {
             try
             {
-                ExcelFile = 
+                ExcelFile = _excelService.OpenDialog().Result;
+
+                if (ExcelFile != null)
+                {
+                    if (_myDictionary.TryGetValue(Translations.CurrentExcelFile, out string value) == false)
+                    {
+                        bool success = _myDictionary.TryAdd(Translations.CurrentExcelFile, excelFile);
+
+                        if (success)
+                            _notifier.ShowSuccess(Translations.SelectExcelFileSuccess);
+                        else
+                            _notifier.ShowError(Translations.ErrorMessage);
+                    }
+                    else
+                    {
+                        _myDictionary.TryGetValue(Translations.CurrentExcelFile, out string value1);
+                        bool success = _myDictionary.TryUpdate(Translations.CurrentExcelFile, excelFile, value1);
+
+                        if (value1 == excelFile)
+                            _notifier.ShowInformation(Translations.UpdatedSameFile);
+
+                        if (success && value1 != excelFile)
+                            _notifier.ShowInformation(Translations.UpdatedExcelFile);
+                    }
+                }
             }
             catch
             {
