@@ -60,7 +60,7 @@ namespace ImporterPOS.WPF.States
                         Icon = IconChar.TableList;
                         break;
                     case ViewType.ImportArticles:
-                        this.CurrentViewModel = new ArticlesViewModel();
+                        this.CurrentViewModel = new ArticlesViewModel(_excelService, _notifier, _myDictionary);
                         Caption = Translations.Articles;
                         Icon = IconChar.FileExcel;
                         break;

@@ -1,0 +1,26 @@
+{
+  "Articles": {
+    "Name": "NAME",
+    "Category": "GENDER",
+    "Storage": "STORAGE",
+    "BarCode": "BARCODE",
+    "Price": "SO_PRICE",
+    "Quantity": "QTYC",
+    "PricePerUnit": "PRICEUNIT",
+    "ItemSize": "ITEM_SIZE",
+    "Item": "ITEM",
+    "ColorDescription": "COLOR_DESCRIPTION"
+  },
+  "Discounts": {
+    "Name": "NAME",
+    "Category": "Department (EN)",
+    "BarCode": "Barcode",
+    "Discount": "Discount",
+    "FullPrice": "Full price €",
+    "DiscountedPrice": "Discounted price €",
+    "Description": "Description (EN)",
+    "ItemSize": "Size",
+    "Item": "Product",
+    "ColorDescription": "Color_Description (EN)"
+  }
+}

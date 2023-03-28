@@ -1,6 +1,10 @@
-﻿using ImporterPOS.WPF.Resources;
+﻿using ImporterPOS.WPF.Helpers;
+using ImporterPOS.WPF.Resources;
+using ImporterPOS.WPF.ViewModels;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.OleDb;
 using System.IO;
@@ -8,12 +12,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace ImporterPOS.WPF.Services.Excel
 {
     public class ExcelService : IExcelService
     {
         public static string ExcelFile { get; set; }
+        private static ObservableCollection<ExcelArticlesListViewModel> _articleQtycViewModels = new ObservableCollection<ExcelArticlesListViewModel>();
+
 
 
         public static OleDbConnection _oleDbConnection;
@@ -71,6 +78,64 @@ namespace ImporterPOS.WPF.Services.Excel
                 return await Task.FromResult(ExcelFile);
             }
             return null;
+        }
+
+        public async Task<ObservableCollection<ExcelArticlesListViewModel>> ReadColumnsFromExcel(ConcurrentDictionary<string, string> dictionary, ExcelArticlesListViewModel viewModel)
+        {
+
+            bool success = dictionary.TryGetValue(Translations.CurrentExcelFile, out string value);
+            bool sheet = dictionary.TryGetValue(Translations.CurrentExcelSheet, out string sheetValue);
+            FixedArticleColumns templateViewModel = new FixedArticleColumns();
+
+            if (success && sheet)
+            {
+                try
+                {
+                    string _connection =
+           @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + value + ";" +
+           @"Extended Properties='Excel 8.0;HDR=Yes;'";
+
+                    _oleDbConnection = new OleDbConnection(_connection);
+
+                    await _oleDbConnection.OpenAsync();
+
+                    Command = new OleDbCommand();
+                    Command.Connection = _oleDbConnection;
+                    Command.CommandText = "select * from [" + sheetValue + "]";
+
+                    System.Data.Common.DbDataReader Reader = await Command.ExecuteReaderAsync();
+
+                    while (Reader.Read())
+                    {
+
+                        _articleQtycViewModels.Add(new ExcelArticlesListViewModel
+                        {
+                            Name = Reader[templateViewModel.BarCode].ToString() + " " + Reader["ITEM"].ToString() + " " + Reader["NAME"].ToString() + " " + Reader["COLOR_DESCRIPTION"].ToString() + " " + Reader["ITEM_SIZE"].ToString(),
+                            Category = Reader[templateViewModel.Category].ToString(),
+                            Storage = Reader[templateViewModel.Storage].ToString(),
+                            BarCode = Reader[templateViewModel.BarCode].ToString(),
+                            Price = Reader[templateViewModel.Price].ToString(),
+                            Quantity = Reader[templateViewModel.Quantity].ToString(),
+                            PricePerUnit = Reader[templateViewModel.PricePerUnit].ToString()
+                        });
+                    }
+
+                    Reader.Close();
+                    _oleDbConnection.Close();
+
+                    return await Task.FromResult(_articleQtycViewModels);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+
+            }
+            else
+            {
+                return null;
+            }
+
         }
     }
 }

@@ -7,6 +7,7 @@
         xmlns:local="clr-namespace:ImporterPOS.WPF" xmlns:controls="clr-namespace:ImporterPOS.WPF.Controls"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
+        x:Name="TestWindow"
         WindowState="Maximized"
         Background="Transparent"
         WindowStyle="None"
