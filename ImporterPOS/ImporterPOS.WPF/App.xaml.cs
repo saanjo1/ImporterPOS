@@ -1,16 +1,15 @@
 ﻿using ImporterPOS.Domain.EF;
+using ImporterPOS.WPF.Helpers;
 using ImporterPOS.WPF.HostBuilders;
+using ImporterPOS.WPF.Resources;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows;
+using System.Xml;
 
 namespace ImporterPOS.WPF
 {
@@ -25,6 +24,8 @@ namespace ImporterPOS.WPF
 
         public App()
         {
+            UpdateConnectionString();
+
             _host = Host.CreateDefaultBuilder()
                 .AddConfiguration()
                 .AddDbContext()
@@ -34,6 +35,26 @@ namespace ImporterPOS.WPF
                 .Build();
         }
 
+        private void UpdateConnectionString()
+        {
+            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            int index = appDataPath.IndexOf("Roaming");
+            appDataPath = appDataPath.Substring(0, index) + Informations.POSFolderPath;
+
+            XmlDocument doc = new XmlDocument();
+            doc.Load(appDataPath);
+
+            XmlNode dataSource = doc.SelectSingleNode(Informations.DataSourcePath);
+
+
+
+            string json = File.ReadAllText("appsettings.json");
+            AppSettings settings = JsonConvert.DeserializeObject<AppSettings>(json);
+            settings.ConnectionStrings.sqlstring = dataSource.InnerText + Informations.Encrypt;
+
+            json = JsonConvert.SerializeObject(settings);
+            File.WriteAllText("appsettings.json", json);
+        }
 
         protected override async void OnStartup(StartupEventArgs e)
         {

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ImporterPOS.Domain.Models;
+using ImporterPOS.WPF.Modals;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.Services.Excel;
 using System;
@@ -11,6 +12,7 @@ using System.Linq;
 using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Xml;
 using ToastNotifications;
 using ToastNotifications.Messages;
@@ -25,9 +27,8 @@ namespace ImporterPOS.WPF.ViewModels
         private ConcurrentDictionary<string, string> _myDictionary;
 
 
-
-
-        ResourceManager rm = new ResourceManager(typeof(Translations));
+        [ObservableProperty]
+        private SelectExcelSheetViewModel excelSheetViewModel;
 
         [ObservableProperty]
         private string databaseConnection;
@@ -41,6 +42,14 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         private string excelFile;
 
+        [ObservableProperty]
+        private bool isOpen;
+
+        [ObservableProperty]
+        private bool selectSheetSuccess;
+
+        [ObservableProperty]
+        private bool selectFileSuccess;
 
         public SettingsViewModel(Notifier notifier, IExcelService excelService, ConcurrentDictionary<string, string> myDictionary)
         {
@@ -81,10 +90,32 @@ namespace ImporterPOS.WPF.ViewModels
                             _notifier.ShowInformation(Translations.UpdatedExcelFile);
                     }
                 }
+
+                if (ExcelFile != null)
+                    SelectFileSuccess = true;
             }
             catch
             {
+                _notifier.ShowError(Translations.ErrorMessage);
+                SelectFileSuccess = false;
+            }
 
+        }
+
+        [RelayCommand]
+        public void SelectSheet()
+        {
+            try
+            {
+                IsOpen = true;
+                this.ExcelSheetViewModel = new SelectExcelSheetViewModel(_excelService, this, _notifier, _myDictionary);
+                if(ExcelSheetViewModel != null && ExcelSheetViewModel.SelectedSheet != null)
+                    SelectSheetSuccess = true;
+            }
+            catch
+            {
+                SelectSheetSuccess = false;
+                IsOpen = false;
                 throw;
             }
         }
@@ -107,6 +138,12 @@ namespace ImporterPOS.WPF.ViewModels
             Port = portNode.InnerText;
         }
 
+        [RelayCommand]
+        public void Cancel()
+        {
+            if (IsOpen)
+                IsOpen = false;
+        }
 
     }
 }

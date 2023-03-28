@@ -123,6 +123,9 @@
   <data name="DataSourcePath" xml:space="preserve">
     <value>/ServerItem/DataSource</value>
   </data>
+  <data name="Encrypt" xml:space="preserve">
+    <value>;Encrypt=False</value>
+  </data>
   <data name="OpenDialogFilter" xml:space="preserve">
     <value>Excel Worksheets|*.xls;*.xlsx;*.xlsm</value>
   </data>
@@ -134,8 +137,5 @@
   </data>
   <data name="ServerInstancePath" xml:space="preserve">
     <value>/ServerItem/FullServerName</value>
-  </data>
-  <data name="Set" xml:space="preserve">
-    <value>Set</value>
   </data>
 </root>

@@ -21,10 +21,19 @@
     <SolidColorBrush x:Key="color8" Color="#78A3FC"/>
     <SolidColorBrush x:Key="color9" Color="#07F3C0"/>
     <SolidColorBrush x:Key="color10" Color="#FBA1AA"/>
+    <SolidColorBrush x:Key="color11" Color="#1073B1"/>
+    <SolidColorBrush x:Key="color12" Color="#003D64"/>
+    <SolidColorBrush x:Key="color13" Color="#C30606"/>
+    <SolidColorBrush x:Key="color14" Color="#F70000"/>
+
 
     <!--Button colors -->
     <Color x:Key="primarybuttonGreen">#486b20</Color>
     <Color x:Key="secondarybuttonGreen">#6d9045</Color>
+    <Color x:Key="saveButtonColor1">#003D64</Color>
+    <Color x:Key="saveButtonColor2">#1073B1</Color>
+    <Color x:Key="cancelButtonColor1">#C30606</Color>
+    <Color x:Key="cancelButtonColor2">#F70000</Color>
 
 
 
@@ -42,9 +51,8 @@
     <SolidColorBrush x:Key="panelColor" Color="white"/>
     <SolidColorBrush x:Key="panelOverColor" Color="white"/>
     <SolidColorBrush x:Key="panelActiveColor" Color="white"/>
-    
-    
 
+      
 
     <!--Menu button-->
     <Style x:Key="menuButton" TargetType="RadioButton">
@@ -216,5 +224,94 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="SaveButton" TargetType="Button">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{StaticResource color11}"/>
+        <Setter Property="Padding" Value="10 10"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" 
+                                    Padding="{TemplateBinding Padding}"
+                                CornerRadius="3">
+                        <ContentPresenter/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource saveButtonColor1}" Duration="0:0:0.1"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource saveButtonColor2}" Duration="0:0:0.1"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.ExitActions>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.7"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--Cancel button-->
+    <Style x:Key="CancelButton" TargetType="Button" BasedOn="{StaticResource SaveButton}">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{StaticResource color14}"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource cancelButtonColor2}" Duration="0:0:0.01"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource cancelButtonColor1}" Duration="0:0:0.01"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource SaveButton}">
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource saveButtonColor2}" Duration="0:0:0.01"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource saveButtonColor1}" Duration="0:0:0.01"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 
 </ResourceDictionary>

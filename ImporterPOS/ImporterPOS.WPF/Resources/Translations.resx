@@ -123,6 +123,9 @@
   <data name="CurrentExcelFile" xml:space="preserve">
     <value>CurrentExcelFile</value>
   </data>
+  <data name="CurrentExcelSheet" xml:space="preserve">
+    <value>CurrentExcelSheet</value>
+  </data>
   <data name="Dashboard" xml:space="preserve">
     <value>Dashboard</value>
   </data>
@@ -141,6 +144,12 @@
   <data name="SelectExcelFileSuccess" xml:space="preserve">
     <value>Excel file is successfully selected.</value>
   </data>
+  <data name="SelectSheetError" xml:space="preserve">
+    <value>An error occurred while trying to select excel sheet.</value>
+  </data>
+  <data name="SelectSheetSuccess" xml:space="preserve">
+    <value>An Excel sheet selected successfully.</value>
+  </data>
   <data name="Set" xml:space="preserve">
     <value>set</value>
   </data>
@@ -154,6 +163,6 @@
     <value>Excel file successfully updated.</value>
   </data>
   <data name="UpdatedSameFile" xml:space="preserve">
-    <value>Excel file successfully updated.</value>
+    <value>Same file selected.</value>
   </data>
 </root>

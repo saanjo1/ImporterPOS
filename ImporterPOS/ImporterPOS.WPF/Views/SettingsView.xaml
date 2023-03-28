@@ -20,15 +20,7 @@
         </Grid.ColumnDefinitions>
 
         <modalcontrol:Modal Grid.Row="4" Margin="0 0 0 0" VerticalAlignment="Center" Panel.ZIndex="21" Background="Transparent" IsOpen="{Binding IsOpen}" Grid.RowSpan="5" Grid.ColumnSpan="5">
-            <ContentControl VerticalAlignment="Top"  Content="{Binding SheetDataModel}"/>
-        </modalcontrol:Modal>
-
-        <modalcontrol:Modal Grid.Row="4" Margin="0 0 0 0" VerticalAlignment="Center" Panel.ZIndex="21" Background="Transparent" IsOpen="{Binding IsEditOpen}" Grid.RowSpan="5" Grid.ColumnSpan="5">
-            <ContentControl VerticalAlignment="Top"  Content="{Binding SetColumnsVM}"/>
-        </modalcontrol:Modal>
-
-        <modalcontrol:Modal Grid.Row="4" Margin="0 0 0 0" VerticalAlignment="Center" Panel.ZIndex="21" Background="Transparent" IsOpen="{Binding IsDiscountOpen}" Grid.RowSpan="5" Grid.ColumnSpan="5">
-            <ContentControl VerticalAlignment="Top"  Content="{Binding SetDiscountsVM}"/>
+            <ContentControl VerticalAlignment="Top"  Content="{Binding ExcelSheetViewModel}"/>
         </modalcontrol:Modal>
 
         <Border Grid.Column="0">
@@ -58,15 +50,6 @@
                 <Label HorizontalAlignment="Left" Grid.Row="2" Content="Select sheet from file" Style="{StaticResource settingsControlLabel}"></Label>
                 <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource settingsClickButton}" x:Name="btnSheet" Content="Select" Command="{Binding SelectSheetCommand}" Width="80" Height="35"/>
                 <fa:IconImage HorizontalAlignment="Left" Grid.Row="2" Grid.Column="3" Icon="Check" Foreground="Green" Height="20" Width="20" Visibility="{Binding SelectSheetSuccess, Converter={StaticResource BoolToVis}}"/>
-
-                <Label HorizontalAlignment="Left" FontSize="18" Grid.Row="3" FontWeight="SemiBold" Foreground="White" Content="Column settings:" Margin="0 20 0 20"/>
-
-                <Label HorizontalAlignment="Left" Grid.Row="4" Content="Set column names for discounts" Style="{StaticResource settingsControlLabel}"></Label>
-                <Button Grid.Row="4" Grid.Column="1" Style="{StaticResource settingsClickButton}" Content="Set" Command="{Binding SetDiscountsColumnsCommand}"  Width="80" Height="35"/>
-
-
-                <Label HorizontalAlignment="Left" Grid.Row="5" Content="Set column names for articles" Style="{StaticResource settingsControlLabel}"></Label>
-                <Button Grid.Row="5" Grid.Column="1" Style="{StaticResource settingsClickButton}" Content="Set" Command="{Binding SetArticlesColumnsCommand}" Width="80" Height="35"/>
 
             </Grid>
         </Border>

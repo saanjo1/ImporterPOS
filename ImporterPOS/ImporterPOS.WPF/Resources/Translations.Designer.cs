@@ -79,6 +79,15 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CurrentExcelSheet.
+        /// </summary>
+        internal static string CurrentExcelSheet {
+            get {
+                return ResourceManager.GetString("CurrentExcelSheet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dashboard.
         /// </summary>
         internal static string Dashboard {
@@ -133,6 +142,24 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred while trying to select excel sheet..
+        /// </summary>
+        internal static string SelectSheetError {
+            get {
+                return ResourceManager.GetString("SelectSheetError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An Excel sheet selected successfully..
+        /// </summary>
+        internal static string SelectSheetSuccess {
+            get {
+                return ResourceManager.GetString("SelectSheetSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to set.
         /// </summary>
         internal static string Set {
@@ -169,7 +196,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Excel file successfully updated..
+        ///   Looks up a localized string similar to Same file selected..
         /// </summary>
         internal static string UpdatedSameFile {
             get {
