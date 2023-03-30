@@ -8,6 +8,8 @@ using ImporterPOS.WPF.ViewModels;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.Services.Excel;
 using ImporterPOS.Domain.Services.Suppliers;
+using ImporterPOS.Domain.Services.InventoryDocuments;
+using ImporterPOS.Domain.Services.Storages;
 
 namespace ImporterPOS.WPF.States
 {
@@ -27,15 +29,19 @@ namespace ImporterPOS.WPF.States
         private ConcurrentDictionary<string, string> _myDictionary;
         private IExcelService _excelService;
         private ISupplierService _supplierService;
+        private IInventoryDocumentsService _invDocsService;
+        private IStorageService _storageService;
         private Notifier _notifier;
 
-        public Navigator(Notifier notifier, ISupplierService supplierService, IExcelService excelService, ConcurrentDictionary<string, string> myDictionary)
+        public Navigator(Notifier notifier, ISupplierService supplierService, IExcelService excelService, ConcurrentDictionary<string, string> myDictionary, IInventoryDocumentsService invDocsService, IStorageService storageService)
         {
             _notifier = notifier;
             _excelService = excelService;
             _supplierService = supplierService;
             _myDictionary = myDictionary;
             DefaultLoad();
+            _invDocsService = invDocsService;
+            _storageService = storageService;
         }
 
 
@@ -63,7 +69,7 @@ namespace ImporterPOS.WPF.States
                         Icon = IconChar.TableList;
                         break;
                     case ViewType.ImportArticles:
-                        this.CurrentViewModel = new ArticlesViewModel(_excelService, _supplierService, _notifier, _myDictionary);
+                        this.CurrentViewModel = new ArticlesViewModel(_excelService, _supplierService, _notifier, _myDictionary, _invDocsService, _storageService);
                         Caption = Translations.Articles;
                         Icon = IconChar.FileExcel;
                         break;

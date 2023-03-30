@@ -10,9 +10,10 @@ namespace ImporterPOS.Domain.Services.InventoryDocuments
     public interface IInventoryDocumentsService
     {
         Task<IEnumerable<InventoryDocument>> GetAllInventoryDocsAsync();
-        Task<Supplier> GetInventoryDocByIdAsync(string id);
+        Task<InventoryDocument> GetInventoryDocByIdAsync(string id);
         Task<bool> CreateInventoryDocAsync(InventoryDocument inventoryDocument);
         Task<bool> DeleteInventoryDocAsync(string id);
         Task<bool> UpdateInventoryDocAsync(InventoryDocument inventoryDocument);
+        Task<int> GetInventoryOrderNumber();
     }
 }

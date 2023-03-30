@@ -22,7 +22,7 @@ namespace ImporterPOS.Domain.Services.Suppliers
         {
             try
             {
-                await _supplierRepository.GetAllAsync();
+                await _supplierRepository.AddAsync(supplier);
                 return true;
             }
             catch

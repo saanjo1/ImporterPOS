@@ -1,4 +1,6 @@
 ﻿using ImporterPOS.Domain.Services.Generic;
+using ImporterPOS.Domain.Services.InventoryDocuments;
+using ImporterPOS.Domain.Services.Storages;
 using ImporterPOS.Domain.Services.Suppliers;
 using ImporterPOS.WPF.Services.Excel;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +22,8 @@ namespace ImporterPOS.WPF.HostBuilders
                 services.AddSingleton<IExcelService, ExcelService>();
                 services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
                 services.AddScoped<ISupplierService, SupplierService>();
+                services.AddScoped<IInventoryDocumentsService, InventoryDocumentsService>();
+                services.AddScoped<IStorageService, StorageService>();
             });
 
             return host;

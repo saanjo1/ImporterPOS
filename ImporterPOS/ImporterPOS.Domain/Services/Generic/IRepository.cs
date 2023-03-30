@@ -14,5 +14,6 @@ namespace ImporterPOS.Domain.Services.Generic
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(string id);
         Task<TEntity> GetByNameAsync(string name);
+        Task<int> GetNumberOfRecords();
     }
 }

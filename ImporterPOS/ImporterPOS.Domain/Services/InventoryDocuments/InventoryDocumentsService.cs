@@ -1,4 +1,5 @@
 ﻿using ImporterPOS.Domain.Models;
+using ImporterPOS.Domain.Services.Generic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,29 +10,62 @@ namespace ImporterPOS.Domain.Services.InventoryDocuments
 {
     public class InventoryDocumentsService : IInventoryDocumentsService
     {
-        public Task<bool> CreateInventoryDocAsync(InventoryDocument inventoryDocument)
+        private readonly IRepository<InventoryDocument> _invDocsRepository;
+
+        public async Task<bool> CreateInventoryDocAsync(InventoryDocument inventoryDocument)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _invDocsRepository.AddAsync(inventoryDocument);
+                return true;
+            }
+            catch
+            {
+                return false;
+                throw;
+            }
+
         }
 
-        public Task<bool> DeleteInventoryDocAsync(string id)
+        public async Task<bool> DeleteInventoryDocAsync(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _invDocsRepository.DeleteAsync(id);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<IEnumerable<InventoryDocument>> GetAllInventoryDocsAsync()
+        public async Task<IEnumerable<InventoryDocument>> GetAllInventoryDocsAsync()
         {
-            throw new NotImplementedException();
+            return await _invDocsRepository.GetAllAsync();
         }
 
-        public Task<Supplier> GetInventoryDocByIdAsync(string id)
+        public async Task<InventoryDocument> GetInventoryDocByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            return await _invDocsRepository.GetByIdAsync(id);
         }
 
-        public Task<bool> UpdateInventoryDocAsync(InventoryDocument inventoryDocument)
+        public async Task<int> GetInventoryOrderNumber(InventoryDocument inventoryDocument)
         {
-            throw new NotImplementedException();
+            return await _invDocsRepository.GetNumberOfRecords();
+        }
+
+        public async Task<bool> UpdateInventoryDocAsync(InventoryDocument invDoc)
+        {
+            try
+            {
+                await _invDocsRepository.UpdateAsync(invDoc);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

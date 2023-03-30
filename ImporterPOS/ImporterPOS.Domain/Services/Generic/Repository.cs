@@ -69,7 +69,10 @@ namespace ImporterPOS.Domain.Services.Generic
             return result;
         }
 
-
+        public async Task<int> GetNumberOfRecords()
+        {
+            return await _dbSet.CountAsync();
+        }
     }
 
 }

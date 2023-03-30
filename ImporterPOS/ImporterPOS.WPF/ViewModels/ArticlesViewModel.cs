@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ImporterPOS.Domain.Models;
+using ImporterPOS.Domain.Services.InventoryDocuments;
+using ImporterPOS.Domain.Services.Storages;
 using ImporterPOS.Domain.Services.Suppliers;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.Services.Excel;
@@ -24,6 +26,8 @@ namespace ImporterPOS.WPF.ViewModels
     {
         private readonly IExcelService _excelService;
         private readonly ISupplierService _supplierService;
+        private readonly IInventoryDocumentsService _invDocsService;
+        private readonly IStorageService _storageService;
         private readonly Notifier _notifier;
         private ConcurrentDictionary<string, string> _myDictionary;
 
@@ -47,13 +51,15 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         ObservableCollection<ExcelArticlesListViewModel>? articleList;
 
-        public ArticlesViewModel(IExcelService excelService, ISupplierService supplierService, Notifier notifier, ConcurrentDictionary<string, string> myDictionary)
+        public ArticlesViewModel(IExcelService excelService, ISupplierService supplierService, Notifier notifier, ConcurrentDictionary<string, string> myDictionary, IInventoryDocumentsService invDocsService, IStorageService storageService)
         {
             _excelService = excelService;
             _supplierService = supplierService;
             _notifier = notifier;
+            _invDocsService = invDocsService;
             _myDictionary = myDictionary;
             articlesCollection = new ObservableCollection<ExcelArticlesListViewModel>();
+            _storageService = storageService;
         }
 
 
@@ -248,7 +254,22 @@ namespace ImporterPOS.WPF.ViewModels
             {
                 if (articleList.Any())
                 {
-                    var x = _supplierService.GetSupplierByName("Test");
+                    Guid _supplierId = _supplierService.GetSupplierByName("Test").Result;
+                    Guid _storageId = _storageService.GetSupplierByName("Glavno skladište").Result;
+
+                    _invDocsService.CreateInventoryDocAsync(new InventoryDocument
+                    {
+                        Id = Guid.NewGuid(),
+                        Order = _invDocsService.GetInventoryOrderNumber().Result,
+                        Created = DateTime.Now,
+                        SupplierId = _supplierId,
+                        StorageId = _storageId,
+                        Type = 1, 
+                        IsActivated = false, 
+                        IsDeleted = false
+                    });
+
+                    
 
 
 
