@@ -13,5 +13,6 @@ namespace ImporterPOS.Domain.Services.Generic
         Task AddAsync(TEntity entity);
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(string id);
+        Task<TEntity> GetByNameAsync(string name);
     }
 }

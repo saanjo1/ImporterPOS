@@ -1,8 +1,10 @@
 ﻿using ImporterPOS.Domain.EF;
+using ImporterPOS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -47,6 +49,27 @@ namespace ImporterPOS.Domain.Services.Generic
             _dbSet.Remove(entityToDelete);
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<TEntity> GetByNameAsync(string name)
+        {
+            // Get the entity type for the current repository
+            Type entityType = typeof(TEntity);
+
+            // Get the DbSet for the specified entity type using reflection
+            PropertyInfo? dbSetProperty = _dbContext.GetType().GetProperty(entityType.Name +"s");
+            DbSet<TEntity>? dbSet = dbSetProperty.GetValue(_dbContext) as DbSet<TEntity>;
+
+            // Get the Name property for the entity type
+            PropertyInfo? nameProperty = entityType.GetProperty("Name");
+
+            IEnumerable<TEntity> query = dbSet.AsEnumerable().Where(e => nameProperty.GetValue(e).ToString() == name);
+            TEntity? result = query.FirstOrDefault();
+            if (result == null)
+                return null;
+            return result;
+        }
+
+
     }
 
 }

@@ -130,7 +130,7 @@
         </StackPanel>
 
         <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
-            <Button Style="{StaticResource SaveButton}" Foreground="White" Command="{Binding ImportDataCommand}"  Height="50" Width="150" Margin="20 0 0 0">
+            <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding ImportDataCommand}"  Height="50" Width="150" Margin="20 0 0 0">
                 <StackPanel Orientation="Horizontal">
                     <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Upload" Width="30" Height="30"/>
                     <TextBlock TextAlignment="Center" FontSize="20" VerticalAlignment="Stretch" Margin="10 0" FontWeight="ExtraLight">Import</TextBlock>

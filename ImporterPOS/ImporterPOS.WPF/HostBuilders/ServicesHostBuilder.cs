@@ -1,4 +1,6 @@
-﻿using ImporterPOS.WPF.Services.Excel;
+﻿using ImporterPOS.Domain.Services.Generic;
+using ImporterPOS.Domain.Services.Suppliers;
+using ImporterPOS.WPF.Services.Excel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -16,7 +18,8 @@ namespace ImporterPOS.WPF.HostBuilders
             host.ConfigureServices(services =>
             {
                 services.AddSingleton<IExcelService, ExcelService>();
-
+                services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+                services.AddScoped<ISupplierService, SupplierService>();
             });
 
             return host;

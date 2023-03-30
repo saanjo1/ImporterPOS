@@ -71,7 +71,10 @@ namespace ImporterPOS.WPF.Modals
                 {
                     bool success = _myDictionary.TryAdd(Translations.CurrentExcelSheet, SelectedSheet);
                     if (success)
+                    {
                         _notifier.ShowInformation(Translations.SelectSheetSuccess);
+                        _settingsViewModel.SelectSheetSuccess = true;
+                    }
                     else
                         _notifier.ShowError(Translations.SelectSheetError);
                 }
@@ -81,7 +84,10 @@ namespace ImporterPOS.WPF.Modals
 
                     bool success = _myDictionary.TryUpdate(Translations.CurrentExcelSheet, SelectedSheet, value);
                     if (success)
+                    {
                         _notifier.ShowInformation(Translations.SelectSheetSuccess);
+                        _settingsViewModel.SelectSheetSuccess = true;
+                    }
                     else
                         _notifier.ShowError(Translations.SelectSheetError);
                 }

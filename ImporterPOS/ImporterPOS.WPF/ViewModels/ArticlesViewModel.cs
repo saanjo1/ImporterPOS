@@ -1,12 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ImporterPOS.Domain.Models;
+using ImporterPOS.Domain.Services.Suppliers;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.Services.Excel;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -21,6 +23,7 @@ namespace ImporterPOS.WPF.ViewModels
     public partial class ArticlesViewModel : BaseViewModel
     {
         private readonly IExcelService _excelService;
+        private readonly ISupplierService _supplierService;
         private readonly Notifier _notifier;
         private ConcurrentDictionary<string, string> _myDictionary;
 
@@ -29,7 +32,7 @@ namespace ImporterPOS.WPF.ViewModels
         private ObservableCollection<ExcelArticlesListViewModel> articlesCollection;
 
         [ObservableProperty]
-        private int count;
+        public int count;
 
         [ObservableProperty]
         private bool isLoading;
@@ -44,9 +47,10 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         ObservableCollection<ExcelArticlesListViewModel>? articleList;
 
-        public ArticlesViewModel(IExcelService excelService, Notifier notifier, ConcurrentDictionary<string, string> myDictionary)
+        public ArticlesViewModel(IExcelService excelService, ISupplierService supplierService, Notifier notifier, ConcurrentDictionary<string, string> myDictionary)
         {
             _excelService = excelService;
+            _supplierService = supplierService;
             _notifier = notifier;
             _myDictionary = myDictionary;
             articlesCollection = new ObservableCollection<ExcelArticlesListViewModel>();
@@ -220,6 +224,42 @@ namespace ImporterPOS.WPF.ViewModels
             UpdateRecordCount();
             Count = ArticleList.Count;
 
+        }
+
+        [RelayCommand]
+        public void ClearAllData()
+        {
+            if (articleList != null)
+            {
+                articleList.Clear();
+                ArticleCollection = null;
+                _notifier.ShowInformation(count + " records were successfully removed.");
+                Count = 0;
+            }
+        }
+
+
+        [RelayCommand]
+        public async void ImportData()
+        {
+            IsLoading = true;
+
+            await Task.Run(() =>
+            {
+                if (articleList.Any())
+                {
+                    var x = _supplierService.GetSupplierByName("Test");
+
+
+
+
+                }
+
+
+
+            });
+
+            IsLoading = false;
         }
 
     }

@@ -109,8 +109,6 @@ namespace ImporterPOS.WPF.ViewModels
             {
                 IsOpen = true;
                 this.ExcelSheetViewModel = new SelectExcelSheetViewModel(_excelService, this, _notifier, _myDictionary);
-                if(ExcelSheetViewModel != null && ExcelSheetViewModel.SelectedSheet != null)
-                    SelectSheetSuccess = true;
             }
             catch
             {
@@ -136,6 +134,12 @@ namespace ImporterPOS.WPF.ViewModels
             DatabaseConnection = databaseNode.InnerText;
             ServerInstance = serverInstanceNode.InnerText;
             Port = portNode.InnerText;
+
+            if (_myDictionary.TryGetValue(Translations.CurrentExcelFile, out string value) == true)
+                SelectFileSuccess = true;
+            if (_myDictionary.TryGetValue(Translations.CurrentExcelSheet, out string value2) == true)
+                SelectSheetSuccess = true;
+
         }
 
         [RelayCommand]

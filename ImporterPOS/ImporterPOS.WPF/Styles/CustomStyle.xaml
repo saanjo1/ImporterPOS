@@ -239,12 +239,14 @@
                 <ControlTemplate TargetType="Button">
                     <Border Background="{TemplateBinding Background}" 
                                     Padding="{TemplateBinding Padding}"
-                                CornerRadius="3">
+                                CornerRadius="10">
                         <ContentPresenter/>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        
+
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
@@ -287,6 +289,30 @@
                     <BeginStoryboard>
                         <Storyboard>
                             <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource cancelButtonColor1}" Duration="0:0:0.01"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="ImportButton" TargetType="Button" BasedOn="{StaticResource SaveButton}">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{StaticResource color15}"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource secondarybuttonGreen}" Duration="0:0:0.01"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource primarybuttonGreen}" Duration="0:0:0.01"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </Trigger.ExitActions>
@@ -518,11 +544,11 @@
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource color2}"/>
+                <Setter Property="Background" Value="{StaticResource color11}"/>
                 <Setter Property="Foreground" Value="#ffffff"/>
             </Trigger>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="{StaticResource color2}"/>
+                <Setter Property="Background" Value="{StaticResource color12}"/>
                 <Setter Property="Foreground" Value="#ffffff"/>
             </Trigger>
             <MultiTrigger>
