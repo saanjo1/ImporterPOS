@@ -1,6 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ImporterPOS.Domain.Services.Articles;
+using ImporterPOS.Domain.Services.Goods;
 using ImporterPOS.Domain.Services.InventoryDocuments;
+using ImporterPOS.Domain.Services.InventoryItems;
+using ImporterPOS.Domain.Services.Storages;
 using ImporterPOS.Domain.Services.Suppliers;
 using ImporterPOS.WPF.Services.Excel;
 using ImporterPOS.WPF.States;
@@ -36,10 +40,10 @@ namespace ImporterPOS.WPF.ViewModels
         });
 
 
-        public MainViewModel(IExcelService excelService, ISupplierService supplierService, IInventoryDocumentsService invDocsService)
+        public MainViewModel(IExcelService excelService, ISupplierService supplierService, IInventoryDocumentsService invDocsService, IStorageService _storageService, IGoodService _goodService, IInventoryItemBasisService _itemsService, IArticleService articleService)
         {
             myDictionary = new ConcurrentDictionary<string, string>();
-            Navigator = new Navigator(notifier, supplierService, excelService, myDictionary, invDocsService);
+            Navigator = new Navigator(notifier, supplierService, excelService, myDictionary, invDocsService, _storageService, _goodService, _itemsService, articleService);
 
         }
 

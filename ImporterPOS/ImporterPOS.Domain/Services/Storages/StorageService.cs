@@ -54,12 +54,12 @@ namespace ImporterPOS.Domain.Services.Storages
             return await _storageRepository.GetByIdAsync(id);
         }
 
-        public async Task<Guid> GetSupplierByName(string name)
+        public async Task<Guid> GetStorageByName(string name)
         {
             try
             {
                 // Use the generic repository to get the Storage by name
-                var storage = await _storageRepository.GetByNameAsync(name);
+                var storage = await _storageRepository.GetByNameAsync(name, 0);
 
                 if (storage == null)
                 {

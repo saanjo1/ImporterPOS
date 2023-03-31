@@ -14,6 +14,6 @@ namespace ImporterPOS.Domain.Services.Storages
         Task<bool> CreateStorageDocAsync(Storage storage);
         Task<bool> DeleteStorageAsync(string id);
         Task<bool> UpdateStorageAsync(Storage storage);
-        Task<Guid> GetSupplierByName(string name);
+        Task<Guid> GetStorageByName(string name);
     }
 }

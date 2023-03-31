@@ -61,7 +61,7 @@ namespace ImporterPOS.Domain.Services.Suppliers
             try
             {
                 // Use the generic repository to get the Supplier by name
-                var supplier = await _supplierRepository.GetByNameAsync(name);
+                var supplier = await _supplierRepository.GetByNameAsync(name, 0);
 
                 if (supplier == null)
                 {

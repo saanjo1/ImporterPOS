@@ -50,7 +50,7 @@ namespace ImporterPOS.Domain.Services.InventoryDocuments
             return await _invDocsRepository.GetByIdAsync(id);
         }
 
-        public async Task<int> GetInventoryOrderNumber(InventoryDocument inventoryDocument)
+        public async Task<int> GetInventoryOrderNumber()
         {
             return await _invDocsRepository.GetNumberOfRecords();
         }

@@ -50,7 +50,7 @@ namespace ImporterPOS.Domain.Services.Generic
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<TEntity> GetByNameAsync(string name)
+        public async Task<TEntity> GetByNameAsync(string name, int type)
         {
             // Get the entity type for the current repository
             Type entityType = typeof(TEntity);
@@ -63,6 +63,11 @@ namespace ImporterPOS.Domain.Services.Generic
             PropertyInfo? nameProperty = entityType.GetProperty("Name");
 
             IEnumerable<TEntity> query = dbSet.AsEnumerable().Where(e => nameProperty.GetValue(e).ToString() == name);
+
+            if (type == 1)
+            {
+                query = dbSet.AsEnumerable().Where(e => nameProperty.GetValue(e).ToString().Contains(name));
+            }
             TEntity? result = query.FirstOrDefault();
             if (result == null)
                 return null;
