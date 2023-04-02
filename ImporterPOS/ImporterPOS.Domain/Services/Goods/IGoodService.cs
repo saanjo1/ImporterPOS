@@ -1,4 +1,5 @@
 ﻿using ImporterPOS.Domain.Models;
+using ImporterPOS.Domain.Services.Generic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,14 +8,8 @@ using System.Threading.Tasks;
 
 namespace ImporterPOS.Domain.Services.Goods
 {
-    public interface IGoodService
+    public interface IGoodService : BaseInterface<Good>
     {
-        Task<IEnumerable<Good>> GetAllGoodsAsync();
-        Task<Good> GetGoodByIdAsync(string id);
-        Task<bool> CreateGoodAsync(Good good);
-        Task<bool> DeleteGoodAsync(string id);
-        Task<bool> UpdateGoodAsync(Good good);
-
-        Task<Guid> GetGoodByName(string name, int type);
+        Task<Guid> GetGoodByName(string name);
     }
 }

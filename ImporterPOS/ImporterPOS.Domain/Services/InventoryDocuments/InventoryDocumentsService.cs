@@ -1,5 +1,7 @@
-﻿using ImporterPOS.Domain.Models;
+﻿using ImporterPOS.Domain.EF;
+using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Services.Generic;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,62 +12,81 @@ namespace ImporterPOS.Domain.Services.InventoryDocuments
 {
     public class InventoryDocumentsService : IInventoryDocumentsService
     {
-        private readonly IRepository<InventoryDocument> _invDocsRepository;
+        private readonly DatabaseContextFactory _factory;
 
-        public async Task<bool> CreateInventoryDocAsync(InventoryDocument inventoryDocument)
+        public InventoryDocumentsService(DatabaseContextFactory factory)
         {
-            try
-            {
-                await _invDocsRepository.AddAsync(inventoryDocument);
-                return true;
-            }
-            catch
-            {
-                return false;
-                throw;
-            }
-
+            _factory = factory;
         }
 
-        public async Task<bool> DeleteInventoryDocAsync(string id)
+        public async Task<bool> Create(InventoryDocument entity)
         {
-            try
+            using (DatabaseContext context = _factory.CreateDbContext())
             {
-                await _invDocsRepository.DeleteAsync(id);
-                return true;
-            }
-            catch
-            {
-                return false;
+                try
+                {
+                    context.Add(entity);
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
             }
         }
 
-        public async Task<IEnumerable<InventoryDocument>> GetAllInventoryDocsAsync()
+        public async Task<ICollection<InventoryDocument>> Delete(Guid id)
         {
-            return await _invDocsRepository.GetAllAsync();
-        }
-
-        public async Task<InventoryDocument> GetInventoryDocByIdAsync(string id)
-        {
-            return await _invDocsRepository.GetByIdAsync(id);
-        }
-
-        public async Task<int> GetInventoryOrderNumber()
-        {
-            return await _invDocsRepository.GetNumberOfRecords();
-        }
-
-        public async Task<bool> UpdateInventoryDocAsync(InventoryDocument invDoc)
-        {
-            try
+            using (DatabaseContext context = _factory.CreateDbContext())
             {
-                await _invDocsRepository.UpdateAsync(invDoc);
-                return true;
-            }
-            catch
-            {
-                return false;
+                InventoryDocument? entity = await context.InventoryDocuments.FirstOrDefaultAsync(x => x.Id == id);
+                if (entity != null)
+                    context.Remove(entity);
+
+                context.SaveChangesAsync();
+                ICollection<InventoryDocument> entities = context.InventoryDocuments.ToList();
+                return entities;
             }
         }
+
+        public async Task<InventoryDocument> Get(string id)
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                InventoryDocument? entity = await context.InventoryDocuments.FirstOrDefaultAsync(x => x.Id.ToString() == id);
+                return entity;
+            }
+        }
+
+        public async Task<ICollection<InventoryDocument>> GetAll()
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                ICollection<InventoryDocument> entities = await context.InventoryDocuments.ToListAsync();
+                return entities;
+            }
+        }
+
+        public async Task<InventoryDocument> Update(Guid id, InventoryDocument entity)
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                entity.Id = id;
+                context.InventoryDocuments.Update(entity);
+                await context.SaveChangesAsync();
+
+                return entity;
+            }
+        }
+
+        public Task<int> GetInventoryOrderNumber()
+        {
+            using(DatabaseContext context = _factory.CreateDbContext())
+            {
+                return Task.FromResult(context.InventoryDocuments.Count());
+            }
+        }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImporterPOS.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,13 @@ namespace ImporterPOS.Domain.Services.Generic
         Task AddAsync(TEntity entity);
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(string id);
-        Task<TEntity> GetByNameAsync(string name, int type);
+        Task<Good> GetGoodByName(string name);
+        Task<Article> GetArticleByBarcode(string barcode);
+        Task<Storage> GetStorageByName(string storage);
+        Task<Supplier> GetSupplierByName(string supplier);
         Task<int> GetNumberOfRecords();
+        Task<Guid> GetSubCategoryId(string? category, string? storage);
+        Task SaveArticleGood(ArticleGood newArticleGood);
+        Task<bool> CheckForNormative(Guid articleId);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ImporterPOS.Domain.Models;
+using ImporterPOS.Domain.Services.Articles;
 using ImporterPOS.Domain.Services.Goods;
 using ImporterPOS.Domain.Services.InventoryDocuments;
 using ImporterPOS.Domain.Services.InventoryItems;
@@ -29,6 +30,7 @@ namespace ImporterPOS.WPF.ViewModels
         private readonly IInventoryDocumentsService _invDocsService;
         private readonly IGoodService _goodService;
         private readonly IStorageService _storageService;
+        private readonly IArticleService _articleService;
         private readonly IInventoryItemBasisService _inventoryItems;
         private readonly Notifier _notifier;
         private ConcurrentDictionary<string, string> _myDictionary;
@@ -53,7 +55,7 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         ObservableCollection<ExcelArticlesListViewModel>? articleList;
 
-        public ArticlesViewModel(IExcelService excelService, ISupplierService supplierService, Notifier notifier, ConcurrentDictionary<string, string> myDictionary, IInventoryDocumentsService invDocsService, IStorageService storageService, IGoodService goodService, IInventoryItemBasisService inventoryItems)
+        public ArticlesViewModel(IExcelService excelService, ISupplierService supplierService, Notifier notifier, ConcurrentDictionary<string, string> myDictionary, IInventoryDocumentsService invDocsService, IStorageService storageService, IGoodService goodService, IInventoryItemBasisService inventoryItems, IArticleService articleService)
         {
             _excelService = excelService;
             _supplierService = supplierService;
@@ -64,6 +66,7 @@ namespace ImporterPOS.WPF.ViewModels
             _storageService = storageService;
             _goodService = goodService;
             _inventoryItems = inventoryItems;
+            _articleService = articleService;
         }
 
 
@@ -252,22 +255,18 @@ namespace ImporterPOS.WPF.ViewModels
         [RelayCommand]
         public async void ImportData()
         {
-            try
-            {
-                IsLoading = true;
-
-                await Task.Run(async () =>
-                {
+            IsLoading = true;
+            await Task.Run(() => {
                 if (articleList.Any())
                 {
-                    Guid _supplierId = await _supplierService.GetSupplierByName("Test");
-                    Guid _storageId = await _storageService.GetStorageByName("Glavno skladište");
-                    int orderNmbr = await _invDocsService.GetInventoryOrderNumber();
+                    Guid _supplierId = _supplierService.GetSupplierByName("Test").Result;
+                    Guid _storageId = _storageService.GetStorageByName("Glavno skladište").Result;
+                    int orderNmbr = _invDocsService.GetInventoryOrderNumber().Result;
 
                     var invDoc = new InventoryDocument
                     {
                         Id = Guid.NewGuid(),
-                        Order = orderNmbr + 1,
+                        Order = orderNmbr == 0 ? 0 : orderNmbr + 1,
                         Created = DateTime.Now,
                         SupplierId = _supplierId,
                         StorageId = _storageId,
@@ -275,60 +274,105 @@ namespace ImporterPOS.WPF.ViewModels
                         IsActivated = false,
                         IsDeleted = false
                     };
-                        await _invDocsService.CreateInventoryDocAsync(invDoc);
+                    _invDocsService.Create(invDoc);
 
-                        for (int i = 0; i < articleList.Count; i++)
+                    for (int i = 0; i < articleList.Count; i++)
+                    {
+                        Guid _goodId = _goodService.GetGoodByName(articleList[i].BarCode).Result;
+                        Good newGood = new Good
                         {
-                            Guid _goodId = await _goodService.GetGoodByName(articleList[i].BarCode, 1);
-                            Good newGood = new Good
+                            Id = Guid.NewGuid(),
+                            Name = articleList[i].Name,
+                            UnitId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
+                            LatestPrice = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit),
+                            Volumen = 1,
+                            Refuse = 0
+                        };
+                        if (_goodId == Guid.Empty)
+                        {
+                            _goodService.Create(newGood);
+                            _goodId = newGood.Id;
+                        }
+                        else
+                        {
+                            newGood.Id = _goodId;
+                            _goodService.Update(_goodId, newGood);
+                        }
+
+                        InventoryItemBasis newInventoryItem = new InventoryItemBasis
+                        {
+                            Id = Guid.NewGuid(),
+                            Created = DateTime.Now,
+                            Price = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit),
+                            Quantity = Helpers.Extensions.GetDecimal(articleList[i].Quantity),
+                            Total = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit) * Helpers.Extensions.GetDecimal(articleList[i].Quantity),
+                            Tax = 0,
+                            IsDeleted = false,
+                            Discriminator = "InventoryDocumentItem",
+                            InventoryDocumentId = invDoc.Id,
+                            StorageId = invDoc.StorageId,
+                            CurrentQuantity = Helpers.Extensions.GetDecimal(articleList[i].Quantity),
+                        };
+
+
+                        Guid _articleId = _articleService.GetComparedByBarcode(articleList[i].BarCode).Result;
+                        Article newArticle = new Article
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = articleList[i].Name,
+                            ArticleNumber = _articleService.GetCounter(Guid.Empty).Result,
+                            SubCategoryId = _articleService.ManageSubcategories(articleList[i].Category, articleList[i].Storage).Result,
+                            BarCode = articleList[i].BarCode,
+                            Price = Helpers.Extensions.GetDecimal(articleList[i].Price)
+                        };
+
+                        newArticle.Order = _articleService.GetCounter((Guid)newArticle.SubCategoryId).Result;
+
+
+
+                        if (_articleId == Guid.Empty)
+                        {
+                            _articleService.Create(newArticle);
+                            ArticleGood newArticleGood = new ArticleGood
                             {
                                 Id = Guid.NewGuid(),
-                                Name = articleList[i].Name,
-                                UnitId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
-                                LatestPrice = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit),
-                                Volumen = 1,
-                                Refuse = 0
-                            };
-                            if(_goodId == Guid.Empty)
-                            {
-                                await _goodService.CreateGoodAsync(newGood);
-                                _goodId = newGood.Id;
-                            }
-                            else
-                            {
-                                newGood.Id = _goodId;
-                                await _goodService.UpdateGoodAsync(newGood);
-                            }
-
-                            InventoryItemBasis newInventoryItem = new InventoryItemBasis
-                            {
-                                Id = Guid.NewGuid(),
-                                Created = DateTime.Now,
-                                Price = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit),
-                                Quantity = Helpers.Extensions.GetDecimal(articleList[i].Quantity),
-                                Total = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit) * Helpers.Extensions.GetDecimal(articleList[i].Quantity),
-                                Tax = 0,
-                                IsDeleted = false,
-                                Discriminator = "InventoryDocumentItem",
-                                InventoryDocumentId = invDoc.Id,
-                                StorageId = invDoc.StorageId,
-                                CurrentQuantity = Helpers.Extensions.GetDecimal(articleList[i].Quantity),
+                                ArticleId = newArticle.Id,
+                                GoodId = _goodId,
+                                Quantity = 1,
+                                ValidFrom = DateTime.Today,
+                                ValidUntil = DateTime.Today.AddYears(50)
                             };
 
+                            _articleService.SaveArticleGood(newArticleGood);
+                        }
+                        else
+                        {
+                            newArticle.Id = _articleId;
+                            _articleService.Update(_articleId, newArticle);
+                            if (!_articleService.CheckForNormative(_articleId).Result)
+                            {
+                                ArticleGood newArticleGood = new ArticleGood
+                                {
+                                    Id = Guid.NewGuid(),
+                                    ArticleId = newArticle.Id,
+                                    GoodId = _goodId,
+                                    Quantity = 1,
+                                    ValidFrom = DateTime.Today,
+                                    ValidUntil = DateTime.Today.AddYears(50)
+                                };
+                                _articleService.SaveArticleGood(newArticleGood);
+                            }
                         }
 
                     }
+                    _notifier.ShowSuccess("Storage successfully updated");
+                }
+            });
+            IsLoading = false;
+            articleList.Clear();
+            ArticleCollection = null;
+           
 
-
-
-                });
-
-                IsLoading = false;
-            }
-            catch
-            {
-
-            }
         }
 
     }

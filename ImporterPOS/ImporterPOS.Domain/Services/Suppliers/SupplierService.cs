@@ -1,5 +1,7 @@
-﻿using ImporterPOS.Domain.Models;
+﻿using ImporterPOS.Domain.EF;
+using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Services.Generic;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,85 +12,93 @@ namespace ImporterPOS.Domain.Services.Suppliers
 {
     public class SupplierService : ISupplierService
     {
+        private readonly DatabaseContextFactory _factory;
 
-        private readonly IRepository<Supplier> _supplierRepository;
-
-        public SupplierService(IRepository<Supplier> supplierRepository)
+        public SupplierService(DatabaseContextFactory factory)
         {
-            _supplierRepository = supplierRepository;
+            _factory = factory;
         }
 
-        public async Task<bool> CreateSupplierAsync(Supplier supplier)
+        public async Task<bool> Create(Supplier entity)
         {
-            try
+            using (DatabaseContext context = _factory.CreateDbContext())
             {
-                await _supplierRepository.AddAsync(supplier);
-                return true;
+                try
+                {
+                    context.Add(entity);
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
             }
-            catch
-            {
-                return false;
-                throw;
-            }       
-        
         }
 
-        public async Task<bool> DeleteSupplierAsync(string id)
+        public async Task<ICollection<Supplier>> Delete(Guid id)
         {
-            try
+            using (DatabaseContext context = _factory.CreateDbContext())
             {
-                await _supplierRepository.DeleteAsync(id);
-                return true;
+                Supplier? entity = await context.Suppliers.FirstOrDefaultAsync(x => x.Id == id);
+                if (entity != null)
+                    context.Remove(entity);
+
+                context.SaveChangesAsync();
+                ICollection<Supplier> entities = context.Suppliers.ToList();
+                return entities;
             }
-            catch
+        }
+
+        public async Task<Supplier> Get(string id)
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
             {
-                return false;
-            }      
+                Supplier entity = await context.Suppliers.FirstOrDefaultAsync(x => x.Id.ToString() == id);
+                return entity;
+            }
         }
 
-        public async Task<IEnumerable<Supplier>> GetAllSuppliersAsync()
+        public async Task<ICollection<Supplier>> GetAll()
         {
-            return await _supplierRepository.GetAllAsync();
-        }
-
-        public async Task<Supplier> GetSupplierByIdAsync(string id)
-        {
-            return await _supplierRepository.GetByIdAsync(id);
-        }
-
-        public async Task<Guid> GetSupplierByName(string name)
-        {
-            try
+            using (DatabaseContext context = _factory.CreateDbContext())
             {
-                // Use the generic repository to get the Supplier by name
-                var supplier = await _supplierRepository.GetByNameAsync(name, 0);
+                ICollection<Supplier> entities = await context.Suppliers.ToListAsync();
+                return entities;
+            }
+        }
 
+        public async Task<Supplier> Update(Guid id, Supplier entity)
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                entity.Id = id;
+                context.Suppliers.Update(entity);
+                await context.SaveChangesAsync();
+
+                return entity;
+            }
+        }
+
+        public Task<Guid> GetSupplierByName(string name)
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                Supplier supplier = context.Suppliers.Where(x => x.Name == name).FirstOrDefault();
                 if (supplier == null)
                 {
-                    // Create a new Supplier with the specified name and add it to the database
-                    supplier = new Supplier {Id = Guid.NewGuid(), Name = name, IsDeleted = false };
-                    await _supplierRepository.AddAsync(supplier);
+                    Supplier s = new Supplier
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = name,
+                    };
+                    context.Suppliers.Add(s);
+                    context.SaveChanges();
+                    return Task.FromResult(s.Id);
                 }
-
-                return supplier.Id;
-            }
-            catch
-            {
-                return Guid.Empty;
+                return Task.FromResult(supplier.Id);
             }
         }
 
-        public async Task<bool> UpdateSupplierAsync(Supplier supplier)
-        {
-            try
-            {
-                await _supplierRepository.UpdateAsync(supplier);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
     }
 }

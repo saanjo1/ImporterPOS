@@ -1,6 +1,7 @@
 ﻿using ImporterPOS.Domain.EF;
 using ImporterPOS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client.Extensions.Msal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,33 +51,135 @@ namespace ImporterPOS.Domain.Services.Generic
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<TEntity> GetByNameAsync(string name, int type)
+        public Task<Article> GetArticleByBarcode(string barcode)
         {
-            // Get the entity type for the current repository
-            Type entityType = typeof(TEntity);
-
-            // Get the DbSet for the specified entity type using reflection
-            PropertyInfo? dbSetProperty = _dbContext.GetType().GetProperty(entityType.Name +"s");
-            DbSet<TEntity>? dbSet = dbSetProperty.GetValue(_dbContext) as DbSet<TEntity>;
-
-            // Get the Name property for the entity type
-            PropertyInfo? nameProperty = entityType.GetProperty("Name");
-
-            IEnumerable<TEntity> query = dbSet.AsEnumerable().Where(e => nameProperty.GetValue(e).ToString() == name);
-
-            if (type == 1)
+           using (var context = new DatabaseContext())
             {
-                query = dbSet.AsEnumerable().Where(e => nameProperty.GetValue(e).ToString().Contains(name));
-            }
-            TEntity? result = query.FirstOrDefault();
-            if (result == null)
+                Article article = _dbContext.Articles.Where(x => x.BarCode == barcode).FirstOrDefault();
+                if (article != null)
+                {
+                    return Task.FromResult(article);
+                }
                 return null;
-            return result;
+            }
         }
 
-        public async Task<int> GetNumberOfRecords()
+        public Task<Models.Storage> GetStorageByName(string storage)
         {
-            return await _dbSet.CountAsync();
+            using (var context = new DatabaseContext())
+            {
+                Models.Storage _storage = _dbContext.Storages.Where(x => x.Name == storage).FirstOrDefault();
+                if (_storage != null)
+                    return Task.FromResult(_storage);
+                return null;
+            }
+
+        }
+        
+        public Task<Supplier> GetSupplierByName(string supplier)
+        {
+            using(var context = new DatabaseContext())
+            {
+                Supplier _supplier = context.Suppliers.Where(x => x.Name == supplier).FirstOrDefault();
+                if (_supplier != null)
+                    return Task.FromResult(_supplier);
+                return null;
+            }
+
+        }
+
+        public Task<int> GetNumberOfRecords()
+        {
+            return Task.FromResult(_dbSet.Count());
+        }
+
+        public Task<Guid> GetSubCategoryId(string? category, string? storage)
+        {
+            using (var context = new DatabaseContext())
+            {
+                SubCategory? _subCategory = context.SubCategories.Where(x => x.Name == category).FirstOrDefault();
+                Guid _storageId = context.Storages.Where(x => x.Name.Contains("Glavno")).FirstOrDefault().Id;
+                Guid _categoryId = this.ManageCategories(category, _storageId.ToString()).Result;
+
+                if (_subCategory == null)
+                {
+                    SubCategory subCategory = new SubCategory()
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = category,
+                        Deleted = false,
+                        StorageId = _storageId,
+                        CategoryId = _categoryId,
+                        Order = _dbContext.SubCategories.Count() + 1,
+                    };
+
+                    var id = subCategory.Id;
+                    context.SubCategories.Add(subCategory);
+                    context.SaveChanges();
+                    return Task.FromResult(id);
+                }
+                else
+                {
+                    return Task.FromResult(_subCategory.Id);
+                }
+            }
+        }
+
+        private Task<Guid> ManageCategories(string? category, string? storage)
+        {
+            using (var context = new DatabaseContext())
+            {
+                Category _category = context.Categories.Where(x => x.Name == category).FirstOrDefault();
+
+                if (_category == null)
+                {
+                    Category newCategory = new Category()
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = category,
+                        Deleted = false,
+                        Order = _dbContext.Categories.Count() + 1,
+                        StorageId = new Guid(storage)
+                    };
+                    var id = newCategory.Id;
+                    context.Categories.Add(newCategory);
+                    context.SaveChanges();
+                    return Task.FromResult(id);
+                }
+                else
+                {
+                    return Task.FromResult(_category.Id);
+                }
+            }
+        }
+
+        public async Task SaveArticleGood(ArticleGood newArticleGood)
+        {
+             using (var context = new DatabaseContext())
+            {
+                context.Add(newArticleGood);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public Task<bool> CheckForNormative(Guid articleId)
+        {
+           using (var context = new DatabaseContext())
+            {
+                var x = context.ArticleGoods.Where(x => x.ArticleId == articleId).FirstOrDefault();
+                if (x != null)
+                    return Task.FromResult(true);
+                return Task.FromResult(false);
+            }
+        }
+
+        public Task<Good?> GetGoodByName(string name)
+        {
+            using (var context = new DatabaseContext())
+            {
+                Good? good = context.Goods.FirstOrDefault(x => x.Name == name);
+                return Task.FromResult(good);
+            }
         }
     }
 

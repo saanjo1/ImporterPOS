@@ -1,5 +1,7 @@
-﻿using ImporterPOS.Domain.Models;
+﻿using ImporterPOS.Domain.EF;
+using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Services.Generic;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,62 +12,71 @@ namespace ImporterPOS.Domain.Services.InventoryItems
 {
     public class InventoryItemBasisService : IInventoryItemBasisService
     {
-        private readonly IRepository<InventoryItemBasis> _invBasisRepository;
+        private readonly DatabaseContextFactory _factory;
 
-        public InventoryItemBasisService(IRepository<InventoryItemBasis> invBasisRepository)
+        public InventoryItemBasisService(DatabaseContextFactory factory)
         {
-            _invBasisRepository = invBasisRepository;
+            _factory = factory;
         }
 
-        public async Task<bool> CreateInventoryItemBasiscAsync(InventoryItemBasis invBasis)
+        public async Task<bool> Create(InventoryItemBasis entity)
         {
-            try
+            using (DatabaseContext context = _factory.CreateDbContext())
             {
-                await _invBasisRepository.AddAsync(invBasis);
-                return true;
-            }
-            catch
-            {
-                return false;
-                throw;
-            }
-
-        }
-
-        public async Task<bool> DeleteInventoryItemBasisAsync(string id)
-        {
-            try
-            {
-                await _invBasisRepository.DeleteAsync(id);
-                return true;
-            }
-            catch
-            {
-                return false;
+                try
+                {
+                    context.Add(entity);
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
             }
         }
 
-        public async Task<IEnumerable<InventoryItemBasis>> GetAllInventoryItemBasisAsync()
+        public async Task<ICollection<InventoryItemBasis>> Delete(Guid id)
         {
-            return await _invBasisRepository.GetAllAsync();
-        }
-
-        public async Task<InventoryItemBasis> GetInventoryItemBasisByIdAsync(string id)
-        {
-            return await _invBasisRepository.GetByIdAsync(id);
-        }
-
-
-        public async Task<bool> UpdateInventoryItemBasisAsync(InventoryItemBasis invBasis)
-        {
-            try
+            using (DatabaseContext context = _factory.CreateDbContext())
             {
-                await _invBasisRepository.UpdateAsync(invBasis);
-                return true;
+                InventoryItemBasis? entity = await context.InventoryItemBases.FirstOrDefaultAsync(x => x.Id == id);
+                if (entity != null)
+                    context.Remove(entity);
+
+                context.SaveChangesAsync();
+                ICollection<InventoryItemBasis> entities = context.InventoryItemBases.ToList();
+                return entities;
             }
-            catch
+        }
+
+        public async Task<InventoryItemBasis> Get(string id)
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
             {
-                return false;
+                InventoryItemBasis? entity = await context.InventoryItemBases.FirstOrDefaultAsync(x => x.Id.ToString() == id);
+                return entity;
+            }
+        }
+
+        public async Task<ICollection<InventoryItemBasis>> GetAll()
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                ICollection<InventoryItemBasis> entities = await context.InventoryItemBases.ToListAsync();
+                return entities;
+            }
+        }
+
+        public async Task<InventoryItemBasis> Update(Guid id, InventoryItemBasis entity)
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                entity.Id = id;
+                context.InventoryItemBases.Update(entity);
+                await context.SaveChangesAsync();
+
+                return entity;
             }
         }
     }

@@ -12,6 +12,7 @@ using ImporterPOS.Domain.Services.InventoryDocuments;
 using ImporterPOS.Domain.Services.Storages;
 using ImporterPOS.Domain.Services.Goods;
 using ImporterPOS.Domain.Services.InventoryItems;
+using ImporterPOS.Domain.Services.Articles;
 
 namespace ImporterPOS.WPF.States
 {
@@ -34,11 +35,12 @@ namespace ImporterPOS.WPF.States
         private IInventoryDocumentsService _invDocsService;
         private IInventoryItemBasisService _invitemsService;
         private IStorageService _storageService;
+        private IArticleService _articleService;
         private IGoodService _goodService;
         private Notifier _notifier;
 
         public Navigator(Notifier notifier, ISupplierService supplierService, IExcelService excelService,
-            ConcurrentDictionary<string, string> myDictionary, IInventoryDocumentsService invDocsService, IStorageService storageService, IGoodService goodService, IInventoryItemBasisService invitemsService)
+            ConcurrentDictionary<string, string> myDictionary, IInventoryDocumentsService invDocsService, IStorageService storageService, IGoodService goodService, IInventoryItemBasisService invitemsService, IArticleService articleService)
         {
             _notifier = notifier;
             _excelService = excelService;
@@ -49,6 +51,7 @@ namespace ImporterPOS.WPF.States
             _storageService = storageService;
             _goodService = goodService;
             _invitemsService = invitemsService;
+            _articleService = articleService;
         }
 
 
@@ -76,7 +79,7 @@ namespace ImporterPOS.WPF.States
                         Icon = IconChar.TableList;
                         break;
                     case ViewType.ImportArticles:
-                        this.CurrentViewModel = new ArticlesViewModel(_excelService, _supplierService, _notifier, _myDictionary, _invDocsService, _storageService, _goodService, _invitemsService);
+                        this.CurrentViewModel = new ArticlesViewModel(_excelService, _supplierService, _notifier, _myDictionary, _invDocsService, _storageService, _goodService, _invitemsService, _articleService);
                         Caption = Translations.Articles;
                         Icon = IconChar.FileExcel;
                         break;

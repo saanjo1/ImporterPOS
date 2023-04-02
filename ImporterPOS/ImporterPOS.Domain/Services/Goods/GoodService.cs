@@ -1,5 +1,7 @@
-﻿using ImporterPOS.Domain.Models;
+﻿using ImporterPOS.Domain.EF;
+using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Services.Generic;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,78 +14,84 @@ namespace ImporterPOS.Domain.Services.Goods
 {
     public class GoodService : IGoodService
     {
+        private readonly DatabaseContextFactory _factory;
 
-        private readonly IRepository<Good> _goodsRepository;
-
-        public GoodService(IRepository<Good> goodsRepository)
+        public GoodService(DatabaseContextFactory factory)
         {
-            _goodsRepository = goodsRepository;
+            _factory = factory;
         }
 
-        public async Task<bool> CreateGoodAsync(Good good)
+        public async Task<bool> Create(Good entity)
         {
-            try
+            using (DatabaseContext context = _factory.CreateDbContext())
             {
-                await _goodsRepository.AddAsync(good);
-                return true;
-            }
-            catch
-            {
-                return false;
-                throw;
-            }
-        }
-
-        public async Task<bool> DeleteGoodAsync(string id)
-        {
-            try
-            {
-                await _goodsRepository.DeleteAsync(id);
-                return true;
-            }
-            catch
-            {
-                return false;
+                try
+                {
+                    context.Add(entity);
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
             }
         }
 
-        public async Task<IEnumerable<Good>> GetAllGoodsAsync()
+        public async Task<ICollection<Good>> Delete(Guid id)
         {
-            return await _goodsRepository.GetAllAsync();
-        }
-
-        public async Task<Good> GetGoodByIdAsync(string id)
-        {
-            return await _goodsRepository.GetByIdAsync(id);
-        }
-
-        public async Task<Guid> GetGoodByName(string name, int type = 0)
-        {
-            try
+            using (DatabaseContext context = _factory.CreateDbContext())
             {
-                // Use the generic repository to get the entity by name
-                var good = await _goodsRepository.GetByNameAsync(name, type);
-                if(good.Id != null)
-                    return good.Id;
-                return Guid.Empty;
-            }
-            catch
-            {
-                throw;
+                Good? entity = await context.Goods.FirstOrDefaultAsync(x => x.Id == id);
+                if (entity != null)
+                    context.Remove(entity);
+
+                context.SaveChangesAsync();
+                ICollection<Good> entities = context.Goods.ToList();
+                return entities;
             }
         }
 
-        public async Task<bool> UpdateGoodAsync(Good good)
+        public async Task<Good> Get(string id)
         {
-            try
+            using (DatabaseContext context = _factory.CreateDbContext())
             {
-                await _goodsRepository.UpdateAsync(good);
-                return true;
-            }
-            catch
-            {
-                return false;
+                Good? entity = await context.Goods.FirstOrDefaultAsync(x => x.Id.ToString() == id);
+                return entity;
             }
         }
+
+        public async Task<ICollection<Good>> GetAll()
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                ICollection<Good> entities = await context.Goods.ToListAsync();
+                return entities;
+            }
+        }
+
+        public async Task<Good> Update(Guid id, Good entity)
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                entity.Id = id;
+                context.Goods.Update(entity);
+                await context.SaveChangesAsync();
+
+                return entity;
+            }
+        }
+
+        public Task<Guid> GetGoodByName(string name)
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                Good good = context.Goods.Where(x => x.Name.Contains(name)).FirstOrDefault();
+                if (good == null)
+                    return Task.FromResult(Guid.Empty);
+                return Task.FromResult(good.Id);
+            }
+        }
+
     }
 }
