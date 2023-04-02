@@ -137,5 +137,44 @@ namespace ImporterPOS.WPF.Services.Excel
             }
 
         }
+
+        public async Task<List<string>> ListColumnNames(string sheetName)
+        {
+            var connection = WPF.Helpers.Extensions.SetOleDbConnection(ExcelFile);
+
+            _oleDbConnection = new OleDbConnection(connection);
+
+            var lines = new List<string>();
+
+            await _oleDbConnection.OpenAsync();
+
+            Command = new OleDbCommand();
+            Command.Connection = _oleDbConnection;
+            Command.CommandText = "select top 1 * from [" + sheetName + "]";
+
+            var Reader = await Command.ExecuteReaderAsync();
+
+            while (Reader.Read())
+            {
+                var fieldCount = Reader.FieldCount;
+
+                var fieldIncrementor = 1;
+                var fields = new List<string>();
+                while (fieldCount >= fieldIncrementor)
+                {
+                    string test = Reader[fieldIncrementor - 1].ToString();
+                    fields.Add(test);
+                    fieldIncrementor++;
+                }
+
+                lines = fields;
+            }
+
+            Reader.Close();
+            _oleDbConnection.Close();
+
+
+            return await Task.FromResult(lines);
+        }
     }
 }

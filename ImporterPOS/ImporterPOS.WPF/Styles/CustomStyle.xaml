@@ -27,6 +27,9 @@
     <SolidColorBrush x:Key="color14" Color="#F70000"/>
     <SolidColorBrush x:Key="color15" Color="#486b20"/>
     <SolidColorBrush x:Key="color16" Color="#6d9045"/>
+    <SolidColorBrush x:Key="color17" Color="#9A6B04"/>
+    
+    
 
 
     <!--Button colors -->
@@ -36,6 +39,8 @@
     <Color x:Key="saveButtonColor2">#1073B1</Color>
     <Color x:Key="cancelButtonColor1">#C30606</Color>
     <Color x:Key="cancelButtonColor2">#F70000</Color>
+    <Color x:Key="optionsColorPrimary1">#9A6B04</Color>
+    <Color x:Key="optionsColorSecondary1">#C58805</Color>
 
 
 
@@ -715,8 +720,32 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Width" Value="12" />
         <Setter Property="Height" Value="12" />
+    </Style>
 
 
+    <Style x:Key="optionsBtn" TargetType="Button" BasedOn="{StaticResource clearDict}">
+        <Setter Property="Background" Value="{StaticResource color17}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource optionsColorSecondary1}" Duration="0:0:0.01"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource optionsColorPrimary1}" Duration="0:0:0.01"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.ExitActions>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.7"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
 </ResourceDictionary>

@@ -52,7 +52,7 @@
                 </Grid.RowDefinitions>
 
                 <custom:LoadingSpinner Color="{StaticResource color12}" Thickness="10" IsLoading="{Binding IsLoading, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="100"/>
-                <TextBlock FontWeight="SemiBold"  Grid.Row="1" Foreground="{StaticResource color12}" FontSize="28" Margin="0 10" Text="Loading . . . "/>
+                <TextBlock  Grid.Row="1" Foreground="{StaticResource color12}" FontSize="28" FontWeight="ExtraLight" Margin="0 10" Text="Importing in progress. Please wait. "/>
 
             </Grid>
         </Border>
