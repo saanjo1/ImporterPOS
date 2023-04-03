@@ -3,10 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ImporterPOS.WPF.Views"
+             xmlns:local="clr-namespace:ImporterPOS.WPF.Views" xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp" xmlns:controls="clr-namespace:ImporterPOS.WPF.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <controls:StorageControl DataContext="{Binding Storage}" Grid.Row="0" Grid.RowSpan="3" Grid.ColumnSpan="4"/>
+
+        <ContentControl Content="{Binding Storage.CurrentDataGrid}" Grid.Row="1" Grid.Column="0" Grid.RowSpan="5" Grid.ColumnSpan="5"/>
+
+
     </Grid>
 </UserControl>

@@ -10,7 +10,7 @@
              FontWeight="ExtraLight"
              FontSize="18"
              Height="250"
-             Width="600">
+             Width="480">
 
     <Grid Background="#ebebeb">
         <Grid.ColumnDefinitions>
@@ -43,7 +43,7 @@
         </Border>
 
             <Label Content="List of sheets:" FontWeight="SemiBold"  Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" Margin="0 50"/>
-            <ComboBox ItemsSource="{Binding CurrentSheets}" SelectedItem="{Binding SelectedSheet}" x:Name="comboBoxSheets" Grid.Column="1" Grid.Row="1" Width="200" Height="30"/>
+            <ComboBox HorizontalAlignment="Center" ItemsSource="{Binding CurrentSheets}" SelectedItem="{Binding SelectedSheet}" x:Name="comboBoxSheets" Grid.Column="1" Grid.Row="1" Width="200" Height="30"/>
         
         
         <Button BorderThickness="2" Content="Save" Padding="10" Width="80" Style="{StaticResource SaveButton}" Margin="0 0 20 0" Command="{Binding SaveCommand}" Grid.Row="2" HorizontalAlignment="Right"/>
