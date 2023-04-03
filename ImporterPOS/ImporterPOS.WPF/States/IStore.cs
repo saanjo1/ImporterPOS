@@ -12,7 +12,7 @@ namespace ImporterPOS.WPF.States
         Articles,
         Economato
     }
-    public interface IStorage
+    public interface IStore
     {
         BaseViewModel? CurrentDataGrid { get; set; }
     }

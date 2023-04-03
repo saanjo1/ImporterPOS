@@ -93,5 +93,18 @@ namespace ImporterPOS.Domain.Services.Goods
             }
         }
 
+        public async Task<decimal> SumQuantityOfGoodsById(Guid goodId, Guid storageId)
+        {
+            decimal sumQuantities = 0;
+
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                sumQuantities = context.InventoryItemBases.
+                   Where(x => x.GoodId == goodId && x.StorageId == storageId).Sum(x => x.Quantity);
+
+            }
+
+            return await Task.FromResult(sumQuantities);
+        }
     }
 }

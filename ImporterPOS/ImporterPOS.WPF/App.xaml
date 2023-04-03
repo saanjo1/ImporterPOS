@@ -51,6 +51,15 @@
                 <controls:DiscountOptionsView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type modals:EditStorageViewModel}">
+                <controls:EditStorageView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewmodels:ArticleStorageViewModel}">
+                <views:ArticleStorageView/>
+            </DataTemplate>
+
+
 
 
 

@@ -21,7 +21,7 @@ namespace ImporterPOS.WPF.States
     {
 
         [ObservableProperty]
-        private BaseViewModel? _currentViewModel;
+        private BaseViewModel? currentViewModel;
 
         [ObservableProperty]
         private string caption;
@@ -69,27 +69,27 @@ namespace ImporterPOS.WPF.States
                     case ViewType.Home:
                         this.CurrentViewModel = new HomeViewModel();
                         Caption = Translations.Dashboard;
-                        Icon = IconChar.Home;
+                        this.Icon = IconChar.Home;
                         break;
                     case ViewType.Discounts:
                         this.CurrentViewModel = new DiscountViewModel(_excelService, _notifier, _myDictionary, _articleService, _ruleService);
                         Caption = Translations.Discounts;
-                        Icon = IconChar.Percentage;
+                        this.Icon = IconChar.Percentage;
                         break;
                     case ViewType.Articles:
-                        this.CurrentViewModel = new StoreViewModel();
+                        this.CurrentViewModel = new StoreViewModel(_articleService, _notifier, _storageService, _invDocsService, _goodService, _invitemsService);
                         Caption = Translations.Storages;
-                        Icon = IconChar.TableList;
+                        this.Icon = IconChar.TableList;
                         break;
                     case ViewType.ImportArticles:
                         this.CurrentViewModel = new ArticlesViewModel(_excelService, _supplierService, _notifier, _myDictionary, _invDocsService, _storageService, _goodService, _invitemsService, _articleService);
                         Caption = Translations.Articles;
-                        Icon = IconChar.FileExcel;
+                        this.Icon = IconChar.FileExcel;
                         break;
                     case ViewType.Settings:
                         this.CurrentViewModel = new SettingsViewModel(_notifier, _excelService, _myDictionary);
                         Caption = Translations.Settings;
-                        Icon = IconChar.Gear;
+                        this.Icon = IconChar.Gear;
                         break;
                     default:
                         break;
@@ -101,7 +101,7 @@ namespace ImporterPOS.WPF.States
         {
             this.CurrentViewModel = new HomeViewModel();
             Caption = Translations.Dashboard;
-            Icon = IconChar.Home;
+            this.Icon = IconChar.Home;
         }
 
 
