@@ -314,6 +314,8 @@ namespace ImporterPOS.WPF.ViewModels
                             CurrentQuantity = Helpers.Extensions.GetDecimal(articleList[i].Quantity),
                         };
 
+                        _inventoryItems.Create(newInventoryItem);
+
 
                         Guid _articleId = _articleService.GetComparedByBarcode(articleList[i].BarCode).Result;
                         Article newArticle = new Article

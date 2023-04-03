@@ -13,6 +13,7 @@ using ImporterPOS.Domain.Services.Storages;
 using ImporterPOS.Domain.Services.Goods;
 using ImporterPOS.Domain.Services.InventoryItems;
 using ImporterPOS.Domain.Services.Articles;
+using ImporterPOS.Domain.Services.Rules;
 
 namespace ImporterPOS.WPF.States
 {
@@ -37,21 +38,23 @@ namespace ImporterPOS.WPF.States
         private IStorageService _storageService;
         private IArticleService _articleService;
         private IGoodService _goodService;
+        private IRuleService _ruleService;
         private Notifier _notifier;
 
         public Navigator(Notifier notifier, ISupplierService supplierService, IExcelService excelService,
-            ConcurrentDictionary<string, string> myDictionary, IInventoryDocumentsService invDocsService, IStorageService storageService, IGoodService goodService, IInventoryItemBasisService invitemsService, IArticleService articleService)
+            ConcurrentDictionary<string, string> myDictionary, IInventoryDocumentsService invDocsService, IStorageService storageService, IGoodService goodService, IInventoryItemBasisService invitemsService, IArticleService articleService, IRuleService ruleService)
         {
             _notifier = notifier;
             _excelService = excelService;
             _supplierService = supplierService;
             _myDictionary = myDictionary;
-            DefaultLoad();
             _invDocsService = invDocsService;
             _storageService = storageService;
             _goodService = goodService;
             _invitemsService = invitemsService;
             _articleService = articleService;
+            DefaultLoad();
+            _ruleService = ruleService;
         }
 
 
@@ -69,7 +72,7 @@ namespace ImporterPOS.WPF.States
                         Icon = IconChar.Home;
                         break;
                     case ViewType.Discounts:
-                        this.CurrentViewModel = new DiscountViewModel();
+                        this.CurrentViewModel = new DiscountViewModel(_excelService, _notifier, _myDictionary, _articleService, _ruleService);
                         Caption = Translations.Discounts;
                         Icon = IconChar.Percentage;
                         break;

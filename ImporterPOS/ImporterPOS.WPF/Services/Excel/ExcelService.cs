@@ -1,6 +1,8 @@
 ﻿using ImporterPOS.WPF.Helpers;
+using ImporterPOS.WPF.Modals;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.ViewModels;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -20,6 +22,7 @@ namespace ImporterPOS.WPF.Services.Excel
     {
         public static string ExcelFile { get; set; }
         private static ObservableCollection<ExcelArticlesListViewModel> _articleQtycViewModels = new ObservableCollection<ExcelArticlesListViewModel>();
+        private static ObservableCollection<DiscountColumnsViewModel> _discountViewModels = new ObservableCollection<DiscountColumnsViewModel>();
 
 
 
@@ -175,6 +178,68 @@ namespace ImporterPOS.WPF.Services.Excel
 
 
             return await Task.FromResult(lines);
+        }
+
+        public async Task<ObservableCollection<DiscountColumnsViewModel>> ReadDiscountColumns(ConcurrentDictionary<string, string> _myDictionary, DiscountColumnsViewModel viewModel)
+        {
+            if (_discountViewModels.Count > 0)
+                _discountViewModels.Clear();
+
+            bool success = _myDictionary.TryGetValue(Translations.CurrentExcelFile, out string value);
+            bool sheet = _myDictionary.TryGetValue(Translations.CurrentExcelSheet, out string sheetValue);
+            FixedDiscountColumns templateViewModel = new FixedDiscountColumns();
+
+            if(success && sheet)
+            {
+                try
+                {
+                    string _connection =
+         @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + value + ";" +
+         @"Extended Properties='Excel 8.0;HDR=Yes;'";
+
+                    _oleDbConnection = new OleDbConnection(_connection);
+
+                    await _oleDbConnection.OpenAsync();
+
+
+                    Command = new OleDbCommand();
+                    Command.Connection = _oleDbConnection;
+                    Command.CommandText = "select * from [" + sheetValue + "]";
+
+                    System.Data.Common.DbDataReader Reader = await Command.ExecuteReaderAsync();
+
+                    while (Reader.Read())
+                    {
+
+                        _discountViewModels.Add(new DiscountColumnsViewModel
+                        {
+                            Name = Reader[templateViewModel.BarCode].ToString() + " " + Reader[templateViewModel.Item].ToString() + " " + Reader[templateViewModel.Description].ToString() + " " + Reader[templateViewModel.ColorDescription].ToString() + " " + Reader[templateViewModel.ItemSize].ToString(),
+                            Category = Reader[templateViewModel.Category].ToString(),
+                            BarCode = Reader[templateViewModel.BarCode].ToString(),
+                            Price = Reader[templateViewModel.FullPrice].ToString(),
+                            Discount = Helpers.Extensions.DisplayDiscountInPercentage(Reader[templateViewModel.Discount].ToString()),
+                            NewPrice = Reader[templateViewModel.DiscountedPrice].ToString(),
+                            Storage = Translations.Articles
+                        });
+                    }
+
+                    Reader.Close();
+                    _oleDbConnection.Close();
+
+                    return await Task.FromResult(_discountViewModels);
+
+
+                }
+                catch
+                {
+
+                    throw;
+                }
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

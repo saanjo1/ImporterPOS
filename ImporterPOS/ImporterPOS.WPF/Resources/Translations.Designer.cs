@@ -178,6 +178,15 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to First, you have to set files at Settings page..
+        /// </summary>
+        internal static string SettingsError {
+            get {
+                return ResourceManager.GetString("SettingsError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Storages.
         /// </summary>
         internal static string Storages {

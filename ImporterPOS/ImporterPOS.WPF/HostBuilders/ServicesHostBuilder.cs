@@ -4,6 +4,7 @@ using ImporterPOS.Domain.Services.Generic;
 using ImporterPOS.Domain.Services.Goods;
 using ImporterPOS.Domain.Services.InventoryDocuments;
 using ImporterPOS.Domain.Services.InventoryItems;
+using ImporterPOS.Domain.Services.Rules;
 using ImporterPOS.Domain.Services.Storages;
 using ImporterPOS.Domain.Services.Suppliers;
 using ImporterPOS.WPF.Services.Excel;
@@ -37,6 +38,9 @@ namespace ImporterPOS.WPF.HostBuilders
 
                 services.AddSingleton<BaseInterface<Good>, GoodService>();
                 services.AddSingleton<IGoodService, GoodService>();
+
+                services.AddSingleton<BaseInterface<Rule>, RuleService>();
+                services.AddSingleton<IRuleService, RuleService>();
 
 
                 services.AddSingleton<BaseInterface<InventoryDocument>, InventoryDocumentsService>();

@@ -29,7 +29,6 @@ namespace ImporterPOS.WPF.ViewModels
 
         private readonly IExcelService _excelDataService;
         private readonly IArticleService _articleDataService;
-        private readonly ICategoryService _categoryDataService;
         private readonly IRuleService _discountDataService;
         private readonly Notifier _notifier;
         private readonly ConcurrentDictionary<string, string> _myDictionary;
@@ -67,6 +66,7 @@ namespace ImporterPOS.WPF.ViewModels
 
 
 
+
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(MapDataCommand))]
         private bool isMapped;
@@ -82,10 +82,9 @@ namespace ImporterPOS.WPF.ViewModels
         private DiscountColumnsViewModel mapDataModel;
 
         [ObservableProperty]
-        private DiscountOptionsViewModel discountOptionsModel;
+        private OptionsForDiscounts discountOptionsModel;
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(ClearAllDataCommand))]
         ObservableCollection<DiscountColumnsViewModel>? articleList;
 
         [ObservableProperty]
@@ -197,13 +196,12 @@ namespace ImporterPOS.WPF.ViewModels
             }
         }
 
-        public DiscountViewModel(IExcelService excelDataService, Notifier notifier, ConcurrentDictionary<string, string> myDictionary, IArticleService articleDataService, ICategoryService categoryDataService, IRuleService discountDataService)
+        public DiscountViewModel(IExcelService excelDataService, Notifier notifier, ConcurrentDictionary<string, string> myDictionary, IArticleService articleDataService, IRuleService discountDataService)
         {
             _excelDataService = excelDataService;
             _notifier = notifier;
             _myDictionary = myDictionary;
             _articleDataService = articleDataService;
-            _categoryDataService = categoryDataService;
             _discountDataService = discountDataService;
 
         }
@@ -215,7 +213,7 @@ namespace ImporterPOS.WPF.ViewModels
 
             try
             {
-                articleList = _excelDataService.ReadFromExcel(_myDictionary, tempVm).Result;
+                articleList = _excelDataService.ReadDiscountColumns(_myDictionary, tempVm).Result;
                 if (articleList != null)
                 {
                     _notifier.ShowInformation(articleList.Count + " articles pulled. ");
@@ -250,7 +248,7 @@ namespace ImporterPOS.WPF.ViewModels
         public void Options()
         {
             this.IsOptions = true;
-            this.DiscountOptionsModel = new DiscountOptionsViewModel(this, _notifier);
+            this.DiscountOptionsModel = new OptionsForDiscounts(this, _notifier);
         }
 
         [RelayCommand]
@@ -354,12 +352,10 @@ namespace ImporterPOS.WPF.ViewModels
                                     {
                                         Id = Guid.NewGuid(),
                                         Name = articleList[i].Name,
-                                        ArticleNumber = counter++,
                                         Price = Helpers.Extensions.GetDecimal(articleList[i].Price),
                                         BarCode = articleList[i].BarCode,
                                         SubCategoryId = _articleDataService.ManageSubcategories(articleList[i]?.Category, articleList[i]?.Storage).Result,
                                         Deleted = false,
-                                        Order = counter++,
                                     };
 
                                     _articleDataService.Update(article.Id, newArticle);
@@ -470,5 +466,4 @@ namespace ImporterPOS.WPF.ViewModels
     }
 }
 
-    }
-}
+ 

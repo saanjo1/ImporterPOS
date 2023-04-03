@@ -1,4 +1,5 @@
-﻿using ImporterPOS.WPF.ViewModels;
+﻿using ImporterPOS.WPF.Modals;
+using ImporterPOS.WPF.ViewModels;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace ImporterPOS.WPF.Services.Excel
         Task<List<string>> GetListOfSheets(string excelFile);
 
         Task<ObservableCollection<ExcelArticlesListViewModel>> ReadColumnsFromExcel(ConcurrentDictionary<string, string> model, ExcelArticlesListViewModel viewModel);
+        Task<ObservableCollection<DiscountColumnsViewModel>> ReadDiscountColumns(ConcurrentDictionary<string, string> model, DiscountColumnsViewModel viewModel);
         Task<List<string>> ListColumnNames(string sheetName);
 
     }

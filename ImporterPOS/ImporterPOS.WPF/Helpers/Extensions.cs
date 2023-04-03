@@ -58,6 +58,26 @@ namespace ImporterPOS.WPF.Helpers
             return mColumnModel;
         }
 
+        public static string DisplayDiscountInPercentage(string discount)
+        {
+            bool success = double.TryParse(discount, out double result);
+            string finalResult;
+
+            if (success)
+            {
+                var percentage = result * (-100);
+                finalResult = percentage.ToString() + "%";
+            }
+            else
+            {
+                finalResult = "NO DISCOUNT";
+            }
+
+
+            return finalResult;
+        }
+
+
 
     }
 }

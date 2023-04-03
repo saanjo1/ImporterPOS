@@ -141,7 +141,7 @@
             <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding ImportItemsCommand}"  Height="51" Width="150" Margin="20 0 0 0">
                 <StackPanel Orientation="Horizontal">
                     <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Upload" Width="30" Height="30" />
-                    <TextBlock TextAlignment="Center" FontSize="20" HorizontalAlignment="Center" Margin="12 3 5 5" VerticalAlignment="Stretch" FontWeight="ExtraLight" >Import</TextBlock>
+                    <TextBlock TextAlignment="Center" FontSize="20" HorizontalAlignment="Center" Margin="10 0" VerticalAlignment="Stretch" FontWeight="ExtraLight" >Import</TextBlock>
                 </StackPanel>
             </Button>
         </StackPanel>

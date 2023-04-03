@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:ImporterPOS.WPF"
              xmlns:viewmodels="clr-namespace:ImporterPOS.WPF.ViewModels"
              xmlns:modals="clr-namespace:ImporterPOS.WPF.Modals"
-             xmlns:views="clr-namespace:ImporterPOS.WPF.Views">
+             xmlns:views="clr-namespace:ImporterPOS.WPF.Views" xmlns:controls="clr-namespace:ImporterPOS.WPF.Controls">
     
     <Application.Resources>
 
@@ -46,6 +46,11 @@
             <DataTemplate DataType="{x:Type modals:SelectExcelSheetViewModel}">
                 <views:SelectSheetView/>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type modals:OptionsForDiscounts}">
+                <controls:DiscountOptionsView/>
+            </DataTemplate>
+
 
 
 
