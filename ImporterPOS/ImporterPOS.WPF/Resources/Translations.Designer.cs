@@ -212,5 +212,14 @@ namespace ImporterPOS.WPF.Resources {
                 return ResourceManager.GetString("UpdatedSameFile", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully updated storage based on provided Excel file..
+        /// </summary>
+        internal static string WritedOffSuccessfully {
+            get {
+                return ResourceManager.GetString("WritedOffSuccessfully", resourceCulture);
+            }
+        }
     }
 }

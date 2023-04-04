@@ -5,6 +5,7 @@ using ImporterPOS.Domain.Services.Goods;
 using ImporterPOS.Domain.Services.InventoryDocuments;
 using ImporterPOS.Domain.Services.InventoryItems;
 using ImporterPOS.Domain.Services.Storages;
+using ImporterPOS.WPF.Services.Excel;
 using ImporterPOS.WPF.States;
 using ToastNotifications;
 
@@ -22,10 +23,10 @@ namespace ImporterPOS.WPF.ViewModels
         public StoreViewModel(IArticleService articleService, 
             Notifier notifier, IStorageService storageDataService,
             IInventoryDocumentsService _inventoryService, 
-            IGoodService goodService, IInventoryItemBasisService itemBasisService)
+            IGoodService goodService, IInventoryItemBasisService itemBasisService, IExcelService _excelService)
         {
             _notifier = notifier;
-            Store = new Store(_notifier, articleService, storageDataService, _inventoryService, goodService, itemBasisService);
+            Store = new Store(_notifier, articleService, storageDataService, _inventoryService, goodService, itemBasisService, _excelService);
         }
     }
 }

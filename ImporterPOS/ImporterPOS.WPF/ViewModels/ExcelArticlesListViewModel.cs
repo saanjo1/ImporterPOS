@@ -13,9 +13,6 @@ namespace ImporterPOS.WPF.ViewModels
     [ObservableObject]
     public partial class ExcelArticlesListViewModel
     {
-        private readonly Notifier _notifier;
-        private readonly IExcelService _excelService;
-        private readonly ConcurrentDictionary<string, string> _myDictionary;
 
         [ObservableProperty]
         private string? name;

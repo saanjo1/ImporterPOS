@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Identity.Client.Extensions.Msal;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -172,6 +173,54 @@ namespace ImporterPOS.Domain.Services.Articles
             {
                 context.Add(newArticleGood);
                 context.SaveChanges();
+            }
+        }
+          public Task<Good> GetGoodFromArticleByName(string name)
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                Article _article = context.Articles.Where(x=>x.Tag.Contains(name)).FirstOrDefault();
+                if (_article != null)
+                {
+                    Good _good = context.Goods.Where(x => x.Name.Contains(_article.BarCode)).FirstOrDefault();
+                    if (_good == null)
+                    {
+                        Good newGood = new Good
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = _article.Name,
+                            UnitId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
+                            LatestPrice = 0,
+                            Volumen = 1,
+                            Refuse = 0
+                        };
+                        context.Goods.Add(newGood);
+
+                        ArticleGood articleGood = new ArticleGood()
+                        {
+                            Id = Guid.NewGuid(),
+                            ArticleId = _article.Id,
+                            GoodId = newGood.Id,
+                            ValidFrom = DateTime.Now,
+                            ValidUntil = DateTime.Now.AddYears(30)
+                        };
+                        context.ArticleGoods.Add(articleGood);
+
+                        context.SaveChanges();
+
+                        return Task.FromResult(newGood);
+                    }
+                    else
+                    {
+                        return Task.FromResult(_good);
+                    }
+
+                }
+                else
+                {
+                    Good defaultGood = new Good(); // create a default instance of Good
+                    return Task.FromResult(defaultGood); // return the default instance
+                }
             }
         }
 

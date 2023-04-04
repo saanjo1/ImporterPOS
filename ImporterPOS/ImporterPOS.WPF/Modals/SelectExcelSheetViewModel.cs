@@ -3,7 +3,9 @@ using CommunityToolkit.Mvvm.Input;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.Services.Excel;
+using ImporterPOS.WPF.States;
 using ImporterPOS.WPF.ViewModels;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -21,6 +23,7 @@ namespace ImporterPOS.WPF.Modals
         private readonly Notifier _notifier;
         private readonly IExcelService _excelService;
         private readonly SettingsViewModel _settingsViewModel;
+        private readonly Store _store;
         private readonly ConcurrentDictionary<string, string> _myDictionary;
 
         public SelectExcelSheetViewModel(IExcelService excelService, SettingsViewModel settingsViewModel, Notifier notifier, ConcurrentDictionary<string, string> myDictionary)
@@ -32,6 +35,14 @@ namespace ImporterPOS.WPF.Modals
             LoadSheet();
         }
 
+        public SelectExcelSheetViewModel(IExcelService excelService, Store store, Notifier notifier, string excelFile)
+        {
+            _excelService = excelService;
+            _store = store;
+            _notifier = notifier;
+            LoadSheet(excelFile);
+        }
+
         [ObservableProperty]
         private List<string> currentSheets;
 
@@ -39,17 +50,24 @@ namespace ImporterPOS.WPF.Modals
         private string selectedSheet;
 
 
-        public void LoadSheet()
+        public void LoadSheet(string excelFile = "")
         {
-            if (_myDictionary != null && _myDictionary.TryGetValue(Translations.CurrentExcelFile, out string value))
+           if(excelFile == "")
             {
-                CurrentSheets = _excelService.GetListOfSheets(value).Result;
+                if (_myDictionary != null && _myDictionary.TryGetValue(Translations.CurrentExcelFile, out string value))
+                {
+                    CurrentSheets = _excelService.GetListOfSheets(value).Result;
+                    SelectedSheet = CurrentSheets[0];
+                }
+                else
+                {
+                    _notifier.ShowError(Translations.SelectSheetError);
+                    Cancel();
+                }
+            } else
+            {
+                CurrentSheets = _excelService.GetListOfSheets(excelFile).Result;
                 SelectedSheet = CurrentSheets[0];
-            }
-            else
-            {
-                _notifier.ShowError(Translations.SelectSheetError);
-                Cancel();
             }
         }
 
@@ -58,7 +76,8 @@ namespace ImporterPOS.WPF.Modals
         public void Cancel()
         {
             SelectedSheet = null;
-            _settingsViewModel.Cancel();
+            if(_settingsViewModel != null) 
+                _settingsViewModel.Cancel();
         }
 
 
@@ -73,7 +92,8 @@ namespace ImporterPOS.WPF.Modals
                     if (success)
                     {
                         _notifier.ShowInformation(Translations.SelectSheetSuccess);
-                        _settingsViewModel.SelectSheetSuccess = true;
+                        if(_settingsViewModel != null)
+                            _settingsViewModel.SelectSheetSuccess = true;
                     }
                     else
                         _notifier.ShowError(Translations.SelectSheetError);
@@ -86,7 +106,8 @@ namespace ImporterPOS.WPF.Modals
                     if (success)
                     {
                         _notifier.ShowInformation(Translations.SelectSheetSuccess);
-                        _settingsViewModel.SelectSheetSuccess = true;
+                        if (_settingsViewModel != null)
+                            _settingsViewModel.SelectSheetSuccess = true;
                     }
                     else
                         _notifier.ShowError(Translations.SelectSheetError);

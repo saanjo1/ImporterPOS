@@ -96,15 +96,6 @@
             </Button>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.RowSpan="3" HorizontalAlignment="Left" Margin="0 30" >
-            <Button x:Name="correctBtn" Style="{StaticResource optionsBtn}" Foreground="White" Command="{Binding MultipleEditCommand}" Height="50" Width="250">
-                <StackPanel Orientation="Horizontal">
-                    <fa:IconImage Style="{StaticResource controlButtonIcon}" Margin="10 0 0 0" Icon="FileEdit" Width="30" Height="30"/>
-                    <TextBlock TextAlignment="Center" FontSize="20" HorizontalAlignment="Center" Margin="12 8 5 5" VerticalAlignment="Stretch" FontWeight="ExtraLight" >Store correction</TextBlock>
-                </StackPanel>
-            </Button>
-        </StackPanel>
-
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Grid.Column="1">
             <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding SaveChangesCommand}" Visibility="{Binding ElementName=correctBtn, Path=DataContext.IsEnabled, Converter={StaticResource BoolToVis}}" Height="50" Width="200" Margin="10 0">
                 <StackPanel Orientation="Horizontal">

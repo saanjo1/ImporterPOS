@@ -3,6 +3,7 @@ using ImporterPOS.WPF.Modals;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.ViewModels;
 using Microsoft.Identity.Client;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -240,6 +241,53 @@ namespace ImporterPOS.WPF.Services.Excel
             else
             {
                 return null;
+            }
+        }
+
+        public async Task<ObservableCollection<WriteOffViewModel>> ReadFromWriteOff(string excelFile, string sheet)
+        {
+            try
+            {
+                string _connection =
+     @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + excelFile + ";" +
+     @"Extended Properties='Excel 8.0;HDR=Yes;'";
+
+                ObservableCollection<WriteOffViewModel> _listOfWriteOffItems = new ObservableCollection<WriteOffViewModel>();
+
+                _oleDbConnection = new OleDbConnection(_connection);
+
+                await _oleDbConnection.OpenAsync();
+
+
+                Command = new OleDbCommand();
+                Command.Connection = _oleDbConnection;
+                Command.CommandText = "select * from [" + sheet + "]";
+
+                System.Data.Common.DbDataReader Reader = await Command.ExecuteReaderAsync();
+
+                while (Reader.Read())
+                {
+
+                    _listOfWriteOffItems.Add(new WriteOffViewModel
+                    {
+                       Item = Reader["šifra proizvoda"].ToString(),
+                       Item_size = Reader["COLOR"].ToString(),
+                       Color_number = Reader["velicina"].ToString(),
+                       Quantity = Reader["kol"].ToString()
+                    });
+                }
+
+                Reader.Close();
+                _oleDbConnection.Close();
+
+                return await Task.FromResult(_listOfWriteOffItems);
+
+
+            }
+            catch
+            {
+
+                throw;
             }
         }
     }

@@ -168,4 +168,7 @@
   <data name="UpdatedSameFile" xml:space="preserve">
     <value>Same file selected.</value>
   </data>
+  <data name="WritedOffSuccessfully" xml:space="preserve">
+    <value>Successfully updated storage based on provided Excel file.</value>
+  </data>
 </root>

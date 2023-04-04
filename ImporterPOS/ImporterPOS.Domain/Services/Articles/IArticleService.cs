@@ -15,5 +15,6 @@ namespace ImporterPOS.Domain.Services.Articles
         Task<Guid> ManageSubcategories(string? category, string? storage);
         void SaveArticleGood(ArticleGood newArticleGood);
         Task<bool> CheckForNormative(Guid articleId);
+        Task<Good> GetGoodFromArticleByName(string name);
     }
 }
