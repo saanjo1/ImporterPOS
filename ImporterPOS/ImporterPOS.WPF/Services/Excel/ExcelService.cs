@@ -119,7 +119,8 @@ namespace ImporterPOS.WPF.Services.Excel
                             BarCode = Reader[templateViewModel.BarCode].ToString(),
                             Price = Reader[templateViewModel.Price].ToString(),
                             Quantity = Reader[templateViewModel.Quantity].ToString(),
-                            PricePerUnit = Reader[templateViewModel.PricePerUnit].ToString()
+                            PricePerUnit = Reader[templateViewModel.PricePerUnit].ToString(),
+                            Tag = Reader["ITEM"].ToString() + " " + Reader["ITEM_SIZE"].ToString() + " " + Reader["COLOR"].ToString()
                         });
                     }
 

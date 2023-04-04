@@ -57,6 +57,8 @@ namespace ImporterPOS.WPF.Modals
         [ObservableProperty]
         private decimal? latestPrice;
 
+        [ObservableProperty]
+        private bool isRowEdited;
 
 
 
@@ -70,7 +72,7 @@ namespace ImporterPOS.WPF.Modals
             }
             else
             {
-
+                isRowEdited = true;
                 InventoryItemBasis newInventoryItem = new InventoryItemBasis()
                 {
                     Id = Guid.NewGuid(),

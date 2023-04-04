@@ -41,6 +41,9 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         private string? pricePerUnit;
 
+        [ObservableProperty]
+        private string? tag;
+
 
     }
 }

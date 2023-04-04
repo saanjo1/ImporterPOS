@@ -15,6 +15,10 @@
             <Label Content="Choose your storage:" FontWeight="Light" FontSize="22" Margin="0 70 30 70" Foreground="White" HorizontalAlignment="Left"/>
             <ComboBox FontSize="18"  HorizontalAlignment="Left" ItemsSource="{Binding CurrentStorages}" SelectedItem="{Binding SelectedStorage}" x:Name="comboBoxSheets" Width="200" Height="30"/>
         </StackPanel>
-        <Button HorizontalAlignment="Right" Style="{StaticResource settingsClickButton}" x:Name="btnSheet" Content="Submit" Command="{Binding EditCurrentDataGridCommand}" CommandParameter="{Binding ElementName=comboBoxSheets, Path=SelectedItem}" Width="80" Height="35"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button HorizontalAlignment="Right" Style="{StaticResource settingsClickButton}" x:Name="btnSheet" Content="Submit" Command="{Binding EditCurrentDataGridCommand}" CommandParameter="{Binding ElementName=comboBoxSheets, Path=SelectedItem}" Width="80" Height="35" Margin="20 0"/>
+            <Button HorizontalAlignment="Right" Style="{StaticResource SaveButton}" x:Name="writeOff" Content="Write off articles" Command="{Binding EditCurrentDataGridCommand}" CommandParameter="{Binding ElementName=comboBoxSheets, Path=SelectedItem}" Width="120" Height="35"/>
+        </StackPanel>
     </Grid>
 </UserControl>

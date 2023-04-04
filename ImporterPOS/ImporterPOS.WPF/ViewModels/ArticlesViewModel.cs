@@ -326,12 +326,11 @@ namespace ImporterPOS.WPF.ViewModels
                             ArticleNumber = _articleService.GetCounter(Guid.Empty).Result,
                             SubCategoryId = _articleService.ManageSubcategories(articleList[i].Category, articleList[i].Storage).Result,
                             BarCode = articleList[i].BarCode,
-                            Price = Helpers.Extensions.GetDecimal(articleList[i].Price)
+                            Price = Helpers.Extensions.GetDecimal(articleList[i].Price),
+                            Tag = articleList[i].Tag
                         };
 
                         newArticle.Order = _articleService.GetCounter((Guid)newArticle.SubCategoryId).Result;
-
-
 
                         if (_articleId == Guid.Empty)
                         {
