@@ -19,13 +19,13 @@ namespace ImporterPOS.WPF.ViewModels
         public IStore Store { get; set; }
 
 
-        public StoreViewModel(IArticleService articleService, Notifier notifier, IStorageService storageDataService, IInventoryDocumentsService _inventoryService, IGoodService goodService, IInventoryItemBasisService itemBasisService)
+        public StoreViewModel(IArticleService articleService, 
+            Notifier notifier, IStorageService storageDataService,
+            IInventoryDocumentsService _inventoryService, 
+            IGoodService goodService, IInventoryItemBasisService itemBasisService)
         {
             _notifier = notifier;
             Store = new Store(_notifier, articleService, storageDataService, _inventoryService, goodService, itemBasisService);
         }
-
-
-
     }
 }

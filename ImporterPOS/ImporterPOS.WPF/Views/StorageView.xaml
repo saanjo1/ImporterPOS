@@ -16,7 +16,7 @@
 
         <controls:StorageControl DataContext="{Binding Store}" Grid.Row="0" Grid.RowSpan="3"/>
 
-        <ContentControl Content="{Binding Store.CurrentDataGrid}" Grid.Row="1" Grid.Column="0" Grid.RowSpan="5" Grid.ColumnSpan="5"/>
+        <ContentControl Content="{Binding Store.CurrentDataGrid}" Grid.Row="1" Grid.Column="0" Grid.RowSpan="5" Grid.ColumnSpan="5" Margin="30 140"/>
 
 
     </Grid>

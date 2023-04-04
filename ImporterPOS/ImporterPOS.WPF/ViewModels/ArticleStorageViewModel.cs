@@ -12,8 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using ToastNotifications;
@@ -29,9 +27,10 @@ namespace ImporterPOS.WPF.ViewModels
         private readonly IInventoryDocumentsService _inventoryService;
         private readonly IInventoryItemBasisService _invItemService;
         private readonly IGoodService _goodService;
+        private readonly string storeType;
         private Notifier _notifier;
 
-        public ArticleStorageViewModel(IArticleService articleService, IStorageService storageService, Notifier notifier, IInventoryDocumentsService inventoryService, IGoodService goodService, IInventoryItemBasisService invItemService)
+        public ArticleStorageViewModel(IArticleService articleService, string _storeType, IStorageService storageService, Notifier notifier, IInventoryDocumentsService inventoryService, IGoodService goodService, IInventoryItemBasisService invItemService)
         {
             _articleService = articleService;
             _storageService = storageService;
@@ -39,6 +38,8 @@ namespace ImporterPOS.WPF.ViewModels
             _inventoryService = inventoryService;
             _goodService = goodService;
             _invItemService = invItemService;
+            storeType = _storeType;
+            LoadData();
         }
 
         [ObservableProperty]
@@ -100,14 +101,8 @@ namespace ImporterPOS.WPF.ViewModels
 
             await Task.Run(() =>
             {
-                if (StorageName == "Articles")
-                {
-                    ArticleList = StorageQuantityCounter("Articles").Result;
-                }
-                else
-                {
-                    ArticleList = StorageQuantityCounter("Economato").Result;
-                }
+                ArticleList = StorageQuantityCounter(storeType).Result;
+
                 ArticleCollection = CollectionViewSource.GetDefaultView(ArticleList);
                 Count = ArticleList.Count;
             });
@@ -122,6 +117,12 @@ namespace ImporterPOS.WPF.ViewModels
                 IsEditOpen = false;
         }
 
+        [RelayCommand]
+        public void EditArticle(GoodsArticlesViewModel parameter)
+        {
+            IsEditOpen = true;
+            this.EditArticleViewModel = new EditStorageViewModel(parameter, _notifier, _storageService, this, inventoryDocument, _invItemService);
+        }
 
 
         [RelayCommand]

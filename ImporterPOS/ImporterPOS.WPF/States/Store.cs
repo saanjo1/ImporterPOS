@@ -7,6 +7,9 @@ using ImporterPOS.Domain.Services.InventoryDocuments;
 using ImporterPOS.Domain.Services.InventoryItems;
 using ImporterPOS.Domain.Services.Storages;
 using ImporterPOS.WPF.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Windows.Documents;
 using ToastNotifications;
 
 namespace ImporterPOS.WPF.States
@@ -23,6 +26,12 @@ namespace ImporterPOS.WPF.States
         private readonly IGoodService _goodService;
         private readonly IInventoryDocumentsService _inventoryService;
 
+        [ObservableProperty]
+        private List<string> currentStorages;
+
+        [ObservableProperty]
+        private string selectedStorage;
+
         public Store(Notifier notifier, IArticleService articleService, IStorageService storageDataService, IInventoryDocumentsService inventoryService, IGoodService goodService, IInventoryItemBasisService invItemService)
         {
             _notifier = notifier;
@@ -31,21 +40,28 @@ namespace ImporterPOS.WPF.States
             _inventoryService = inventoryService;
             _goodService = goodService;
             _invItemService = invItemService;
+            LoadStorages();
+
+        }
+
+        private void LoadStorages()
+        {
+            CurrentStorages = new List<string>();
+            CurrentStorages.Add("Glavno skladište");
+
+            SelectedStorage = CurrentStorages[0];
         }
 
         [RelayCommand]
         public void EditCurrentDataGrid(object? parameter)
         {
-            if (parameter is StorageType)
+            if (parameter is string)
             {
-                StorageType storeType = (StorageType)parameter;
+                string storeType = (string)parameter;
                 switch (storeType)
                 {
-                    case StorageType.Articles:
-                        this.CurrentDataGrid = new ArticleStorageViewModel(_articleService, _storageDataService, _notifier, _inventoryService, _goodService, _invItemService);
-                        break;
-                    case StorageType.Economato:
-                        this.CurrentDataGrid = new ArticleStorageViewModel(_articleService, _storageDataService, _notifier, _inventoryService, _goodService, _invItemService);
+                    case "Glavno skladište":
+                        this.CurrentDataGrid = new ArticleStorageViewModel(_articleService, storeType, _storageDataService, _notifier, _inventoryService, _goodService, _invItemService);
                         break;
                     default:
                         break;

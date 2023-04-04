@@ -7,11 +7,6 @@ using System.Threading.Tasks;
 
 namespace ImporterPOS.WPF.States
 {
-    public enum StorageType
-    {
-        Articles,
-        Economato
-    }
     public interface IStore
     {
         BaseViewModel? CurrentDataGrid { get; set; }

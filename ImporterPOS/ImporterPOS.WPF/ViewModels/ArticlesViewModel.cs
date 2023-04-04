@@ -307,6 +307,7 @@ namespace ImporterPOS.WPF.ViewModels
                             Quantity = Helpers.Extensions.GetDecimal(articleList[i].Quantity),
                             Total = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit) * Helpers.Extensions.GetDecimal(articleList[i].Quantity),
                             Tax = 0,
+                            GoodId = _goodId,
                             IsDeleted = false,
                             Discriminator = "InventoryDocumentItem",
                             InventoryDocumentId = invDoc.Id,
@@ -350,6 +351,8 @@ namespace ImporterPOS.WPF.ViewModels
                         else
                         {
                             newArticle.Id = _articleId;
+                            newArticle.Order = _articleService.Get(_articleId.ToString()).Result.Order;
+                            newArticle.ArticleNumber = _articleService.Get(_articleId.ToString()).Result.ArticleNumber;
                             _articleService.Update(_articleId, newArticle);
                             if (!_articleService.CheckForNormative(_articleId).Result)
                             {
