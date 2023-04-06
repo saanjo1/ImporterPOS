@@ -197,7 +197,7 @@ namespace ImporterPOS.WPF.Services.Excel
                 {
                     string _connection =
          @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + value + ";" +
-         @"Extended Properties='Excel 8.0;HDR=Yes;'";
+         @"Extended Properties='Excel 8.0;HDR=Yes;";
 
                     _oleDbConnection = new OleDbConnection(_connection);
 
@@ -250,7 +250,7 @@ namespace ImporterPOS.WPF.Services.Excel
             {
                 string _connection =
      @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + excelFile + ";" +
-     @"Extended Properties='Excel 8.0;HDR=Yes;'";
+     @"Extended Properties='Excel 8.0;HDR=Yes;IMEX=1'";
 
                 ObservableCollection<WriteOffViewModel> _listOfWriteOffItems = new ObservableCollection<WriteOffViewModel>();
 

@@ -113,27 +113,27 @@ namespace ImporterPOS.WPF.States
                         WriteOffViewModel vm = new WriteOffViewModel();
 
                         WriteOffVM = _excelService.ReadFromWriteOff(ExcelFile, SelectedSheet).Result;
+                        InventoryDocument invDocument = new InventoryDocument
+                        {
+                            Id = Guid.NewGuid(),
+                            Created = DateTime.Now,
+                            IsActivated = true,
+                            IsDeleted = false,
+                            StorageId = _storageId,
+                            SupplierId = null,
+                            Type = 2
+                        };
 
                         foreach (var item in WriteOffVM)
                         {
-                            string name = item.Item + " " + item.Color_number + " " + item.Item_size;
-                            InventoryDocument invDocument = new InventoryDocument
-                            {
-                                Id = Guid.NewGuid(),
-                                Created = DateTime.Now,
-                                IsActivated = true,
-                                IsDeleted = false,
-                                StorageId = _storageId,
-                                SupplierId = null,
-                                Type = 2
-                            };
+                            _inventoryService.Create(invDocument);
 
+                            string name = item.Item + " " + item.Color_number + " " + item.Item_size;
+                          
                             Good? _good = _articleService.GetGoodFromArticleByName(name).Result;
 
                             if (_good.Id != Guid.Empty)
                             {
-                                _inventoryService.Create(invDocument);
-
                                 InventoryItemBasis inventoryItemBasis = new InventoryItemBasis
                                 {
                                     Id = Guid.NewGuid(),
@@ -146,7 +146,7 @@ namespace ImporterPOS.WPF.States
                                     InventoryDocumentId = invDocument.Id,
                                     GoodId = _good.Id,
                                     Price = _good.LatestPrice,
-                                    Total = 0,
+                                    Total = Helpers.Extensions.GetDecimal(item.Quantity) * _good.LatestPrice,
                                     IsDeleted = false,
                                     Refuse = 0
                                 };
