@@ -14,6 +14,10 @@
     </UserControl.Resources>
 
     <Grid Margin="10 70">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -77,6 +81,30 @@
 
                 <Label Grid.Column="0" Grid.Row="3" Content="Your port:" Style="{StaticResource settingsControlLabel}"></Label>
                 <TextBox Grid.Column="1" Grid.Row="3" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding Port, Mode=TwoWay}"/>
+
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label HorizontalAlignment="Left" FontSize="18" FontWeight="SemiBold" Foreground="White" Content="Excel settings:" Margin="0 0 0 20"/>
+
+
+                <Label HorizontalAlignment="Left" Grid.Row="1" Content="Connect article to goods" Style="{StaticResource settingsControlLabel}"></Label>
+                <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Margin="10 0" Style="{StaticResource settingsClickButton}" Content="Select" Command="{Binding ConnectArticleToGoodsCommand}" Width="80" Height="35"/>
+                <fa:IconImage HorizontalAlignment="Left" Grid.Row="1" Grid.Column="2" Icon="Check" Foreground="LightGreen" Height="20" Width="20" Visibility="{Binding SelectFileSuccess, Converter={StaticResource BoolToVis}}"/>
+
 
             </Grid>
         </Border>

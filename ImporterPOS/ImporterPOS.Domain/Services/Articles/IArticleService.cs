@@ -16,5 +16,7 @@ namespace ImporterPOS.Domain.Services.Articles
         void SaveArticleGood(ArticleGood newArticleGood);
         Task<bool> CheckForNormative(Guid articleId);
         Task<Good> GetGoodFromArticleByName(string name);
+
+        Task<string> ConnectArticlesToGoods();
     }
 }

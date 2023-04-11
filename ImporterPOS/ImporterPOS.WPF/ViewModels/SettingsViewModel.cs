@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ImporterPOS.Domain.Models;
+using ImporterPOS.Domain.Services.Articles;
 using ImporterPOS.WPF.Modals;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.Services.Excel;
@@ -24,6 +25,7 @@ namespace ImporterPOS.WPF.ViewModels
     {
         private readonly Notifier _notifier;
         private IExcelService _excelService;
+        private IArticleService _articleService;
         private ConcurrentDictionary<string, string> _myDictionary;
 
 
@@ -51,11 +53,12 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         private bool selectFileSuccess;
 
-        public SettingsViewModel(Notifier notifier, IExcelService excelService, ConcurrentDictionary<string, string> myDictionary)
+        public SettingsViewModel(Notifier notifier, IExcelService excelService, ConcurrentDictionary<string, string> myDictionary, IArticleService articleService)
         {
             _notifier = notifier;
             _myDictionary = myDictionary;
             _excelService = excelService;
+            _articleService = articleService;
             GetDatabaseInfo();
         }
 
@@ -100,6 +103,19 @@ namespace ImporterPOS.WPF.ViewModels
                 SelectFileSuccess = false;
             }
 
+        }
+
+        [RelayCommand]
+        public void ConnectArticleToGoods()
+        {
+            try
+            {
+                _notifier.ShowInformation(_articleService.ConnectArticlesToGoods().Result);
+            }
+            catch
+            {
+                _notifier.ShowError("Can't connect articles to goods.");
+            }
         }
 
         [RelayCommand]

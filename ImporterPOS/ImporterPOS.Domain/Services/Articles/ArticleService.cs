@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Identity.Client.Extensions.Msal;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -235,5 +236,51 @@ namespace ImporterPOS.Domain.Services.Articles
             }
         }
 
+        public Task<string> ConnectArticlesToGoods()
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                try
+                {
+                    int articlesCount = context.Articles.Count();
+                    int goodsCount = context.Goods.Count();
+
+                    int successCounter = 0;
+                    if (goodsCount > 0 && articlesCount > 0)
+                    {
+                        foreach (var good in context.Goods)
+                        {
+                            foreach (var article in context.Articles)
+                            {
+                                if (good.Name.Contains(article.BarCode))
+                                {
+                                    ArticleGood newArticleGood = new ArticleGood
+                                    {
+                                        ArticleId = article.Id,
+                                        GoodId = good.Id,
+                                        ValidFrom = DateTime.Now,
+                                        ValidUntil = DateTime.Now.AddYears(50),
+                                        Quantity = 1,
+                                        Id = Guid.NewGuid()
+                                    };
+
+                                    context.Add(newArticleGood);
+                                    successCounter++;
+                                }
+                            }
+                        }
+                    }
+
+                    string result = successCounter + "/" + articlesCount + " articles connected.";
+
+                    return Task.FromResult(result);
+                }
+                catch
+                {
+                    return Task.FromResult("An error occurred while connecting articles to goods.");
+                }
+
+            }
+        }
     }
 }
