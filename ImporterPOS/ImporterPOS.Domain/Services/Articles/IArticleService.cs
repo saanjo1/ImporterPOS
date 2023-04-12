@@ -18,5 +18,9 @@ namespace ImporterPOS.Domain.Services.Articles
         Task<Good> GetGoodFromArticleByName(string name);
 
         Task<string> ConnectArticlesToGoods();
+        Task<decimal> GetTotalSellingPrice(InventoryDocument inventoryDocument);
+
+        Task<decimal> GetTotalBasePrices(InventoryDocument inventoryDocument); 
+
     }
 }

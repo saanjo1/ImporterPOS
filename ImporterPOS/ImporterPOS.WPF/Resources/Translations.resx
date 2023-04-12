@@ -135,6 +135,9 @@
   <data name="ErrorMessage" xml:space="preserve">
     <value>An error occurred. Please try again.</value>
   </data>
+  <data name="InventoryDocuments" xml:space="preserve">
+    <value>Inventory documents</value>
+  </data>
   <data name="OpenDialogTitle" xml:space="preserve">
     <value>Please select Excel file</value>
   </data>

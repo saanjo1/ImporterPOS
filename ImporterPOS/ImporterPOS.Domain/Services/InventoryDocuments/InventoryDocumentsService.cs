@@ -2,6 +2,7 @@
 using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Services.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -88,5 +89,15 @@ namespace ImporterPOS.Domain.Services.InventoryDocuments
             }
         }
 
+
+        public Task<decimal> GetTotalInventoryItems(string _documentId)
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                decimal? total = context.InventoryItemBases.Where(x => x.InventoryDocumentId.ToString() == _documentId).Sum(x => x.Total);
+
+                return Task.FromResult(Math.Round((decimal)total, 2));
+            }
+        }
     }
 }

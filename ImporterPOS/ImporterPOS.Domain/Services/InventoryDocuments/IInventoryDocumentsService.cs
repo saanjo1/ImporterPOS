@@ -11,5 +11,7 @@ namespace ImporterPOS.Domain.Services.InventoryDocuments
     public interface IInventoryDocumentsService : BaseInterface<InventoryDocument>
     {
         Task<int> GetInventoryOrderNumber();
+
+        Task<decimal> GetTotalInventoryItems(string _documentId);
     }
 }

@@ -67,7 +67,7 @@ namespace ImporterPOS.WPF.States
                 switch (viewType)
                 {
                     case ViewType.Home:
-                        this.CurrentViewModel = new HomeViewModel();
+                        this.CurrentViewModel = new HomeViewModel(_invDocsService, _supplierService, _articleService);
                         Caption = Translations.Dashboard;
                         this.Icon = IconChar.Home;
                         break;
@@ -99,7 +99,7 @@ namespace ImporterPOS.WPF.States
 
         public void DefaultLoad()
         {
-            this.CurrentViewModel = new HomeViewModel();
+            this.CurrentViewModel = new HomeViewModel(_invDocsService, _supplierService, _articleService);
             Caption = Translations.Dashboard;
             this.Icon = IconChar.Home;
         }
