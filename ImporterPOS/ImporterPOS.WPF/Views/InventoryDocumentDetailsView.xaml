@@ -44,13 +44,13 @@
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Artikal" Binding="{Binding Name}" IsReadOnly="true" Width="*" FontWeight="Bold" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTextColumn Header="Količina" Binding="{Binding Quantity}" IsReadOnly="true" Width="*" FontWeight="Bold" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTextColumn Header="Ulazna cijena" Binding="{Binding PurchasePrice}" IsReadOnly="true" Width="*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTextColumn Header="Izlazna cijena" Binding="{Binding SoldPrice}" IsReadOnly="true" Width="*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTextColumn Header="Iznos osnovica" Binding="{Binding BasePrice}" IsReadOnly="true" Width="*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTextColumn Header="Iznos poreza" Binding="{Binding Taxes}" IsReadOnly="true" Width="*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTextColumn Header="RUC" Binding="{Binding Ruc}" IsReadOnly="true" Width="*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                <DataGridTextColumn Header="Artikal" Binding="{Binding Name}" IsReadOnly="true" Width="500" FontWeight="Bold" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                <DataGridTextColumn Header="Količina" Binding="{Binding Quantity}" IsReadOnly="true" Width="100" FontWeight="Bold" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                <DataGridTextColumn Header="Ulazna cijena" Binding="{Binding PurchasePrice}" IsReadOnly="true" Width="auto" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                <DataGridTextColumn Header="Izlazna cijena" Binding="{Binding SoldPrice}" IsReadOnly="true" Width="auto" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                <DataGridTextColumn Header="Iznos osnovica" Binding="{Binding BasePrice}" IsReadOnly="true" Width="auto" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                <DataGridTextColumn Header="Iznos poreza" Binding="{Binding Taxes}" IsReadOnly="true" Width="auto" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                <DataGridTextColumn Header="RUC" Binding="{Binding Ruc}" IsReadOnly="true" Width="200" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
             </DataGrid.Columns>
         </DataGrid>
 

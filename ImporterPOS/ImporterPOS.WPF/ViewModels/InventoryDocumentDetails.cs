@@ -69,20 +69,21 @@ namespace ImporterPOS.WPF.ViewModels
             {
                 var article = _articleService.GetPriceByGood(invitemBases.GoodId).Result;
 
-                var soldPrice = article.Price * invitemBases.Quantity;
-                var basePrice = Helpers.Extensions.GetBasePrice(soldPrice, 25);
-                var purchasePrice = invitemBases.Total;
-                var taxes = soldPrice - basePrice;
-                var name = article.Name;
+                var _soldPrice = article.Price * invitemBases.Quantity;
+                var _basePrice = Math.Round(Helpers.Extensions.GetBasePrice(_soldPrice, 25), 2);
+                var _purchasePrice = (decimal)invitemBases.Total;
+                var _taxes = _soldPrice - _basePrice;
+                var _name = article.Name;
 
                 listOfItems.Add(new InventoryDocumentsDetails
                 {
-                    Name = name,
+                    Name = _name,
                     Quantity = invitemBases.Quantity,
-                    PurchasePrice = (decimal)purchasePrice,
-                    Taxes = taxes,
-                    BasePrice = basePrice,
-                    SoldPrice = soldPrice
+                    PurchasePrice = _purchasePrice,
+                    Taxes = Math.Round(_taxes, 2),
+                    BasePrice = _basePrice,
+                    SoldPrice = Math.Round(_soldPrice, 2),
+                    Ruc = Math.Round((_basePrice - _purchasePrice), 2)
                 });
             }
 
