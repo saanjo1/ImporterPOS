@@ -51,6 +51,11 @@
                 <controls:DiscountOptionsView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewmodels:InventoryDocumentsDetails}">
+                <views:InventoryDocumentDetailsView/>
+            </DataTemplate>
+            
+            
             <DataTemplate DataType="{x:Type modals:EditStorageViewModel}">
                 <controls:EditStorageView/>
             </DataTemplate>

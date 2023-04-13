@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Services.Articles;
 using ImporterPOS.Domain.Services.InventoryDocuments;
+using ImporterPOS.Domain.Services.InventoryItems;
 using ImporterPOS.Domain.Services.Suppliers;
 using ImporterPOS.WPF.Resources;
 using System;
@@ -22,6 +23,7 @@ namespace ImporterPOS.WPF.ViewModels
     {
 
         private readonly IInventoryDocumentsService _invService;
+        private readonly IInventoryItemBasisService _invItemService;
         private readonly ISupplierService _supplierDataService;
         private readonly IArticleService _articleService;
 
@@ -33,24 +35,25 @@ namespace ImporterPOS.WPF.ViewModels
         private bool isLoading;
 
         [ObservableProperty]
-        private bool isShowDetailsOpen;
+        private bool isShowInventoryDetails;
 
         [ObservableProperty]
         private ObservableCollection<InventoryDocumentsViewModel> listOfInventories;
 
-        //[ObservableProperty]
-        //private InventoryDocumentsDetails inventoryDocumentDetails;
+        [ObservableProperty]
+        private InventoryDocumentsDetails inventoryDocumentDetails;
 
 
         [ObservableProperty]
         private ICollectionView inventoryCollection;
 
 
-        public HomeViewModel(IInventoryDocumentsService invService, ISupplierService supplierDataService, IArticleService articleService)
+        public HomeViewModel(IInventoryDocumentsService invService, ISupplierService supplierDataService, IArticleService articleService, IInventoryItemBasisService invItemService)
         {
             _invService = invService;
             _supplierDataService = supplierDataService;
             _articleService = articleService;
+            this._invItemService = invItemService;
             Title = Translations.InventoryDocuments;
             LoadInventoryDocuments();
         }
@@ -81,6 +84,7 @@ namespace ImporterPOS.WPF.ViewModels
                         SoldPrice = soldPrice,
                         BasePrice = basePrice,
                         Taxes = taxes,
+                        Id = inventoryDocument.Id.ToString(),
                         Ruc = basePrice - purchasePrice
                     });
                 }
@@ -94,8 +98,8 @@ namespace ImporterPOS.WPF.ViewModels
         [RelayCommand]
         public void ShowInventoryDetails(InventoryDocumentsViewModel parameter)
         {
-            //IsShowDetailsOpen = true;
-            //this.InventoryDocumentDetails = new InventoryDocumentsDetails(parameter);
+            IsShowInventoryDetails = true;
+            this.InventoryDocumentDetails = new InventoryDocumentsDetails(parameter.Id, _invItemService, _articleService);
         }
 
 
@@ -107,6 +111,7 @@ namespace ImporterPOS.WPF.ViewModels
 
             // postavi filter za odabir datoteke na Excel datoteke
             dialog.Filter = "Excel Files|*.xlsx";
+            dialog.FileName = "Inventory-Documents-" + DateTime.Now.ToString("ddMMyyyyhhmm");
 
             // prikaži dijalog za odabir mjesta za spremanje datoteke i dohvatimo rezultat
             bool? result = dialog.ShowDialog();
@@ -118,12 +123,18 @@ namespace ImporterPOS.WPF.ViewModels
                 {
                     var worksheet = workbook.Worksheets.Add("InventoryDocuments");
 
+                    worksheet.Column(1).Width = 20;
+                    worksheet.Columns(2, 7).Width = 15;
+
+                    var headerRow = worksheet.Row(1);
+                    headerRow.Style.Font.Bold = true;
+
                     // postavimo zaglavlje tablice
                     worksheet.Cell(1, 1).Value = "Datum i vrijeme";
                     worksheet.Cell(1, 2).Value = "Dokument";
                     worksheet.Cell(1, 3).Value = "Ulazna cijena";
                     worksheet.Cell(1, 4).Value = "Izlazna cijena";
-                    worksheet.Cell(1, 5).Value = "Iznos osniovice";
+                    worksheet.Cell(1, 5).Value = "Iznos osnovice";
                     worksheet.Cell(1, 6).Value = "Iznos poreza";
                     worksheet.Cell(1, 7).Value = "RUC";
 

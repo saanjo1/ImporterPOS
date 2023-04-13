@@ -10,5 +10,6 @@ namespace ImporterPOS.Domain.Services.InventoryItems
 {
     public interface IInventoryItemBasisService : BaseInterface<InventoryItemBasis>
     { 
+        Task<ICollection<InventoryItemBasis>> GetItemsByInventoryId(string inventoryId);
     }
 }

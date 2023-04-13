@@ -77,7 +77,12 @@ namespace ImporterPOS.WPF.Helpers
             return finalResult;
         }
 
+        public static decimal GetBasePrice(decimal price, decimal v)
+        {
+            decimal basePrice = price / (1 + (v / 100));
 
+            return basePrice;
 
+        }
     }
 }

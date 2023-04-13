@@ -68,6 +68,15 @@ namespace ImporterPOS.Domain.Services.InventoryItems
             }
         }
 
+        public Task<ICollection<InventoryItemBasis>> GetItemsByInventoryId(string inventoryId)
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                ICollection<InventoryItemBasis> entities = context.InventoryItemBases.Where(x=>x.InventoryDocumentId.ToString() == inventoryId).ToList();
+                return Task.FromResult(entities);
+            }
+        }
+
         public async Task<InventoryItemBasis> Update(Guid id, InventoryItemBasis entity)
         {
             using (DatabaseContext context = _factory.CreateDbContext())

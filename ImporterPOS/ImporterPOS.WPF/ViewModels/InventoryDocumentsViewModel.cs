@@ -11,6 +11,10 @@ namespace ImporterPOS.WPF.ViewModels
     [ObservableObject]
     public partial class InventoryDocumentsViewModel : BaseViewModel
     {
+
+        [ObservableProperty]
+        private string id;
+
         [ObservableProperty]
         private string dateCreated;
 

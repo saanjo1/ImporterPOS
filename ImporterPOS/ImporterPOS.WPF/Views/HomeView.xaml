@@ -27,7 +27,7 @@
         </Grid.ColumnDefinitions>
 
         <modalcontrol:Modal Panel.ZIndex="21" Background="Transparent" IsOpen="{Binding IsShowInventoryDetails}" Margin="50 0 0 0" Height="500" Grid.RowSpan="3" Grid.ColumnSpan="5">
-            <ContentControl Content="{Binding EditArticleViewModel}" Background="{StaticResource panelActiveColor}"/>
+            <ContentControl Content="{Binding InventoryDocumentDetails}" Background="{StaticResource panelActiveColor}"/>
         </modalcontrol:Modal>
 
 
@@ -111,7 +111,7 @@
                 <DataGridTextColumn Header="Iznos osnovica" Binding="{Binding BasePrice}" IsReadOnly="true" Width="*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
                 <DataGridTextColumn Header="Iznos poreza" Binding="{Binding Taxes}" IsReadOnly="true" Width="*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
                 <DataGridTextColumn Header="RUC" Binding="{Binding Ruc}" IsReadOnly="true" Width="*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="*">
+                <DataGridTemplateColumn Header="Operacije" IsReadOnly="True" Width="*">
                     <DataGridTemplateColumn.HeaderStyle>
                         <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridColumnHeaderStyle1}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -122,7 +122,7 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                 <Button Margin="15 0 0 0" Style="{StaticResource gridEditButton}" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.ShowInventoryDetailsCommand}" CommandParameter="{Binding}">
-                                    <TextBlock Text="Details"/>
+                                    <TextBlock Text="Detalji" Padding="5"/>
                                 </Button>
                             </StackPanel>
                         </DataTemplate>
@@ -132,13 +132,12 @@
         </DataGrid>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="3" Margin="50 2">
-            <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding ExportDataCommand}"  Height="50" Width="130" Margin="20 0 0 0">
+            <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding ExportDataCommand}"  Height="50" Width="170" Margin="20 0 0 0">
                 <StackPanel Orientation="Horizontal">
                     <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="FileExcel" Width="30" Height="30" />
-                    <TextBlock TextAlignment="Center" FontSize="18" HorizontalAlignment="Center" Margin="7 5" VerticalAlignment="Stretch" FontWeight="ExtraLight">Export</TextBlock>
+                    <TextBlock TextAlignment="Center" FontSize="18" HorizontalAlignment="Center" Margin="7 5" VerticalAlignment="Stretch" FontWeight="ExtraLight">Izvezi (Excel)</TextBlock>
                 </StackPanel>
             </Button>
         </StackPanel>
-
     </Grid>
 </UserControl>

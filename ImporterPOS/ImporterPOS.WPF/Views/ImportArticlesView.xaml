@@ -25,7 +25,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <modalcontrol:Modal Panel.ZIndex="21" Background="Transparent" IsOpen="{Binding IsMapped}" Height="500" Grid.RowSpan="3">
+        <modalcontrol:Modal Panel.ZIndex="21" Background="Transparent" IsOpen="{Binding IsMapped}" Grid.RowSpan="3">
             <ContentControl Content="{Binding ArticleQ}" Background="{StaticResource panelActiveColor}"/>
         </modalcontrol:Modal>
 

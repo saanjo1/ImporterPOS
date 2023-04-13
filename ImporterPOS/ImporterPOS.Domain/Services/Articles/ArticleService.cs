@@ -349,5 +349,14 @@ namespace ImporterPOS.Domain.Services.Articles
             }
         }
 
+        public Task<Article> GetPriceByGood(Guid? goodId)
+        {
+            using (DatabaseContext context  = _factory.CreateDbContext())
+            {
+                Guid? articleId = context.ArticleGoods.Where(x=>x.GoodId == goodId).Select(x=>x.ArticleId).FirstOrDefault();
+                var article = context.Articles.Where(x => x.Id == articleId).FirstOrDefault();
+                return Task.FromResult(article);
+            }
+        }
     }
 }
