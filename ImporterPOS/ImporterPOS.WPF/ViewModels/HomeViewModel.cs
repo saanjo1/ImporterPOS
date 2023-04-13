@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using ClosedXML.Excel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Services.Articles;
@@ -65,7 +66,7 @@ namespace ImporterPOS.WPF.ViewModels
 
                 ListOfInventories = new ObservableCollection<InventoryDocumentsViewModel>();
 
-                foreach (var inventoryDocument in inventoryDocuments.Where(x => x.SupplierId != null).OrderBy(x => x.Created))
+                foreach (var inventoryDocument in inventoryDocuments.OrderBy(x => x.Created))
                 {
                     var soldPrice = _articleService.GetTotalSellingPrice(inventoryDocument).Result;
                     var basePrice = _articleService.GetTotalBasePrices(inventoryDocument).Result;
@@ -96,6 +97,56 @@ namespace ImporterPOS.WPF.ViewModels
             //IsShowDetailsOpen = true;
             //this.InventoryDocumentDetails = new InventoryDocumentsDetails(parameter);
         }
+
+
+        [RelayCommand]
+        private void ExportData()
+        {
+            // stvori novi SaveFileDialog
+            var dialog = new Microsoft.Win32.SaveFileDialog();
+
+            // postavi filter za odabir datoteke na Excel datoteke
+            dialog.Filter = "Excel Files|*.xlsx";
+
+            // prikaži dijalog za odabir mjesta za spremanje datoteke i dohvatimo rezultat
+            bool? result = dialog.ShowDialog();
+
+            if (result == true)
+            {
+                // kreiramo novu Excel datoteku i postavimo ime datoteke
+                using (var workbook = new XLWorkbook())
+                {
+                    var worksheet = workbook.Worksheets.Add("InventoryDocuments");
+
+                    // postavimo zaglavlje tablice
+                    worksheet.Cell(1, 1).Value = "Datum i vrijeme";
+                    worksheet.Cell(1, 2).Value = "Dokument";
+                    worksheet.Cell(1, 3).Value = "Ulazna cijena";
+                    worksheet.Cell(1, 4).Value = "Izlazna cijena";
+                    worksheet.Cell(1, 5).Value = "Iznos osniovice";
+                    worksheet.Cell(1, 6).Value = "Iznos poreza";
+                    worksheet.Cell(1, 7).Value = "RUC";
+
+                    // postavimo vrijednosti u tablicu
+                    int row = 2;
+                    foreach (var document in listOfInventories)
+                    {
+                        worksheet.Cell(row, 1).Value = document.DateCreated;
+                        worksheet.Cell(row, 2).Value = document.Name;
+                        worksheet.Cell(row, 3).Value = document.PurchasePrice;
+                        worksheet.Cell(row, 4).Value = document.SoldPrice;
+                        worksheet.Cell(row, 5).Value = document.BasePrice;
+                        worksheet.Cell(row, 6).Value = document.Taxes;
+                        worksheet.Cell(row, 7).Value = document.Ruc;
+                        row++;
+                    }
+
+                    // spremimo datoteku na odabrano mjesto
+                    workbook.SaveAs(dialog.FileName);
+                }
+            }
+        }
+
 
 
         public decimal? GetTotalIncome(InventoryDocument inventoryDocument)

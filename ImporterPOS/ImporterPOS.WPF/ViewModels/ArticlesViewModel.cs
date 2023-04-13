@@ -259,7 +259,7 @@ namespace ImporterPOS.WPF.ViewModels
             await Task.Run(() => {
                 if (articleList.Any())
                 {
-                    Guid _supplierId = _supplierService.GetSupplierByName("Test").Result;
+                    Guid _supplierId = _supplierService.GetSupplierByName("Unos robe").Result;
                     Guid _storageId = _storageService.GetStorageByName("Glavno skladište").Result;
                     int orderNmbr = _invDocsService.GetInventoryOrderNumber().Result;
 

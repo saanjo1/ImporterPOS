@@ -35,14 +35,14 @@
 
         <TextBlock Grid.ColumnSpan="2" Grid.Row="0" HorizontalAlignment="Right" Width="180" VerticalAlignment="Center" Foreground="#B0B9C6" IsHitTestVisible="False"
                            Panel.ZIndex="1"
-                           Visibility="{Binding ElementName=textBoxFilter, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}" Text="Search by barcode" Height="16"  />
+                           Visibility="{Binding ElementName=textBoxFilter, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}" Text="Pretraži po barkodu..." Height="16"  />
 
         <TextBox Grid.ColumnSpan="2"  Width="200" Grid.Row="0" HorizontalAlignment="Right"  Name="textBoxFilter" Style="{StaticResource filterTextBox}" Text="{Binding TextToFilter, UpdateSourceTrigger=PropertyChanged}" Height="32"/>
 
         <TextBlock Grid.ColumnSpan="2"  FontSize="16" Text="{Binding Count}" Foreground="{StaticResource titleColor1}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20 0 0 0"/>
-        <TextBlock Grid.ColumnSpan="2"  FontSize="16" Text="         articles included" Foreground="{StaticResource titleColor1}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20 0 0 0"/>
+        <TextBlock Grid.ColumnSpan="2"  FontSize="16" Text="         artikala u listi" Foreground="{StaticResource titleColor1}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20 0 0 0"/>
 
-        <TextBlock Grid.ColumnSpan="2"  Grid.Row="2" FontSize="24" Style="{StaticResource textBlockStyle}" Text="Provide records to import." Visibility="{Binding Items.IsEmpty, Converter={StaticResource BoolToVis}, ElementName=ImportGrid}"/>
+        <TextBlock Grid.ColumnSpan="2"  Grid.Row="2" FontSize="24" Style="{StaticResource textBlockStyle}" Text="Lista je prazna. Učitaj podatke." Visibility="{Binding Items.IsEmpty, Converter={StaticResource BoolToVis}, ElementName=ImportGrid}"/>
 
         <Border Grid.Row="2" 
         Visibility="{Binding IsLoading, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVis}}"
@@ -61,7 +61,7 @@
         </Border>
         <DataGrid Grid.ColumnSpan="2" Grid.Row="2" Name="ImportGrid" ItemsSource="{Binding ArticleCollection, Mode=TwoWay}" RowStyle="{DynamicResource DataGridRowStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Style="{DynamicResource DataGridStyle1}">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Name" IsReadOnly="false" Width="470">
+                <DataGridTemplateColumn Header="Ime" IsReadOnly="false" Width="470">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -73,11 +73,11 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Barcode" Binding="{Binding BarCode}" IsReadOnly="false" Width="*"/>
-                <DataGridTextColumn Header="Full price" Binding="{Binding Price}" IsReadOnly="false" Width="*"/>
-                <DataGridTextColumn Header="Discount" Binding="{Binding Discount}" IsReadOnly="false" Width="*"/>
-                <DataGridTextColumn Header="Discounted price" Binding="{Binding NewPrice}" IsReadOnly="false" Width="*"/>
-                <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="auto">
+                <DataGridTextColumn Header="Bar kod" Binding="{Binding BarCode}" IsReadOnly="false" Width="*"/>
+                <DataGridTextColumn Header="Cijena bez popusta" Binding="{Binding Price}" IsReadOnly="false" Width="*"/>
+                <DataGridTextColumn Header="Popust" Binding="{Binding Discount}" IsReadOnly="false" Width="*"/>
+                <DataGridTextColumn Header="Cijena bez popusta" Binding="{Binding NewPrice}" IsReadOnly="false" Width="*"/>
+                <DataGridTemplateColumn Header="Operacije" IsReadOnly="True" Width="auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -115,33 +115,33 @@
         </StackPanel>
 
         <StackPanel Grid.Row="4" Orientation="Horizontal" Width="1000" HorizontalAlignment="Left">
-            <Button Style="{StaticResource SaveButton}" Command="{Binding LoadFixedExcelColumnsCommand}" Height="50" Width="150">
+            <Button Style="{StaticResource SaveButton}" Command="{Binding LoadFixedExcelColumnsCommand}" Height="50" Width="190">
                 <StackPanel Orientation="Horizontal">
                     <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Database" Width="30" Height="30"/>
-                    <TextBlock TextAlignment="Center" FontSize="20" HorizontalAlignment="Center" Margin="10 0 5 5" VerticalAlignment="Stretch" FontWeight="ExtraLight" >Load data</TextBlock>
+                    <TextBlock TextAlignment="Center" FontSize="19" HorizontalAlignment="Center" Margin="10 0 5 5" VerticalAlignment="Stretch" FontWeight="ExtraLight" >Učitaj podatke</TextBlock>
                 </StackPanel>
             </Button>
 
             <Button Style="{StaticResource clearDict}" Foreground="White" Command="{Binding ClearAllDataCommand}" Height="50" Width="150" Margin="20 0 0 0">
                 <StackPanel Orientation="Horizontal">
                     <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="XmarkCircle" Margin="10 0 0 0" Width="30" Height="30"/>
-                    <TextBlock TextAlignment="Center" FontSize="20" HorizontalAlignment="Center" Margin="12 8 5 5" VerticalAlignment="Stretch" FontWeight="ExtraLight" >Clear</TextBlock>
+                    <TextBlock TextAlignment="Center" FontSize="20" HorizontalAlignment="Center" Margin="12 8 5 5" VerticalAlignment="Stretch" FontWeight="ExtraLight" >Očisti listu</TextBlock>
                 </StackPanel>
             </Button>
 
             <Button Style="{StaticResource optionsBtn}" Foreground="White" Command="{Binding OptionsCommand}" Height="50" Width="150" Margin="20 0 0 0">
                 <StackPanel Orientation="Horizontal">
                     <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Gear" Margin="10 0 0 0" Width="30" Height="30"/>
-                    <TextBlock TextAlignment="Center" FontSize="20" HorizontalAlignment="Center" Margin="12 8 5 5" VerticalAlignment="Stretch" FontWeight="ExtraLight" >Options</TextBlock>
+                    <TextBlock TextAlignment="Center" FontSize="20" HorizontalAlignment="Center" Margin="12 8 5 5" VerticalAlignment="Stretch" FontWeight="ExtraLight" >Opcije</TextBlock>
                 </StackPanel>
             </Button>
         </StackPanel>
 
         <StackPanel Grid.Row="4" Grid.Column="1" HorizontalAlignment="Right">
-            <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding ImportItemsCommand}"  Height="51" Width="150" Margin="20 0 0 0">
+            <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding ImportItemsCommand}"  Height="50" Width="160" Margin="20 0 0 0">
                 <StackPanel Orientation="Horizontal">
                     <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Upload" Width="30" Height="30" />
-                    <TextBlock TextAlignment="Center" FontSize="20" HorizontalAlignment="Center" Margin="10 0" VerticalAlignment="Stretch" FontWeight="ExtraLight" >Import</TextBlock>
+                    <TextBlock TextAlignment="Center" FontSize="18" HorizontalAlignment="Center" Margin="7 3" VerticalAlignment="Stretch" FontWeight="ExtraLight" >Umetni robu</TextBlock>
                 </StackPanel>
             </Button>
         </StackPanel>

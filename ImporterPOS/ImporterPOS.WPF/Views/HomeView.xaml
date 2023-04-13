@@ -19,11 +19,11 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
         <modalcontrol:Modal Panel.ZIndex="21" Background="Transparent" IsOpen="{Binding IsShowInventoryDetails}" Margin="50 0 0 0" Height="500" Grid.RowSpan="3" Grid.ColumnSpan="5">
@@ -83,7 +83,7 @@
             </Grid>
         </Border>
 
-        <DataGrid Margin="-15 60"  Grid.ColumnSpan="1" Grid.Row="2" Name="InventoryDocumentsGrid" 
+        <DataGrid Margin="50" Grid.ColumnSpan="1" Grid.Row="2" Name="InventoryDocumentsGrid"
                   ItemsSource="{Binding InventoryCollection, Mode=TwoWay}" RowStyle="{DynamicResource DataGridRowStyle1}"
                   ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}"
                   CellStyle="{DynamicResource DataGridCellStyle1}" Style="{DynamicResource DataGridStyle1}">
@@ -131,14 +131,14 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="25 50 0 0"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.ColumnSpan="3">
-            <fa:IconImage Icon="Calendar" Width="25" Height="25" Foreground="{StaticResource color8}"/>
-            <TextBlock Margin="10 2 0 0" Style="{StaticResource DateTimeTextBlock}" FontSize="18" Text="{Binding Source={x:Static sys:DateTime.Now},
-                  StringFormat='{}{0:dddd, MMM dd yyyy}'}"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="3" Margin="50 2">
+            <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding ExportDataCommand}"  Height="50" Width="130" Margin="20 0 0 0">
+                <StackPanel Orientation="Horizontal">
+                    <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="FileExcel" Width="30" Height="30" />
+                    <TextBlock TextAlignment="Center" FontSize="18" HorizontalAlignment="Center" Margin="7 5" VerticalAlignment="Stretch" FontWeight="ExtraLight">Export</TextBlock>
+                </StackPanel>
+            </Button>
         </StackPanel>
 
-        <StackPanel Grid.Column="1" Width="300">
-
-        </StackPanel>
     </Grid>
 </UserControl>

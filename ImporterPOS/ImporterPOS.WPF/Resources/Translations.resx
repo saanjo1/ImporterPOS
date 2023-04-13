@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Articles" xml:space="preserve">
-    <value>Articles</value>
+    <value>Artikli</value>
   </data>
   <data name="CurrentExcelFile" xml:space="preserve">
     <value>CurrentExcelFile</value>
@@ -127,51 +127,51 @@
     <value>CurrentExcelSheet</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
-    <value>Dashboard</value>
+    <value>Početna stranica</value>
   </data>
   <data name="Discounts" xml:space="preserve">
-    <value>Discounts</value>
+    <value>Popusti</value>
   </data>
   <data name="ErrorMessage" xml:space="preserve">
-    <value>An error occurred. Please try again.</value>
+    <value>Greška. Pokušajte ponovo.</value>
   </data>
   <data name="InventoryDocuments" xml:space="preserve">
-    <value>Inventory documents</value>
+    <value>Inventurni dokumenti</value>
   </data>
   <data name="OpenDialogTitle" xml:space="preserve">
-    <value>Please select Excel file</value>
+    <value>Odaberite Excel file</value>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Select</value>
+    <value>Odaberi</value>
   </data>
   <data name="SelectExcelFileSuccess" xml:space="preserve">
-    <value>Excel file is successfully selected.</value>
+    <value>Excel file je uspješno odabran.</value>
   </data>
   <data name="SelectSheetError" xml:space="preserve">
-    <value>An error occurred while trying to select excel sheet.</value>
+    <value>Greška prilikom odabira excel file. </value>
   </data>
   <data name="SelectSheetSuccess" xml:space="preserve">
-    <value>An Excel sheet selected successfully.</value>
+    <value>Uspješno odabran sheet.</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>set</value>
+    <value>Set</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Postavke</value>
   </data>
   <data name="SettingsError" xml:space="preserve">
-    <value>First, you have to set files at Settings page.</value>
+    <value>Postavke nisu podešene.</value>
   </data>
   <data name="Storages" xml:space="preserve">
-    <value>Storages</value>
+    <value>Skladišta</value>
   </data>
   <data name="UpdatedExcelFile" xml:space="preserve">
-    <value>Excel file successfully updated.</value>
+    <value>Excel file je uspješno izmijenjen.</value>
   </data>
   <data name="UpdatedSameFile" xml:space="preserve">
-    <value>Same file selected.</value>
+    <value>Odabrali ste isti file.</value>
   </data>
   <data name="WritedOffSuccessfully" xml:space="preserve">
-    <value>Successfully updated storage based on provided Excel file.</value>
+    <value>Uspješno otpisana roba.</value>
   </data>
 </root>

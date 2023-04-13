@@ -61,7 +61,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Articles.
+        ///   Looks up a localized string similar to Artikli.
         /// </summary>
         internal static string Articles {
             get {
@@ -88,7 +88,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dashboard.
+        ///   Looks up a localized string similar to Početna stranica.
         /// </summary>
         internal static string Dashboard {
             get {
@@ -97,7 +97,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Discounts.
+        ///   Looks up a localized string similar to Popusti.
         /// </summary>
         internal static string Discounts {
             get {
@@ -106,7 +106,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error occurred. Please try again..
+        ///   Looks up a localized string similar to Greška. Pokušajte ponovo..
         /// </summary>
         internal static string ErrorMessage {
             get {
@@ -115,7 +115,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Inventory documents.
+        ///   Looks up a localized string similar to Inventurni dokumenti.
         /// </summary>
         internal static string InventoryDocuments {
             get {
@@ -124,7 +124,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please select Excel file.
+        ///   Looks up a localized string similar to Odaberite Excel file.
         /// </summary>
         internal static string OpenDialogTitle {
             get {
@@ -133,7 +133,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select.
+        ///   Looks up a localized string similar to Odaberi.
         /// </summary>
         internal static string Select {
             get {
@@ -142,7 +142,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Excel file is successfully selected..
+        ///   Looks up a localized string similar to Excel file je uspješno odabran..
         /// </summary>
         internal static string SelectExcelFileSuccess {
             get {
@@ -151,7 +151,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error occurred while trying to select excel sheet..
+        ///   Looks up a localized string similar to Greška prilikom odabira excel file. .
         /// </summary>
         internal static string SelectSheetError {
             get {
@@ -160,7 +160,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An Excel sheet selected successfully..
+        ///   Looks up a localized string similar to Uspješno odabran sheet..
         /// </summary>
         internal static string SelectSheetSuccess {
             get {
@@ -169,7 +169,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to set.
+        ///   Looks up a localized string similar to Set.
         /// </summary>
         internal static string Set {
             get {
@@ -178,7 +178,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Settings.
+        ///   Looks up a localized string similar to Postavke.
         /// </summary>
         internal static string Settings {
             get {
@@ -187,7 +187,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to First, you have to set files at Settings page..
+        ///   Looks up a localized string similar to Postavke nisu podešene..
         /// </summary>
         internal static string SettingsError {
             get {
@@ -196,7 +196,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Storages.
+        ///   Looks up a localized string similar to Skladišta.
         /// </summary>
         internal static string Storages {
             get {
@@ -205,7 +205,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Excel file successfully updated..
+        ///   Looks up a localized string similar to Excel file je uspješno izmijenjen..
         /// </summary>
         internal static string UpdatedExcelFile {
             get {
@@ -214,7 +214,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Same file selected..
+        ///   Looks up a localized string similar to Odabrali ste isti file..
         /// </summary>
         internal static string UpdatedSameFile {
             get {
@@ -223,7 +223,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Successfully updated storage based on provided Excel file..
+        ///   Looks up a localized string similar to Uspješno otpisana roba..
         /// </summary>
         internal static string WritedOffSuccessfully {
             get {

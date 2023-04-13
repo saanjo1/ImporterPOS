@@ -24,7 +24,7 @@
 
                     <StackPanel Orientation="Horizontal">
                         <fa:IconImage Icon="Home" Style="{StaticResource radioButtonIcon}" Foreground="{StaticResource color2}"/>
-                        <TextBlock Text="Dashboard" Style="{StaticResource radioButtonText}"/>
+                        <TextBlock Text="Početna stranica" Style="{StaticResource radioButtonText}"/>
                     </StackPanel>
                 </RadioButton>
                 <RadioButton Style="{StaticResource radioButton1}"
@@ -34,7 +34,7 @@
 
                     <StackPanel Orientation="Horizontal">
                         <fa:IconImage Icon="TableList" Style="{StaticResource radioButtonIcon}" Foreground="{StaticResource color3}"/>
-                        <TextBlock Text="Storages" Style="{StaticResource radioButtonText}"/>
+                        <TextBlock Text="Skladišta" Style="{StaticResource radioButtonText}"/>
                     </StackPanel>
                 </RadioButton>
 
@@ -46,7 +46,7 @@
 
                     <StackPanel Orientation="Horizontal">
                         <fa:IconImage Icon="Percentage" Style="{StaticResource radioButtonIcon}"  Foreground="{StaticResource color4}"/>
-                        <TextBlock Text="Discounts" Style="{StaticResource radioButtonText}"/>
+                        <TextBlock Text="Popusti" Style="{StaticResource radioButtonText}"/>
                     </StackPanel>
                 </RadioButton>
 
@@ -57,7 +57,7 @@
 
                     <StackPanel Orientation="Horizontal">
                         <fa:IconImage Icon="Upload" Style="{StaticResource radioButtonIcon}"  Foreground="{StaticResource color6}"/>
-                        <TextBlock Text="Articles" Style="{StaticResource radioButtonText}"/>
+                        <TextBlock Text="Artikli" Style="{StaticResource radioButtonText}"/>
                     </StackPanel>
                 </RadioButton>
 
@@ -68,7 +68,7 @@
 
                     <StackPanel Orientation="Horizontal">
                         <fa:IconImage Icon="Gear" Style="{StaticResource radioButtonIcon}" Foreground="{StaticResource color10}"/>
-                        <TextBlock Text="Settings" Style="{StaticResource radioButtonText}"/>
+                        <TextBlock Text="Postavke" Style="{StaticResource radioButtonText}"/>
                     </StackPanel>
                 </RadioButton>
 
