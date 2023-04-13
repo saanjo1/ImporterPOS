@@ -41,6 +41,22 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         public decimal quantity;
 
+
+        [ObservableProperty]
+        public decimal totalPurchasePrice;
+
+        [ObservableProperty]
+        public decimal totalSoldPrice;
+
+        [ObservableProperty]
+        public decimal totalBasePrice;
+
+        [ObservableProperty]
+        public decimal totalTaxesPrice;
+
+        [ObservableProperty]
+        public decimal totalRuc;
+
         [ObservableProperty]
         public ICollection<InventoryDocumentsDetails> listOfItems;
 
@@ -71,8 +87,9 @@ namespace ImporterPOS.WPF.ViewModels
 
                 var _soldPrice = article.Price * invitemBases.Quantity;
                 var _basePrice = Math.Round(Helpers.Extensions.GetBasePrice(_soldPrice, 25), 2);
-                var _purchasePrice = (decimal)invitemBases.Total;
+                var _purchasePrice = Math.Round((decimal)invitemBases.Total, 2);
                 var _taxes = _soldPrice - _basePrice;
+                var _ruc = Math.Round((_basePrice - _purchasePrice), 2);
                 var _name = article.Name;
 
                 listOfItems.Add(new InventoryDocumentsDetails
@@ -83,8 +100,16 @@ namespace ImporterPOS.WPF.ViewModels
                     Taxes = Math.Round(_taxes, 2),
                     BasePrice = _basePrice,
                     SoldPrice = Math.Round(_soldPrice, 2),
-                    Ruc = Math.Round((_basePrice - _purchasePrice), 2)
+                    Ruc = _ruc
                 });
+
+                TotalPurchasePrice += _purchasePrice;
+                TotalSoldPrice += _soldPrice;
+                TotalTaxesPrice += _taxes;
+                TotalBasePrice += _basePrice;
+                TotalRuc += _ruc;
+
+                
             }
 
             inventoryItemsCollection = CollectionViewSource.GetDefaultView(ListOfItems);

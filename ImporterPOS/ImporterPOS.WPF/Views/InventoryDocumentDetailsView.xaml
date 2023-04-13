@@ -33,26 +33,43 @@
                 </Button>
             </StackPanel>
         </Border>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <DataGrid Margin="50" Grid.ColumnSpan="1" Grid.Row="1" Name="InventoryDocumentsGrid"
-                  ItemsSource="{Binding InventoryItemsCollection, Mode=TwoWay}" RowStyle="{DynamicResource DataGridRowStyle1}"
-                  ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}"
-                  CellStyle="{DynamicResource DataGridCellStyle1}" Style="{DynamicResource DataGridStyle1}">
-            <DataGrid.Resources>
-                <Style x:Key="LeftAlignCellStyle" TargetType="{x:Type TextBlock}">
-                    <Setter Property="HorizontalAlignment" Value="Left" />
-                </Style>
-            </DataGrid.Resources>
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Artikal" Binding="{Binding Name}" IsReadOnly="true" Width="500" FontWeight="Bold" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTextColumn Header="Količina" Binding="{Binding Quantity}" IsReadOnly="true" Width="100" FontWeight="Bold" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTextColumn Header="Ulazna cijena" Binding="{Binding PurchasePrice}" IsReadOnly="true" Width="auto" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTextColumn Header="Izlazna cijena" Binding="{Binding SoldPrice}" IsReadOnly="true" Width="auto" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTextColumn Header="Iznos osnovica" Binding="{Binding BasePrice}" IsReadOnly="true" Width="auto" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTextColumn Header="Iznos poreza" Binding="{Binding Taxes}" IsReadOnly="true" Width="auto" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTextColumn Header="RUC" Binding="{Binding Ruc}" IsReadOnly="true" Width="200" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-            </DataGrid.Columns>
-        </DataGrid>
+            <DataGrid Grid.Row="0" Margin="50" Name="InventoryDocumentsGrid"
+          ItemsSource="{Binding InventoryItemsCollection, Mode=TwoWay}" RowStyle="{DynamicResource DataGridRowStyle1}"
+          ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}"
+          CellStyle="{DynamicResource DataGridCellStyle1}" Style="{DynamicResource DataGridStyle1}">
+                <DataGrid.Resources>
+                    <Style x:Key="LeftAlignCellStyle" TargetType="{x:Type TextBlock}">
+                        <Setter Property="HorizontalAlignment" Value="Left" />
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Artikal" Binding="{Binding Name}" IsReadOnly="true" Width="500" FontWeight="Bold" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                    <DataGridTextColumn Header="Količina" Binding="{Binding Quantity}" IsReadOnly="true" Width="100" FontWeight="Bold" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                    <DataGridTextColumn Header="Ulazna cijena" Binding="{Binding PurchasePrice}" IsReadOnly="true" Width="auto" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                    <DataGridTextColumn Header="Izlazna cijena" Binding="{Binding SoldPrice}" IsReadOnly="true" Width="auto" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                    <DataGridTextColumn Header="Iznos osnovica" Binding="{Binding BasePrice}" IsReadOnly="true" Width="auto" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                    <DataGridTextColumn Header="Iznos poreza" Binding="{Binding Taxes}" IsReadOnly="true" Width="auto" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                    <DataGridTextColumn Header="RUC" Binding="{Binding Ruc}" IsReadOnly="true" Width="200" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="3" Margin="500 0 0 0">
+            <TextBlock Text="{Binding TotalPurchasePrice}" FontWeight="Bold" Margin="50 0" Foreground="White" FontSize="16"/>
+            <TextBlock Text="{Binding TotalSoldPrice}" FontWeight="Bold" Margin="50 0" Foreground="White" FontSize="16"/>
+            <TextBlock Text="{Binding TotalBasePrice}" FontWeight="Bold" Margin="50 0" Foreground="White" FontSize="16"/>
+            <TextBlock Text="{Binding TotalTaxesPrice}" FontWeight="Bold" Margin="50 0" Foreground="White" FontSize="16"/>
+            <TextBlock Text="{Binding TotalRuc}" FontWeight="Bold" Margin="50 0" Foreground="White" FontSize="16"/>
+  
+        </StackPanel>
+
+
 
     </Grid>
 </UserControl>
