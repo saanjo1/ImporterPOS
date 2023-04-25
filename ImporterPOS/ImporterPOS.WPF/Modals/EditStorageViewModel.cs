@@ -29,7 +29,7 @@ namespace ImporterPOS.WPF.Modals
             Name = _goodsArticlesViewModel.Name;
             Quantity = _goodsArticlesViewModel.Quantity;
             CurrentQuantity = _goodsArticlesViewModel.Quantity;
-            LatestPrice = _goodsArticlesViewModel.LatestPrice;
+            LatestPrice = _goodsArticlesViewModel.TotalPurchasePrice;
             GoodId = _goodsArticlesViewModel.GoodId;
             Sttorage = _goodsArticlesViewModel.Storage;
             _notifier = notifier;

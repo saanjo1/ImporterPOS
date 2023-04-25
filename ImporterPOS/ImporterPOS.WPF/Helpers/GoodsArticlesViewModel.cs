@@ -17,7 +17,19 @@ namespace ImporterPOS.WPF.Helpers
         private decimal? quantity;
 
         [ObservableProperty]
-        private decimal? latestPrice;
+        private decimal? totalPurchasePrice;
+
+        [ObservableProperty]
+        private decimal? totalSoldPrice;
+
+        [ObservableProperty]
+        private decimal? totalBasePrice;
+
+        [ObservableProperty]
+        private decimal? totalTaxes;
+
+        [ObservableProperty]
+        private decimal? ruc;
 
         [ObservableProperty]
         private Guid storage;
@@ -25,7 +37,5 @@ namespace ImporterPOS.WPF.Helpers
         [ObservableProperty]
         private Guid goodId;
 
-        [ObservableProperty]
-        private decimal? price;
     }
 }

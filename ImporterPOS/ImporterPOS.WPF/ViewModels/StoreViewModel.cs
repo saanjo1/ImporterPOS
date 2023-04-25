@@ -20,9 +20,9 @@ namespace ImporterPOS.WPF.ViewModels
         public IStore Store { get; set; }
 
 
-        public StoreViewModel(IArticleService articleService, 
+        public StoreViewModel(IArticleService articleService,
             Notifier notifier, IStorageService storageDataService,
-            IInventoryDocumentsService _inventoryService, 
+            IInventoryDocumentsService _inventoryService,
             IGoodService goodService, IInventoryItemBasisService itemBasisService, IExcelService _excelService)
         {
             _notifier = notifier;

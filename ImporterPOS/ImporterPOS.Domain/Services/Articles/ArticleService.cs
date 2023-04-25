@@ -312,41 +312,51 @@ namespace ImporterPOS.Domain.Services.Articles
 
         public Task<decimal> GetTotalBasePrices(InventoryDocument inventoryDocument)
         {
-            using (DatabaseContext context = _factory.CreateDbContext())
+            decimal totalBasePrice = 0;
+            try
             {
-                List<Guid?> goodIds = context.InventoryItemBases
-     .Where(x => x.InventoryDocumentId == inventoryDocument.Id)
-     .Select(x => x.GoodId)
-     .ToList();
-
-                decimal totalBasePrice = 0;
-
-                foreach (Guid? goodID in goodIds)
+                using (DatabaseContext context = _factory.CreateDbContext())
                 {
-                    Guid? articleId = context.ArticleGoods
-                        .Where(x => x.GoodId == goodID)
-                        .Select(x => x.ArticleId)
-                        .FirstOrDefault();
+                    List<Guid?> goodIds = context.InventoryItemBases
+         .Where(x => x.InventoryDocumentId == inventoryDocument.Id)
+         .Select(x => x.GoodId)
+         .ToList();
 
-                    InventoryItemBasis inventoryItemBase = context.InventoryItemBases
-                       .Where(x => x.InventoryDocumentId == inventoryDocument.Id && x.GoodId == goodID)
-                       .FirstOrDefault();
-
-                    decimal sellingPrice = context.Articles.Where(x => x.Id == articleId).FirstOrDefault().Price;
-
-                    decimal taxValue = (decimal)context.Taxes.SingleOrDefault(x => x.Value == 25)?.Value;
-
-                    if (taxValue != null) 
+                    foreach (Guid? goodID in goodIds)
                     {
-                        decimal basePrice = sellingPrice / (1 + (taxValue / 100));
-                        basePrice *= inventoryItemBase.Quantity;// izračunaj osnovnu cijenu
-                        totalBasePrice += basePrice;
-                    }
-                }
+                        Guid? articleId = context.ArticleGoods
+                            .Where(x => x.GoodId == goodID)
+                            .Select(x => x.ArticleId)
+                            .FirstOrDefault();
 
-                return Task.FromResult(Math.Round(totalBasePrice, 2));
+                        if(articleId != null)
+                        {
+                            InventoryItemBasis inventoryItemBase = context.InventoryItemBases
+                           .Where(x => x.InventoryDocumentId == inventoryDocument.Id && x.GoodId == goodID)
+                           .FirstOrDefault();
+
+                            decimal sellingPrice = context.Articles.Where(x => x.Id == articleId).FirstOrDefault().Price;
+
+                            decimal taxValue = (decimal)context.Taxes.SingleOrDefault(x => x.Value == 25)?.Value;
+
+                            if (taxValue != null)
+                            {
+                                decimal basePrice = sellingPrice / (1 + (taxValue / 100));
+                                basePrice *= inventoryItemBase.Quantity;// izračunaj osnovnu cijenu
+                                totalBasePrice += basePrice;
+                            }
+                        }
+                    }
+
+                    return Task.FromResult(Math.Round(totalBasePrice, 2));
+                }
+            }
+            catch
+            {
+                return Task.FromResult(totalBasePrice);
 
             }
+
         }
 
         public Task<Article> GetPriceByGood(Guid? goodId)
