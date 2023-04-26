@@ -85,12 +85,12 @@ namespace ImporterPOS.WPF.ViewModels
                     {
                         DateCreated = inventoryDocument.Created.ToString("dd.MM.yyyy hh:mm"),
                         Name = _supplierDataService.Get(inventoryDocument.SupplierId.ToString()).Result != null ? _supplierDataService.Get(inventoryDocument.SupplierId.ToString()).Result.Name : "Otpis robe",
-                        PurchasePrice = purchasePrice,
-                        SoldPrice = soldPrice,
-                        BasePrice = basePrice,
-                        Taxes = taxes,
+                        PurchasePrice = purchasePrice.ToString() + " EUR",
+                        SoldPrice = soldPrice.ToString() + " EUR",
+                        BasePrice = basePrice.ToString() + " EUR",
+                        Taxes = taxes.ToString() + " EUR",
                         Id = inventoryDocument.Id.ToString(),
-                        Ruc = basePrice - purchasePrice
+                        Ruc = (basePrice - purchasePrice).ToString() + " EUR"
                     });
                 }
 

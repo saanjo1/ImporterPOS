@@ -22,19 +22,19 @@ namespace ImporterPOS.WPF.ViewModels
         public string name;
 
         [ObservableProperty]
-        public decimal purchasePrice;
+        public string purchasePrice;
 
         [ObservableProperty]
-        public decimal soldPrice;
+        public string soldPrice;
 
         [ObservableProperty]
-        public decimal basePrice;
+        public string basePrice;
 
         [ObservableProperty]
-        public decimal taxes;
+        public string taxes;
 
         [ObservableProperty]
-        public decimal ruc;
+        public string ruc;
 
     }
 }

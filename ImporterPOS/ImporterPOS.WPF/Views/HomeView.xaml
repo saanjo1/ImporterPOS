@@ -14,37 +14,38 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </UserControl.Resources>
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.8*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <modalcontrol:Modal Panel.ZIndex="21" Background="Transparent" IsOpen="{Binding IsShowInventoryDetails}" Margin="50 0 0 0" Height="500" Grid.RowSpan="3" Grid.ColumnSpan="5">
-            <ContentControl Content="{Binding InventoryDocumentDetails}" Background="{StaticResource panelActiveColor}"/>
-        </modalcontrol:Modal>
+            <modalcontrol:Modal Panel.ZIndex="21" Background="Transparent" IsOpen="{Binding IsShowInventoryDetails}" Margin="50 0 0 0" Height="500" Grid.RowSpan="3" Grid.ColumnSpan="5">
+                <ContentControl Content="{Binding InventoryDocumentDetails}" Background="{StaticResource panelActiveColor}"/>
+            </modalcontrol:Modal>
 
 
-        <StackPanel Grid.Row="0" Grid.ColumnSpan="2"
+            <StackPanel Grid.Row="0" Grid.ColumnSpan="2"
                     HorizontalAlignment="Center"
                       Orientation="Horizontal" Margin="0 0 90 20"
                       >
 
 
-            <Ellipse Height="40" Width="40">
-                <Ellipse.Fill>
-                    <ImageBrush ImageSource="/Images/p2.jpg"/>
-                </Ellipse.Fill>
-            </Ellipse>
+                <Ellipse Height="40" Width="40">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="/Images/p2.jpg"/>
+                    </Ellipse.Fill>
+                </Ellipse>
 
-            <StackPanel Orientation="Vertical" Margin="5">
-                <TextBlock Text="Welcome to POS Sector Importer"
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <TextBlock Text="Welcome to POS Sector Importer"
                                Foreground="{StaticResource titleColor2}"
                                FontSize="20"
                                FontFamily="Montserrat"
@@ -52,7 +53,7 @@
                                VerticalAlignment="Center"
                                Margin="10, 20, 0, 0"/>
 
-                <TextBlock Text="version 1.0"
+                    <TextBlock Text="version 1.0"
                                Foreground="{StaticResource titleColor3}"
                                FontSize="12"
                                HorizontalAlignment="Center"
@@ -60,84 +61,121 @@
                                FontWeight="Medium"
                                VerticalAlignment="Center"
                                Margin="10, 0, 0, 0"/>
+                </StackPanel>
+
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="6">
+                <TextBlock Style="{StaticResource textBlockStyle}" Text="{Binding Title}" Margin="50 0" HorizontalAlignment="Left" FontSize="25" FontWeight="Light" Foreground="{StaticResource titleColor2}"/>
             </StackPanel>
 
-        </StackPanel>
-        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="6">
-            <TextBlock Style="{StaticResource textBlockStyle}" Text="{Binding Title}" HorizontalAlignment="Left" FontSize="25" FontWeight="Light" Foreground="{StaticResource titleColor2}"/>
-        </StackPanel>
-
-        <Border Grid.Row="2" 
+            <Border Grid.Row="2" 
         Visibility="{Binding IsLoading, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVis}}"
                 Margin="30 0" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="5" Panel.ZIndex="3" Background="{StaticResource color12}" BorderThickness="3" BorderBrush="Black" Padding="20" CornerRadius="20">
-            <Grid>
+                <Grid>
 
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <custom:LoadingSpinner Color="{StaticResource panelColor}" Thickness="10" IsLoading="{Binding IsLoading, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="100"/>
+                    <TextBlock FontWeight="SemiBold"  Grid.Row="1" Foreground="White" FontSize="28" Margin="0 10" Text="Učitavanje.."/>
+
+                </Grid>
+            </Border>
+
+            <Border Grid.ColumnSpan="1" Grid.Row="2" BorderBrush="{StaticResource color12}" BorderThickness="1" CornerRadius="10" Margin="20" Background="{StaticResource color11}">
+            <DataGrid Name="InventoryDocumentsGrid" Margin="20"
+                  ItemsSource="{Binding InventoryCollection, Mode=TwoWay}" RowStyle="{DynamicResource DataGridRowStyle1}"
+                  ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}"
+                  CellStyle="{DynamicResource DataGridCellStyle1}" Style="{DynamicResource DataGridStyle1}">
+                <DataGrid.Resources>
+                    <Style x:Key="LeftAlignCellStyle" TargetType="{x:Type TextBlock}">
+                        <Setter Property="HorizontalAlignment" Value="Left" />
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Datum i vrijeme" IsReadOnly="True" Width="1.2*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="25" Height="25" CornerRadius="50" Margin="-20" Background="{Binding BgColor}">
+                                        <TextBlock Text="{Binding Character}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" Margin="0 0 0 1"/>
+                                    </Border>
+                                    <TextBlock Text="{Binding DateCreated}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Nabavljač" Binding="{Binding Name}" IsReadOnly="true" Width="1.4*" FontWeight="Bold" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                    <DataGridTextColumn Header="Ulazna cijena" Binding="{Binding PurchasePrice}" IsReadOnly="true" Width="*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                    <DataGridTextColumn Header="Izlazna cijena" Binding="{Binding SoldPrice}" IsReadOnly="true" Width="*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                    <DataGridTextColumn Header="Iznos osnovica" Binding="{Binding BasePrice}" IsReadOnly="true" Width="1.1*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                    <DataGridTextColumn Header="Iznos poreza" Binding="{Binding Taxes}" IsReadOnly="true" Width="*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                    <DataGridTextColumn Header="Razlika u cijeni" Binding="{Binding Ruc}" IsReadOnly="true" Width="1.03*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
+                    <DataGridTemplateColumn Header="Operacije" IsReadOnly="True" Width="*">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridColumnHeaderStyle1}">
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Margin="15 0 0 0" Style="{StaticResource gridEditButton}" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.ShowInventoryDetailsCommand}" CommandParameter="{Binding}">
+                                        <TextBlock Text="Detalji" Padding="5"/>
+                                    </Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="3" BorderBrush="Wheat" BorderThickness="2" CornerRadius="10" Height="500">
+            <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
-                <custom:LoadingSpinner Color="{StaticResource panelColor}" Thickness="10" IsLoading="{Binding IsLoading, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="100"/>
-                <TextBlock FontWeight="SemiBold"  Grid.Row="1" Foreground="White" FontSize="28" Margin="0 10" Text="Učitavanje dokumenata. Budite strpljivi. "/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Label HorizontalAlignment="Left" FontSize="18" FontWeight="SemiBold" Foreground="White" Content="Manipulacija artiklima:" Margin="0 0 0 30"/>
+
+                <Label Grid.Row="1" Grid.Column="0" Content="Artikal:" Style="{StaticResource settingsControlLabel}"></Label>
+                <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding ServerInstance, Mode=TwoWay}"/>
+
+                <Separator HorizontalAlignment="Center" Height="150" Width="150" Foreground="White" Margin="0 -50 0 -30" Grid.Row="2"/>
+
+                <Label Grid.Row="3" Grid.Column="0" Content="Ulazna cijena:" Style="{StaticResource settingsControlLabel}"></Label>
+                <TextBox Grid.Row="3" Grid.Column="1" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding DatabaseConnection, Mode=TwoWay}"/>
+
+                <Label Grid.Column="0" Grid.Row="4" Content="Marža:" Style="{StaticResource settingsControlLabel}"></Label>
+                <TextBox Grid.Column="1" Grid.Row="4" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding Port, Mode=TwoWay}"/>
+
+                <Label Grid.Column="0" Grid.Row="5" Content="Izlazna cijena:" Style="{StaticResource settingsControlLabel}"></Label>
+                <TextBox Grid.Column="1" Grid.Row="5" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding Port, Mode=TwoWay}"/>
 
             </Grid>
         </Border>
-
-        <DataGrid Margin="50" Grid.ColumnSpan="1" Grid.Row="2" Name="InventoryDocumentsGrid"
-                  ItemsSource="{Binding InventoryCollection, Mode=TwoWay}" RowStyle="{DynamicResource DataGridRowStyle1}"
-                  ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}"
-                  CellStyle="{DynamicResource DataGridCellStyle1}" Style="{DynamicResource DataGridStyle1}">
-            <DataGrid.Resources>
-                <Style x:Key="LeftAlignCellStyle" TargetType="{x:Type TextBlock}">
-                    <Setter Property="HorizontalAlignment" Value="Left" />
-                </Style>
-            </DataGrid.Resources>
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Datum i vrijeme" IsReadOnly="True" Width="*">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Border Width="25" Height="25" CornerRadius="50" Margin="-20" Background="{Binding BgColor}">
-                                    <TextBlock Text="{Binding Character}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" Margin="0 0 0 1"/>
-                                </Border>
-                                <TextBlock Text="{Binding DateCreated}" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Ime dokumenta" Binding="{Binding Name}" IsReadOnly="true" Width="*" FontWeight="Bold" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTextColumn Header="Ulazna cijena" Binding="{Binding PurchasePrice}" IsReadOnly="true" Width="*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTextColumn Header="Izlazna cijena" Binding="{Binding SoldPrice}" IsReadOnly="true" Width="*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTextColumn Header="Iznos osnovica" Binding="{Binding BasePrice}" IsReadOnly="true" Width="*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTextColumn Header="Iznos poreza" Binding="{Binding Taxes}" IsReadOnly="true" Width="*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTextColumn Header="RUC" Binding="{Binding Ruc}" IsReadOnly="true" Width="*" ElementStyle="{StaticResource LeftAlignCellStyle}"/>
-                <DataGridTemplateColumn Header="Operacije" IsReadOnly="True" Width="*">
-                    <DataGridTemplateColumn.HeaderStyle>
-                        <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridColumnHeaderStyle1}">
-                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                            <Setter Property="Margin" Value="20 0 0 0" />
-                        </Style>
-                    </DataGridTemplateColumn.HeaderStyle>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button Margin="15 0 0 0" Style="{StaticResource gridEditButton}" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.ShowInventoryDetailsCommand}" CommandParameter="{Binding}">
-                                    <TextBlock Text="Detalji" Padding="5"/>
-                                </Button>
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="3" Margin="50 2">
-            <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding ExportDataCommand}"  Height="50" Width="170" Margin="20 0 0 0">
-                <StackPanel Orientation="Horizontal">
-                    <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="FileExcel" Width="30" Height="30" />
-                    <TextBlock TextAlignment="Center" FontSize="18" HorizontalAlignment="Center" Margin="7 5" VerticalAlignment="Stretch" FontWeight="ExtraLight">Izvezi (Excel)</TextBlock>
-                </StackPanel>
-            </Button>
-        </StackPanel>
-    </Grid>
+                <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding ExportDataCommand}"  Height="50" Width="170" Margin="20 0 0 0">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="FileExcel" Width="30" Height="30" />
+                        <TextBlock TextAlignment="Center" FontSize="18" HorizontalAlignment="Center" Margin="7 5" VerticalAlignment="Stretch" FontWeight="ExtraLight">Izvezi (Excel)</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
 </UserControl>
