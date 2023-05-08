@@ -14,35 +14,35 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </UserControl.Resources>
-        <Grid Margin="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.8*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.8*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-            <modalcontrol:Modal Panel.ZIndex="21" Background="Transparent" IsOpen="{Binding IsShowInventoryDetails}" Margin="50 0 0 0" Height="500" Grid.RowSpan="3" Grid.ColumnSpan="5">
+        <!--<modalcontrol:Modal Panel.ZIndex="21" Background="Transparent" IsOpen="{Binding IsShowInventoryDetails}" Margin="50 0 0 0" Height="500" Grid.RowSpan="3" Grid.ColumnSpan="5">
                 <ContentControl Content="{Binding InventoryDocumentDetails}" Background="{StaticResource panelActiveColor}"/>
-            </modalcontrol:Modal>
+            </modalcontrol:Modal>-->
 
 
-            <StackPanel Grid.Row="0" Grid.ColumnSpan="2"
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="2"
                     HorizontalAlignment="Center"
                       Orientation="Horizontal" Margin="0 0 90 20"
                       >
 
 
-                <Ellipse Height="40" Width="40">
-                    <Ellipse.Fill>
-                        <ImageBrush ImageSource="/Images/p2.jpg"/>
-                    </Ellipse.Fill>
-                </Ellipse>
+            <Ellipse Height="40" Width="40">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="/Images/p2.jpg"/>
+                </Ellipse.Fill>
+            </Ellipse>
 
             <StackPanel Orientation="Vertical" Margin="5">
                 <TextBlock Text="Welcome to POS Sector Importer"
@@ -74,8 +74,8 @@
             <custom:LoadingSpinner Color="{StaticResource titleColor2}" Diameter="60" Thickness="4" IsLoading="{Binding IsLoading, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="100" Grid.Row="0" Grid.Column="1"/>
             <TextBlock FontWeight="SemiBold"  Grid.Row="1" Foreground="{StaticResource titleColor2}" FontSize="26" Margin="0 10" Text="Učitavanje.." VerticalAlignment="Center"/>
 
-            </StackPanel>
-        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="6">
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="6">
             <TextBlock Style="{StaticResource textBlockStyle}" Text="{Binding Title}" Margin="50 0" HorizontalAlignment="Left" FontSize="25" FontWeight="Light" Foreground="{StaticResource titleColor2}"/>
         </StackPanel>
 
@@ -134,12 +134,37 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <Button HorizontalAlignment="Right" Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding ExportDataCommand}"  Height="50" Width="170" Margin="10" Grid.Row="1">
-                    <StackPanel Orientation="Horizontal">
-                        <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="FileExcel" Width="30" Height="30" />
-                        <TextBlock TextAlignment="Center" FontSize="18" HorizontalAlignment="Center" Margin="7 5" VerticalAlignment="Stretch" FontWeight="ExtraLight">Izvezi (Excel)</TextBlock>
-                    </StackPanel>
-                </Button>
+                <StackPanel Orientation="Horizontal" Height="50" Width="190" Grid.Row="1" HorizontalAlignment="Right" Margin="5 10">
+                    <Button HorizontalAlignment="Right" Style="{StaticResource ImportButton}" Foreground="White" Margin="5" Command="{Binding ExportDataCommand}">
+                        <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="FileExcel" Width="30" IconFont="Solid" Height="20" />
+                    </Button>
+                    <Button HorizontalAlignment="Right" Style="{StaticResource CancelButton}" Foreground="White" Margin="5" Command="{Binding ExportDataCommand}">
+                        <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="FilePdf" Width="30" IconFont="Solid" Height="20" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2" Grid.Column="1" Background="{StaticResource color12}" 
+                Margin="20"
+                Width="500" Height="300" CornerRadius="10" BorderBrush="White" BorderThickness="1" VerticalAlignment="Top">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" FontSize="20" Foreground="{StaticResource titleColor1}" Margin="20" FontWeight="Light" Text="Informacije o skladištu"/>
+                <RibbonSeparator Grid.Row="1"/>
+                <TextBlock Grid.Row="2" FontSize="18" Foreground="{StaticResource titleColor1}" Margin="20" FontWeight="Light" Text="Broj artikala bez normativa"/>
             </Grid>
         </Border>
 
