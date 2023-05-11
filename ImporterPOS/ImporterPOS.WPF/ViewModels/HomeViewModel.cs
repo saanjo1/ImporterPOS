@@ -1,6 +1,8 @@
 ﻿using ClosedXML.Excel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.EMMA;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Services.Articles;
 using ImporterPOS.Domain.Services.InventoryDocuments;
@@ -9,6 +11,7 @@ using ImporterPOS.Domain.Services.Suppliers;
 using ImporterPOS.WPF.Resources;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using ModalControl;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,6 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
@@ -109,14 +113,15 @@ namespace ImporterPOS.WPF.ViewModels
 
 
         [RelayCommand]
-        private void ExportData()
+        private void ExportAsExcel()
         {
             // stvori novi SaveFileDialog
             var dialog = new Microsoft.Win32.SaveFileDialog();
 
             // postavi filter za odabir datoteke na Excel datoteke
             dialog.Filter = "Excel Files|*.xlsx";
-            dialog.FileName = "Inventory-Documents-" + DateTime.Now.ToString("ddMMyyyyhhmm");
+            dialog.FileName = "Spisak-inventurnih-dokumenata-" + DateTime.Now.ToString("ddMMyyyyhhmm");
+
 
             // prikaži dijalog za odabir mjesta za spremanje datoteke i dohvatimo rezultat
             bool? result = dialog.ShowDialog();
@@ -133,6 +138,7 @@ namespace ImporterPOS.WPF.ViewModels
 
                     var headerRow = worksheet.Row(1);
                     headerRow.Style.Font.Bold = true;
+
 
                     // postavimo zaglavlje tablice
                     worksheet.Cell(1, 1).Value = "Datum i vrijeme";
@@ -163,6 +169,44 @@ namespace ImporterPOS.WPF.ViewModels
             }
         }
 
+
+        [RelayCommand]
+        private void ExportAsPdf()
+        {
+            try
+            {
+                var saveDialog = new Microsoft.Win32.SaveFileDialog();
+                saveDialog.Filter = "PDF Files (*.pdf)|*.pdf";
+                saveDialog.FileName = "Spisak-inventurnih-dokumenata-" + DateTime.Now.ToString("ddMMyyyyhhmm");
+                saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+                if (saveDialog.ShowDialog() == true)
+                {
+                    Document pdfDocument = new Document();
+
+                    PdfWriter.GetInstance(pdfDocument, new FileStream(saveDialog.FileName, FileMode.Create));
+
+                    pdfDocument.Open();
+
+                    //Define additional info
+                    Paragraph header = new Paragraph();
+                    header.SpacingAfter = 20f; // 10pt spacing after the paragraph
+                    header.Add(new Chunk("Lista svih inventurnih dokumenata na dan " + DateTime.Now.ToString("dd.MM.yyyy. hh:mm"), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
+                    pdfDocument.Add(header);
+
+
+                    List<string> columns = new List<string>() { "Datum i vrijeme", "Nabavljac", "Ulazna cijena", "Izlazna cijena", "Iznos osnovica", "Iznos poreza", "Razlika u cijeni" };
+
+                    pdfDocument = Helpers.Extensions.UpdatePdfDocument(pdfDocument, columns, listOfInventories);
+                }
+            }
+            catch
+            {
+                
+                throw;
+            }
+
+        }
         public decimal? GetTotalIncome(InventoryDocument inventoryDocument)
         {
             return _invService.GetTotalInventoryItems(inventoryDocument.Id.ToString()).Result;

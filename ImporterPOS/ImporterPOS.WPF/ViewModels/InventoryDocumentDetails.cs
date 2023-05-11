@@ -5,6 +5,7 @@ using ImporterPOS.Domain.Services.Articles;
 using ImporterPOS.Domain.Services.InventoryDocuments;
 using ImporterPOS.Domain.Services.InventoryItems;
 using ImporterPOS.Domain.Services.Suppliers;
+using ImporterPOS.WPF.Modals;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -66,6 +67,9 @@ namespace ImporterPOS.WPF.ViewModels
 
         [ObservableProperty]
         public decimal totalRuc;
+        
+        [ObservableProperty]
+        public string inventoryDocumentTitle;
 
         [ObservableProperty]
         public ICollection<InventoryDocumentsDetails> listOfItems;
@@ -87,6 +91,28 @@ namespace ImporterPOS.WPF.ViewModels
         public InventoryDocumentsDetails()
         {
             
+        }
+        private string textToFilter;
+
+        public string TextToFilter
+        {
+            get { return textToFilter; }
+            set
+            {
+                textToFilter = value;
+                OnPropertyChanged(nameof(TextToFilter));
+                InventoryItemsCollection.Filter = FilterFunction;
+            }
+        }
+
+        private bool FilterFunction(object obj)
+        {
+            if (!string.IsNullOrEmpty(TextToFilter))
+            {
+                var filt = obj as InventoryDocumentsDetails;
+                return filt != null && (filt.Name.Contains(TextToFilter, StringComparison.OrdinalIgnoreCase));
+            }
+            return true;
         }
 
         private void LoadInventoryItemBases(string id)

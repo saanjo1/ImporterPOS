@@ -1,7 +1,13 @@
-﻿using ImporterPOS.WPF.Modals;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using ImporterPOS.Domain.Models;
+using ImporterPOS.WPF.Modals;
+using ImporterPOS.WPF.ViewModels;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -83,6 +89,65 @@ namespace ImporterPOS.WPF.Helpers
 
             return basePrice;
 
+        }
+
+        public static Document UpdatePdfDocument(Document pdfDocument, List<string> columns, ObservableCollection<InventoryDocumentsViewModel> values)
+        {
+
+            // Dodavanje tablice u PDF
+            PdfPTable table = new PdfPTable(7);
+            Font font = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL);
+            Font font1 = new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD);
+            table.WidthPercentage = 100;
+
+
+            // Dodavanje naziva stupaca u tablicu
+            foreach (string column in columns)
+            {
+                PdfPCell nameHeader = new PdfPCell(new Phrase(column, font1));
+                nameHeader.HorizontalAlignment = Element.ALIGN_CENTER;
+                nameHeader.VerticalAlignment = Element.ALIGN_MIDDLE;
+                nameHeader.Padding = 10;
+                table.AddCell(nameHeader);
+            }
+
+            foreach (var doc in values)
+            {
+                PdfPCell dateCell = new PdfPCell(new Phrase(doc.DateCreated, font));
+                dateCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                table.AddCell(dateCell);
+
+                PdfPCell idCell = new PdfPCell(new Phrase(doc.Name, font1));
+                idCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                idCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                table.AddCell(idCell);
+
+                PdfPCell purchaseCell = new PdfPCell(new Phrase(doc.PurchasePrice, font));
+                purchaseCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                table.AddCell(purchaseCell);
+
+                PdfPCell soldPriceCell = new PdfPCell(new Phrase(doc.SoldPrice, font));
+                soldPriceCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                table.AddCell(soldPriceCell);
+
+                PdfPCell basePriceCell = new PdfPCell(new Phrase(doc.BasePrice, font));
+                basePriceCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                table.AddCell(basePriceCell);
+
+                PdfPCell taxesCell = new PdfPCell(new Phrase(doc.Taxes, font));
+                taxesCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                table.AddCell(taxesCell);
+
+                PdfPCell rucCell = new PdfPCell(new Phrase(doc.Ruc, font));
+                rucCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                table.AddCell(rucCell);
+            }
+
+
+            pdfDocument.Add(table);
+            pdfDocument.Close();
+
+            return pdfDocument;
         }
     }
 }
