@@ -20,6 +20,6 @@ namespace ImporterPOS.WPF.Services.Excel
         Task<ObservableCollection<DiscountColumnsViewModel>> ReadDiscountColumns(ConcurrentDictionary<string, string> model, DiscountColumnsViewModel viewModel);
         Task<ObservableCollection<WriteOffViewModel>> ReadFromWriteOff(string excelFile, string sheet);
         Task<List<string>> ListColumnNames(string sheetName);
-
+        Task<ObservableCollection<StockCorrectionViewModel>> ReadStockCorrectionDocument(string excelFile);
     }
 }

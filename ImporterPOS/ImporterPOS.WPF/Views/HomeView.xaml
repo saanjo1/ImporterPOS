@@ -169,6 +169,9 @@
                 <TextBlock Grid.Row="0" FontSize="20" Foreground="{StaticResource titleColor1}" Margin="20" FontWeight="Light" Text="Informacije o skladištu"/>
                 <RibbonSeparator Grid.Row="1"/>
                 <TextBlock Grid.Row="2" FontSize="18" Foreground="{StaticResource titleColor1}" Margin="20" FontWeight="Light" Text="Broj artikala bez normativa"/>
+                <TextBlock Grid.Row="3" FontSize="18" Foreground="{StaticResource titleColor1}" Margin="20" FontWeight="Light" Text="Ispravak stanja skladišta"/>
+                <Button HorizontalAlignment="Right" Margin="150 0" Grid.Row="3" Grid.Column="1" FontSize="14" Style="{StaticResource settingsClickButton}" Content="Dodaj" Command="{Binding StockCorrectionFromExcelCommand}" Width="60" Height="30"/>
+
             </Grid>
         </Border>
 

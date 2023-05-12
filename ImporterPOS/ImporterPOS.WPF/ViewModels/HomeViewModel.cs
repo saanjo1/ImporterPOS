@@ -3,14 +3,18 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Wordprocessing;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Services.Articles;
+using ImporterPOS.Domain.Services.Goods;
 using ImporterPOS.Domain.Services.InventoryDocuments;
 using ImporterPOS.Domain.Services.InventoryItems;
 using ImporterPOS.Domain.Services.Suppliers;
 using ImporterPOS.WPF.Resources;
+using ImporterPOS.WPF.Services.Excel;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using ModalControl;
 using System;
 using System.Collections.Generic;
@@ -23,6 +27,8 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Forms;
+using ToastNotifications;
+using ToastNotifications.Messages;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace ImporterPOS.WPF.ViewModels
@@ -31,10 +37,14 @@ namespace ImporterPOS.WPF.ViewModels
     public partial class HomeViewModel : BaseViewModel
     {
 
+        private readonly Notifier _notifier;
+
         private readonly IInventoryDocumentsService _invService;
         private readonly IInventoryItemBasisService _invItemService;
         private readonly ISupplierService _supplierDataService;
         private readonly IArticleService _articleService;
+        private readonly IExcelService _excelService;
+        private readonly IGoodService _goodService;
 
 
         [ObservableProperty]
@@ -57,12 +67,15 @@ namespace ImporterPOS.WPF.ViewModels
         private ICollectionView inventoryCollection;
 
 
-        public HomeViewModel(IInventoryDocumentsService invService, ISupplierService supplierDataService, IArticleService articleService, IInventoryItemBasisService invItemService)
+        public HomeViewModel(IInventoryDocumentsService invService, ISupplierService supplierDataService, IArticleService articleService, IInventoryItemBasisService invItemService, IExcelService excelService, IGoodService goodService, Notifier notifier)
         {
             _invService = invService;
+            _notifier = notifier;
             _supplierDataService = supplierDataService;
             _articleService = articleService;
             this._invItemService = invItemService;
+            _excelService = excelService;
+            _goodService = goodService;
             Title = Translations.InventoryDocuments;
             LoadInventoryDocuments();
         }
@@ -182,16 +195,16 @@ namespace ImporterPOS.WPF.ViewModels
 
                 if (saveDialog.ShowDialog() == true)
                 {
-                    Document pdfDocument = new Document();
+                    iTextSharp.text.Document pdfDocument = new iTextSharp.text.Document();
 
                     PdfWriter.GetInstance(pdfDocument, new FileStream(saveDialog.FileName, FileMode.Create));
 
                     pdfDocument.Open();
 
                     //Define additional info
-                    Paragraph header = new Paragraph();
+                    iTextSharp.text.Paragraph header = new iTextSharp.text.Paragraph();
                     header.SpacingAfter = 20f; // 10pt spacing after the paragraph
-                    header.Add(new Chunk("Lista svih inventurnih dokumenata na dan " + DateTime.Now.ToString("dd.MM.yyyy. hh:mm"), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
+                    header.Add(new Chunk("Lista svih inventurnih dokumenata na dan " + DateTime.Now.ToString("dd.MM.yyyy. hh:mm"), new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 12, iTextSharp.text.Font.BOLD)));
                     pdfDocument.Add(header);
 
 
@@ -205,6 +218,80 @@ namespace ImporterPOS.WPF.ViewModels
                 
                 throw;
             }
+
+        }
+
+        [RelayCommand]
+        private async void StockCorrectionFromExcel()
+        {
+
+            ObservableCollection<StockCorrectionViewModel> stockCorrectionViewModels = new ObservableCollection<StockCorrectionViewModel>();
+
+            try
+            {
+                string excelFile = _excelService.OpenDialog().Result;
+                if (excelFile != null)
+                {
+                    stockCorrectionViewModels = _excelService.ReadStockCorrectionDocument(excelFile).Result;
+                }
+
+                InventoryDocument inventoryDocument = new InventoryDocument()
+                {
+                    Id = Guid.NewGuid(),
+                    Created = DateTime.Now,
+                    Order = _invService.GetInventoryOrderNumber().Result,
+                    IsActivated = true,
+                    IsDeleted = false,
+                    StorageId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
+                    Type = 2
+                };
+
+                _invService.Create(inventoryDocument);
+
+                foreach (var item in stockCorrectionViewModels)
+                {
+
+                    Guid _good = _goodService.GetGoodByName(item.Name).Result;
+
+                    decimal itemCurrentQty = Helpers.Extensions.GetDecimal(item.CurrentQuantity);
+                    decimal itemNewQty = Helpers.Extensions.GetDecimal(item.NewQuantity);
+                    decimal Qty = itemNewQty - itemCurrentQty;
+
+                    if (_good != Guid.Empty && Qty != 0)
+                    {
+                        Good goodEntity = await _goodService.Get(_good.ToString());
+
+                        InventoryItemBasis inventoryItemBasis = new InventoryItemBasis
+                        {
+                            Id = Guid.NewGuid(),
+                            StorageId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
+                            Created = DateTime.Now,
+                            Quantity = Qty,
+                            CurrentQuantity = Qty,
+                            Tax = 0,
+                            Discriminator = "InventoryDocumentItem",
+                            InventoryDocumentId = inventoryDocument.Id,
+                            GoodId = goodEntity.Id,
+                            Price = goodEntity.LatestPrice,
+                            Total = Qty * goodEntity.LatestPrice,
+                            IsDeleted = false,
+                            Refuse = 0
+                        };
+                        _invItemService.Create(inventoryItemBasis);
+                    }
+
+                }
+
+                _notifier.ShowSuccess("Uspjesno izvrsena korekcija skladista.");
+
+            }
+            catch
+            {
+                _notifier.ShowError("Dogodila se greska prilikom korekcije stanja. Provjerite vas dokument.");
+                throw;
+            }
+
+
 
         }
         public decimal? GetTotalIncome(InventoryDocument inventoryDocument)

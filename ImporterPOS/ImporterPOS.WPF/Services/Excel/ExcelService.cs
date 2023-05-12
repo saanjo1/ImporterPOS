@@ -1,4 +1,5 @@
-﻿using ImporterPOS.WPF.Helpers;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using ImporterPOS.WPF.Helpers;
 using ImporterPOS.WPF.Modals;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.ViewModels;
@@ -261,7 +262,7 @@ namespace ImporterPOS.WPF.Services.Excel
 
                 Command = new OleDbCommand();
                 Command.Connection = _oleDbConnection;
-                Command.CommandText = "select * from [" + sheet + "]";
+                Command.CommandText = "SELECT * FROM [Sheet1$]";
 
                 System.Data.Common.DbDataReader Reader = await Command.ExecuteReaderAsync();
 
@@ -285,6 +286,50 @@ namespace ImporterPOS.WPF.Services.Excel
 
             }
             catch
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<ObservableCollection<StockCorrectionViewModel>> ReadStockCorrectionDocument(string excelFile)
+        {
+            try
+            {
+                ObservableCollection<StockCorrectionViewModel> list = new ObservableCollection<StockCorrectionViewModel>();
+
+                string _connection =
+   @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + excelFile + ";" +
+   @"Extended Properties='Excel 8.0;HDR=Yes;IMEX=1'";
+
+                _oleDbConnection = new OleDbConnection(_connection);
+
+                await _oleDbConnection.OpenAsync();
+
+
+                Command = new OleDbCommand();
+                Command.Connection = _oleDbConnection;
+                Command.CommandText = "SELECT * FROM [Sheet1$]";
+
+                System.Data.Common.DbDataReader Reader = await Command.ExecuteReaderAsync();
+
+                while (Reader.Read())
+                {
+                    list.Add(new StockCorrectionViewModel
+                    {
+                        Name = Reader["Proizvod"].ToString(),
+                        CurrentQuantity = Reader["Stara"].ToString(),
+                        NewQuantity = Reader["Nova"].ToString()
+                    });
+                }
+
+                Reader.Close();
+                _oleDbConnection.Close();
+
+                return await Task.FromResult(list);
+
+            }
+            catch 
             {
 
                 throw;
