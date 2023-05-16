@@ -88,7 +88,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Excel Worksheets|*.xls;*.xlsx;*.xlsm.
+        ///   Looks up a localized string similar to Sve datoteke|*.*.
         /// </summary>
         internal static string OpenDialogFilter {
             get {

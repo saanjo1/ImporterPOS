@@ -101,7 +101,7 @@ namespace ImporterPOS.WPF.ViewModels
                     ListOfInventories.Add(new InventoryDocumentsViewModel
                     {
                         DateCreated = inventoryDocument.Created.ToString("dd.MM.yyyy hh:mm"),
-                        Name = _supplierDataService.Get(inventoryDocument.SupplierId.ToString()).Result != null ? _supplierDataService.Get(inventoryDocument.SupplierId.ToString()).Result.Name : "Otpis robe",
+                        Name = _supplierDataService.Get(inventoryDocument.SupplierId.ToString()).Result != null ? _supplierDataService.Get(inventoryDocument.SupplierId.ToString()).Result.Name : "Korekcija stanja skladista",
                         PurchasePrice = purchasePrice.ToString() + " EUR",
                         SoldPrice = soldPrice.ToString() + " EUR",
                         BasePrice = basePrice.ToString() + " EUR",
@@ -253,7 +253,7 @@ namespace ImporterPOS.WPF.ViewModels
 
                     Guid _good = _goodService.GetGoodByName(item.Name).Result;
 
-                    decimal itemCurrentQty = Helpers.Extensions.GetDecimal(item.CurrentQuantity);
+                    decimal itemCurrentQty = 0;
                     decimal itemNewQty = Helpers.Extensions.GetDecimal(item.NewQuantity);
                     decimal Qty = itemNewQty - itemCurrentQty;
 
@@ -291,6 +291,80 @@ namespace ImporterPOS.WPF.ViewModels
                 throw;
             }
 
+
+
+        }
+
+        [RelayCommand]
+        private async void ReadBarcodeTxtFile()
+        {
+            ObservableCollection<StockCorrectionViewModel> stockCorrectionViewModels = new ObservableCollection<StockCorrectionViewModel>();
+
+            try
+            {
+                string path = _excelService.OpenDialog().Result;
+
+                if (path != null)
+                {
+                    stockCorrectionViewModels = _excelService.ReadFromTxtFile(path).Result;
+                }
+
+
+                InventoryDocument inventoryDocument = new InventoryDocument()
+                {
+                    Id = Guid.NewGuid(),
+                    Created = DateTime.Now,
+                    Order = _invService.GetInventoryOrderNumber().Result,
+                    IsActivated = true,
+                    IsDeleted = false,
+                    StorageId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
+                    Type = 2
+                };
+
+                _invService.Create(inventoryDocument);
+
+                foreach (var item in stockCorrectionViewModels)
+                {
+
+                    Guid _good = _goodService.GetGoodByName(item.Name).Result;
+
+                    decimal itemCurrentQty = Helpers.Extensions.GetDecimal(item.CurrentQuantity);
+                    decimal itemNewQty = Helpers.Extensions.GetDecimal(item.NewQuantity);
+                    decimal Qty = itemNewQty - itemCurrentQty;
+
+                    if (_good != Guid.Empty && Qty != 0)
+                    {
+                        Good goodEntity = await _goodService.Get(_good.ToString());
+
+                        InventoryItemBasis inventoryItemBasis = new InventoryItemBasis
+                        {
+                            Id = Guid.NewGuid(),
+                            StorageId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
+                            Created = DateTime.Now,
+                            Quantity = Qty,
+                            CurrentQuantity = Qty,
+                            Tax = 0,
+                            Discriminator = "InventoryDocumentItem",
+                            InventoryDocumentId = inventoryDocument.Id,
+                            GoodId = goodEntity.Id,
+                            Price = goodEntity.LatestPrice,
+                            Total = Qty * goodEntity.LatestPrice,
+                            IsDeleted = false,
+                            Refuse = 0
+                        };
+                        _invItemService.Create(inventoryItemBasis);
+                    }
+
+                }
+
+                _notifier.ShowSuccess("Inventura uspjesno izvrsena.");
+
+            }
+            catch
+            {
+                _notifier.ShowError("Dogodila se greska prilikom korekcije stanja. Provjerite vas dokument.");
+                throw;
+            }
 
 
         }

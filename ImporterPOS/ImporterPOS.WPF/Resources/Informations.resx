@@ -127,7 +127,7 @@
     <value>;Encrypt=False</value>
   </data>
   <data name="OpenDialogFilter" xml:space="preserve">
-    <value>Excel Worksheets|*.xls;*.xlsx;*.xlsm</value>
+    <value>Sve datoteke|*.*</value>
   </data>
   <data name="PortPath" xml:space="preserve">
     <value>/ServerItem/Port</value>

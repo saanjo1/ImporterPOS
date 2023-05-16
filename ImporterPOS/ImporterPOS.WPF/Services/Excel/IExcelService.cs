@@ -21,5 +21,6 @@ namespace ImporterPOS.WPF.Services.Excel
         Task<ObservableCollection<WriteOffViewModel>> ReadFromWriteOff(string excelFile, string sheet);
         Task<List<string>> ListColumnNames(string sheetName);
         Task<ObservableCollection<StockCorrectionViewModel>> ReadStockCorrectionDocument(string excelFile);
+        Task<ObservableCollection<StockCorrectionViewModel>> ReadFromTxtFile(string excelFile);
     }
 }

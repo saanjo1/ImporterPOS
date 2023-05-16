@@ -317,9 +317,8 @@ namespace ImporterPOS.WPF.Services.Excel
                 {
                     list.Add(new StockCorrectionViewModel
                     {
-                        Name = Reader["Proizvod"].ToString(),
-                        CurrentQuantity = Reader["Stara"].ToString(),
-                        NewQuantity = Reader["Nova"].ToString()
+                        Name = Reader["Naziv"].ToString(),
+                        NewQuantity = Reader["Kolicina"].ToString()
                     });
                 }
 
@@ -335,5 +334,47 @@ namespace ImporterPOS.WPF.Services.Excel
                 throw;
             }
         }
+
+        public async Task<ObservableCollection<StockCorrectionViewModel>> ReadFromTxtFile(string pathOfTxtFile)
+        {
+            ObservableCollection<StockCorrectionViewModel> stockCorrections = new ObservableCollection<StockCorrectionViewModel>();
+
+            string[] lines = File.ReadAllLines(pathOfTxtFile);
+
+            Dictionary<string, StockCorrectionViewModel> stockCorrectionDictionary = new Dictionary<string, StockCorrectionViewModel>();
+
+            foreach (string line in lines)
+            {
+                string[] parts = line.Split(',');
+
+                if (parts.Length >= 3)
+                {
+                    string name = parts[2];
+                    string currentQuantity = "0";
+                    string newQuantity = "1";
+
+                    if (stockCorrectionDictionary.ContainsKey(name))
+                    {
+                        StockCorrectionViewModel existingStockCorrection = stockCorrectionDictionary[name];
+                        existingStockCorrection.NewQuantity = (int.Parse(existingStockCorrection.NewQuantity) + 1).ToString();
+                    }
+                    else
+                    {
+                        StockCorrectionViewModel stockCorrection = new StockCorrectionViewModel
+                        {
+                            Name = name,
+                            CurrentQuantity = currentQuantity,
+                            NewQuantity = newQuantity
+                        };
+
+                        stockCorrections.Add(stockCorrection);
+                        stockCorrectionDictionary[name] = stockCorrection;
+                    }
+                }
+            }
+
+            return stockCorrections;
+        }
+
     }
 }
