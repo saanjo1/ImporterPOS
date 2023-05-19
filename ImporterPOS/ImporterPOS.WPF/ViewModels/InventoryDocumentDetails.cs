@@ -236,25 +236,25 @@ namespace ImporterPOS.WPF.ViewModels
                         table.AddCell(quantityCell);
 
 
-                        PdfPCell purchasePriceCell = new PdfPCell(new Phrase(doc.PurchasePrice.ToString() + " kn", font));
+                        PdfPCell purchasePriceCell = new PdfPCell(new Phrase(doc.PurchasePrice.ToString(), font));
                         purchasePriceCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                         table.AddCell(purchasePriceCell);
 
-                        PdfPCell soldPriceCell = new PdfPCell(new Phrase(doc.SoldPrice.ToString() + " kn", font));
+                        PdfPCell soldPriceCell = new PdfPCell(new Phrase(doc.SoldPrice.ToString(), font));
                         soldPriceCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                         table.AddCell(soldPriceCell);
 
-                        PdfPCell basePriceCell = new PdfPCell(new Phrase(doc.BasePrice.ToString() + " kn", font));
+                        PdfPCell basePriceCell = new PdfPCell(new Phrase(doc.BasePrice.ToString(), font));
                         basePriceCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                         table.AddCell(basePriceCell);
 
 
-                        PdfPCell taxesCell = new PdfPCell(new Phrase(doc.Taxes.ToString() + " kn", font));
+                        PdfPCell taxesCell = new PdfPCell(new Phrase(doc.Taxes.ToString(), font));
                         taxesCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                         table.AddCell(taxesCell);
 
 
-                        PdfPCell rucCell = new PdfPCell(new Phrase(doc.Ruc.ToString() + " kn", font));
+                        PdfPCell rucCell = new PdfPCell(new Phrase(doc.Ruc.ToString(), font));
                         rucCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                         table.AddCell(rucCell);
 

@@ -369,7 +369,7 @@ namespace ImporterPOS.WPF.ViewModels
                         }
 
                     }
-                    _notifier.ShowSuccess("Storage successfully updated");
+                    _notifier.ShowSuccess("Artikli uspješno ubačeni.");
                 }
             });
             IsLoading = false;
