@@ -160,7 +160,7 @@
                 </Grid>
             </Border>
 
-            <ContentControl Content="{Binding Navigator.CurrentViewModel}" Grid.Column="1" Margin="40,30,32,30"/>
+            <ContentControl Content="{Binding Navigator.CurrentViewModel}" Grid.Column="1" Margin="20"/>
         </Grid>
 
 

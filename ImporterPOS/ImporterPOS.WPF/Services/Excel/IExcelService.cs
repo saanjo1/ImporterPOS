@@ -16,7 +16,7 @@ namespace ImporterPOS.WPF.Services.Excel
 
         Task<List<string>> GetListOfSheets(string excelFile);
 
-        Task<ObservableCollection<ExcelArticlesListViewModel>> ReadColumnsFromExcel(ConcurrentDictionary<string, string> model, ExcelArticlesListViewModel viewModel);
+        Task<ObservableCollection<ExcelArticlesListViewModel>> ReadColumnsFromExcel(string filePath, string sheetValue, ExcelArticlesListViewModel viewModel);
         Task<ObservableCollection<DiscountColumnsViewModel>> ReadDiscountColumns(ConcurrentDictionary<string, string> model, DiscountColumnsViewModel viewModel);
         Task<ObservableCollection<WriteOffViewModel>> ReadFromWriteOff(string excelFile, string sheet);
         Task<List<string>> ListColumnNames(string sheetName);

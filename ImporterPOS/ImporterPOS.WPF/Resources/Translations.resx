@@ -120,6 +120,9 @@
   <data name="Articles" xml:space="preserve">
     <value>Artikli</value>
   </data>
+  <data name="ClearList" xml:space="preserve">
+    <value>Lista je uspješno ispražnjena.</value>
+  </data>
   <data name="CurrentExcelFile" xml:space="preserve">
     <value>CurrentExcelFile</value>
   </data>
@@ -133,10 +136,22 @@
     <value>Popusti</value>
   </data>
   <data name="ErrorMessage" xml:space="preserve">
-    <value>Greška. Pokušajte ponovo.</value>
+    <value>Dogodila se pogreška. Pokušajte ponovo.</value>
+  </data>
+  <data name="ExcelFileError" xml:space="preserve">
+    <value>Vaš Excel file nije odgovarajućeg formata. Provjerite ga.</value>
+  </data>
+  <data name="ImportArticlesError" xml:space="preserve">
+    <value>Dogodio se problem prilikom integracije u bazu podataka. Pokušajte ponovo.</value>
+  </data>
+  <data name="ImportArticlesSuccess" xml:space="preserve">
+    <value>Završeno! Artikli su uspješno integrirani u bazu podataka.</value>
   </data>
   <data name="InventoryDocuments" xml:space="preserve">
     <value>Inventurni dokumenti</value>
+  </data>
+  <data name="LoadDataSuccess" xml:space="preserve">
+    <value>Artikli su uspješno učitani i pripremljeni za integraciju u softver.</value>
   </data>
   <data name="OpenDialogTitle" xml:space="preserve">
     <value>Odaberite Excel file</value>
@@ -148,7 +163,7 @@
     <value>Excel file je uspješno odabran.</value>
   </data>
   <data name="SelectSheetError" xml:space="preserve">
-    <value>Greška prilikom odabira excel file. </value>
+    <value>Nešto nije uredu sa vašim fajlom. Pokušajte ponovo.</value>
   </data>
   <data name="SelectSheetSuccess" xml:space="preserve">
     <value>Uspješno odabran sheet.</value>

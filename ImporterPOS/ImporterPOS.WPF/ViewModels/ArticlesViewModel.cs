@@ -7,6 +7,7 @@ using ImporterPOS.Domain.Services.InventoryDocuments;
 using ImporterPOS.Domain.Services.InventoryItems;
 using ImporterPOS.Domain.Services.Storages;
 using ImporterPOS.Domain.Services.Suppliers;
+using ImporterPOS.WPF.Modals;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.Services.Excel;
 using System;
@@ -33,21 +34,25 @@ namespace ImporterPOS.WPF.ViewModels
         private readonly IArticleService _articleService;
         private readonly IInventoryItemBasisService _inventoryItems;
         private readonly Notifier _notifier;
-        private ConcurrentDictionary<string, string> _myDictionary;
 
 
         [ObservableProperty]
         private ObservableCollection<ExcelArticlesListViewModel> articlesCollection;
 
         [ObservableProperty]
+        private SelectExcelSheetViewModel excelSheetViewModel;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(ClearAllDataCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ImportDataCommand))]
         public int count;
 
         [ObservableProperty]
         private bool isLoading;
 
-
         [ObservableProperty]
-        private ExcelArticlesListViewModel articleQ;
+        private bool isSheetPopupOpened;
+
 
         [ObservableProperty]
         private ICollectionView articleCollection;
@@ -55,13 +60,13 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         ObservableCollection<ExcelArticlesListViewModel>? articleList;
 
-        public ArticlesViewModel(IExcelService excelService, ISupplierService supplierService, Notifier notifier, ConcurrentDictionary<string, string> myDictionary, IInventoryDocumentsService invDocsService, IStorageService storageService, IGoodService goodService, IInventoryItemBasisService inventoryItems, IArticleService articleService)
+
+        public ArticlesViewModel(IExcelService excelService, ISupplierService supplierService, Notifier notifier, IInventoryDocumentsService invDocsService, IStorageService storageService, IGoodService goodService, IInventoryItemBasisService inventoryItems, IArticleService articleService)
         {
             _excelService = excelService;
             _supplierService = supplierService;
             _notifier = notifier;
             _invDocsService = invDocsService;
-            _myDictionary = myDictionary;
             articlesCollection = new ObservableCollection<ExcelArticlesListViewModel>();
             _storageService = storageService;
             _goodService = goodService;
@@ -119,10 +124,13 @@ namespace ImporterPOS.WPF.ViewModels
 
         private void UpdateRecordCount()
         {
-            NumberOfPages = (int)Math.Ceiling((double)articleList.Count / SelectedRecord);
-            NumberOfPages = NumberOfPages == 0 ? 1 : NumberOfPages;
-            UpdateCollection(articleList.Take(SelectedRecord));
-            CurrentPage = 1;
+            if(articleList != null)
+            {
+                NumberOfPages = (int)Math.Ceiling((double)articleList.Count / SelectedRecord);
+                NumberOfPages = NumberOfPages == 0 ? 1 : NumberOfPages;
+                UpdateCollection(articleList.Take(SelectedRecord));
+                CurrentPage = 1;
+            }
         }
 
         [ObservableProperty]
@@ -201,160 +209,158 @@ namespace ImporterPOS.WPF.ViewModels
 
 
         [RelayCommand]
-        public void LoadFixedExcelColumns()
+        public async Task LoadFixedExcelColumns()
         {
-            ExcelArticlesListViewModel tempVm = new ExcelArticlesListViewModel();
-
             try
             {
-                articleList = _excelService.ReadColumnsFromExcel(_myDictionary, tempVm).Result;
-                _notifier.ShowInformation(articleList.Count() + " articles pulled. ");
-                LoadData(articleList);
+                ExcelArticlesListViewModel tempVm = new ExcelArticlesListViewModel();
+                string filePath = await _excelService.OpenDialog();
+                if (filePath != null)
+                {
+                    await InitializeAndLoadData(filePath);
+                    articleList = await _excelService.ReadColumnsFromExcel(filePath, ExcelSheetViewModel.SelectedSheet, tempVm);
+                    LoadData(filePath);
+                }
             }
             catch (Exception)
             {
-                if (articleList == null)
-                    _notifier.ShowError("Please check your ExcelFile & Sheet, and try again.");
-                else
+                if (articleList == null && ExcelSheetViewModel.SelectedSheet != null)
                     _notifier.ShowError(Translations.ErrorMessage);
-
             }
-
         }
 
-        [RelayCommand]
-        public void LoadData(ObservableCollection<ExcelArticlesListViewModel>? vm = null)
+        private async Task InitializeAndLoadData(string filePath)
         {
-            if (vm != null)
-            {
-                articleList = vm;
-                ArticleCollection = CollectionViewSource.GetDefaultView(vm);
-            }
-            //IsMapped = false;
+            IsSheetPopupOpened = true;
+            this.ExcelSheetViewModel = new SelectExcelSheetViewModel(_excelService, this, _notifier, filePath);
+        }
 
-            ArticleCollection = CollectionViewSource.GetDefaultView(ArticlesCollection);
-            UpdateCollection(articlesCollection.Take(SelectedRecord));
-            UpdateRecordCount();
-            Count = ArticleList.Count;
+        public async void LoadData(string filePath, ObservableCollection<ExcelArticlesListViewModel>? vm = null)
+        {
+            try
+            {
+                ExcelArticlesListViewModel tempVm = new ExcelArticlesListViewModel();
+                articleList = await _excelService.ReadColumnsFromExcel(filePath, ExcelSheetViewModel.SelectedSheet, tempVm);
+
+                if (vm != null)
+                {
+                    articleList = vm;
+                    ArticleCollection = CollectionViewSource.GetDefaultView(vm);
+                }
+                //IsMapped = false;
+
+                ArticleCollection = CollectionViewSource.GetDefaultView(ArticlesCollection);
+                UpdateCollection(articlesCollection.Take(SelectedRecord));
+                UpdateRecordCount();
+                Count = ArticleList.Count;
+                _notifier.ShowInformation(Translations.LoadDataSuccess);
+
+            }
+            catch 
+            {
+                _notifier.ShowWarning(Translations.ExcelFileError);
+            }
 
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanClick))]
         public void ClearAllData()
         {
             if (articleList != null)
             {
                 articleList.Clear();
                 ArticleCollection = null;
-                _notifier.ShowInformation(count + " records were successfully removed.");
+                _notifier.ShowInformation(Translations.ClearList);
                 Count = 0;
             }
         }
 
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanClick))]
         public async void ImportData()
         {
-            IsLoading = true;
-            await Task.Run(() => {
-                if (articleList.Any())
-                {
-                    Guid _supplierId = _supplierService.GetSupplierByName("Unos robe").Result;
-                    Guid _storageId = _storageService.GetStorageByName("Glavno skladište").Result;
-                    int orderNmbr = _invDocsService.GetInventoryOrderNumber().Result;
-
-                    var invDoc = new InventoryDocument
+            try
+            {
+                IsLoading = true;
+                await Task.Run(() => {
+                    if (articleList.Any())
                     {
-                        Id = Guid.NewGuid(),
-                        Order = orderNmbr == 0 ? 0 : orderNmbr + 1,
-                        Created = DateTime.Now,
-                        SupplierId = _supplierId,
-                        StorageId = _storageId,
-                        Type = 1,
-                        IsActivated = false,
-                        IsDeleted = false
-                    };
-                    _invDocsService.Create(invDoc);
+                        Guid _supplierId = _supplierService.GetSupplierByName("Unos robe").Result;
+                        Guid _storageId = _storageService.GetStorageByName("Glavno skladište").Result;
+                        int orderNmbr = _invDocsService.GetInventoryOrderNumber().Result;
 
-                    for (int i = 0; i < articleList.Count; i++)
-                    {
-                        Guid _goodId = _goodService.GetGoodByName(articleList[i].BarCode).Result;
-                        Good newGood = new Good
+                        var invDoc = new InventoryDocument
                         {
                             Id = Guid.NewGuid(),
-                            Name = articleList[i].Name,
-                            UnitId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
-                            LatestPrice = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit),
-                            Volumen = 1,
-                            Refuse = 0
-                        };
-                        if (_goodId == Guid.Empty)
-                        {
-                            _goodService.Create(newGood);
-                            _goodId = newGood.Id;
-                        }
-                        else
-                        {
-                            newGood.Id = _goodId;
-                            _goodService.Update(_goodId, newGood);
-                        }
-
-                        InventoryItemBasis newInventoryItem = new InventoryItemBasis
-                        {
-                            Id = Guid.NewGuid(),
+                            Order = orderNmbr == 0 ? 0 : orderNmbr + 1,
                             Created = DateTime.Now,
-                            Price = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit),
-                            Quantity = Helpers.Extensions.GetDecimal(articleList[i].Quantity),
-                            Total = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit) * Helpers.Extensions.GetDecimal(articleList[i].Quantity),
-                            Tax = 0,
-                            GoodId = _goodId,
-                            IsDeleted = false,
-                            Discriminator = "InventoryDocumentItem",
-                            InventoryDocumentId = invDoc.Id,
-                            StorageId = invDoc.StorageId,
-                            CurrentQuantity = Helpers.Extensions.GetDecimal(articleList[i].Quantity),
+                            SupplierId = _supplierId,
+                            StorageId = _storageId,
+                            Type = 1,
+                            IsActivated = false,
+                            IsDeleted = false
                         };
+                        _invDocsService.Create(invDoc);
 
-                        _inventoryItems.Create(newInventoryItem);
-
-
-                        Guid _articleId = _articleService.GetComparedByBarcode(articleList[i].BarCode).Result;
-                        Article newArticle = new Article
+                        for (int i = 0; i < articleList.Count; i++)
                         {
-                            Id = Guid.NewGuid(),
-                            Name = articleList[i].Name,
-                            ArticleNumber = _articleService.GetCounter(Guid.Empty).Result,
-                            SubCategoryId = _articleService.ManageSubcategories(articleList[i].Category, articleList[i].Storage).Result,
-                            BarCode = articleList[i].BarCode,
-                            Price = Helpers.Extensions.GetDecimal(articleList[i].Price),
-                            Tag = articleList[i].Tag
-                        };
-
-                        newArticle.Order = _articleService.GetCounter((Guid)newArticle.SubCategoryId).Result;
-
-                        if (_articleId == Guid.Empty)
-                        {
-                            _articleService.Create(newArticle);
-                            ArticleGood newArticleGood = new ArticleGood
+                            Guid _goodId = _goodService.GetGoodByName(articleList[i].BarCode).Result;
+                            Good newGood = new Good
                             {
                                 Id = Guid.NewGuid(),
-                                ArticleId = newArticle.Id,
+                                Name = articleList[i].Name,
+                                UnitId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
+                                LatestPrice = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit),
+                                Volumen = 1,
+                                Refuse = 0
+                            };
+                            if (_goodId == Guid.Empty)
+                            {
+                                _goodService.Create(newGood);
+                                _goodId = newGood.Id;
+                            }
+                            else
+                            {
+                                newGood.Id = _goodId;
+                                _goodService.Update(_goodId, newGood);
+                            }
+
+                            InventoryItemBasis newInventoryItem = new InventoryItemBasis
+                            {
+                                Id = Guid.NewGuid(),
+                                Created = DateTime.Now,
+                                Price = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit),
+                                Quantity = Helpers.Extensions.GetDecimal(articleList[i].Quantity),
+                                Total = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit) * Helpers.Extensions.GetDecimal(articleList[i].Quantity),
+                                Tax = 0,
                                 GoodId = _goodId,
-                                Quantity = 1,
-                                ValidFrom = DateTime.Today,
-                                ValidUntil = DateTime.Today.AddYears(50)
+                                IsDeleted = false,
+                                Discriminator = "InventoryDocumentItem",
+                                InventoryDocumentId = invDoc.Id,
+                                StorageId = invDoc.StorageId,
+                                CurrentQuantity = Helpers.Extensions.GetDecimal(articleList[i].Quantity),
                             };
 
-                            _articleService.SaveArticleGood(newArticleGood);
-                        }
-                        else
-                        {
-                            newArticle.Id = _articleId;
-                            newArticle.Order = _articleService.Get(_articleId.ToString()).Result.Order;
-                            newArticle.ArticleNumber = _articleService.Get(_articleId.ToString()).Result.ArticleNumber;
-                            _articleService.Update(_articleId, newArticle);
-                            if (!_articleService.CheckForNormative(_articleId).Result)
+                            _inventoryItems.Create(newInventoryItem);
+
+
+                            Guid _articleId = _articleService.GetComparedByBarcode(articleList[i].BarCode).Result;
+                            Article newArticle = new Article
                             {
+                                Id = Guid.NewGuid(),
+                                Name = articleList[i].Name,
+                                ArticleNumber = _articleService.GetCounter(Guid.Empty).Result,
+                                SubCategoryId = _articleService.ManageSubcategories(articleList[i].Category, articleList[i].Storage).Result,
+                                BarCode = articleList[i].BarCode,
+                                Price = Helpers.Extensions.GetDecimal(articleList[i].Price),
+                                Tag = articleList[i].Tag
+                            };
+
+                            newArticle.Order = _articleService.GetCounter((Guid)newArticle.SubCategoryId).Result;
+
+                            if (_articleId == Guid.Empty)
+                            {
+                                _articleService.Create(newArticle);
                                 ArticleGood newArticleGood = new ArticleGood
                                 {
                                     Id = Guid.NewGuid(),
@@ -364,20 +370,62 @@ namespace ImporterPOS.WPF.ViewModels
                                     ValidFrom = DateTime.Today,
                                     ValidUntil = DateTime.Today.AddYears(50)
                                 };
+
                                 _articleService.SaveArticleGood(newArticleGood);
                             }
-                        }
+                            else
+                            {
+                                newArticle.Id = _articleId;
+                                newArticle.Order = _articleService.Get(_articleId.ToString()).Result.Order;
+                                newArticle.ArticleNumber = _articleService.Get(_articleId.ToString()).Result.ArticleNumber;
+                                _articleService.Update(_articleId, newArticle);
+                                if (!_articleService.CheckForNormative(_articleId).Result)
+                                {
+                                    ArticleGood newArticleGood = new ArticleGood
+                                    {
+                                        Id = Guid.NewGuid(),
+                                        ArticleId = newArticle.Id,
+                                        GoodId = _goodId,
+                                        Quantity = 1,
+                                        ValidFrom = DateTime.Today,
+                                        ValidUntil = DateTime.Today.AddYears(50)
+                                    };
+                                    _articleService.SaveArticleGood(newArticleGood);
+                                }
+                            }
 
+                        }
                     }
-                    _notifier.ShowSuccess("Artikli uspješno ubačeni.");
-                }
-            });
-            IsLoading = false;
-            articleList.Clear();
-            ArticleCollection = null;
+                });
+                IsLoading = false;
+                _notifier.ShowSuccess(Translations.ImportArticlesSuccess);
+                articleList.Clear();
+                ArticleCollection = null;
+            }
+            catch 
+            {
+                _notifier.ShowError(Translations.ImportArticlesError);
+
+                throw;
+            }
            
 
         }
 
+
+
+        public bool CanClick()
+        {
+            if (Count > 0)
+                return true;
+            return false;
+        }
+
+        [RelayCommand]
+        public void Cancel()
+        {
+            if (IsSheetPopupOpened) 
+                IsSheetPopupOpened = false;
+        }
     }
 }

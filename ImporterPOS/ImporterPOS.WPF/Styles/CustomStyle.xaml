@@ -326,20 +326,21 @@
     </Style>
 
     <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource SaveButton}">
+        <Setter Property="Background" Value="{StaticResource color13}"/>
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Trigger.EnterActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource saveButtonColor1}" Duration="0:0:0.01"/>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource cancelButtonColor1}" Duration="0:0:0.01"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </Trigger.EnterActions>
                 <Trigger.ExitActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource saveButtonColor2}" Duration="0:0:0.01"/>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource cancelButtonColor2}" Duration="0:0:0.01"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </Trigger.ExitActions>
@@ -397,7 +398,7 @@
         <Setter Property="Template" >
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="10 5">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="5" BorderThickness="1" BorderBrush="White" Padding="10 5">
                         <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 1"/>
                     </Border>
                 </ControlTemplate>
@@ -408,16 +409,92 @@
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource color8}" />
+                <Setter Property="Background" Value="{StaticResource color12}" />
                 <Setter Property="Foreground" Value="#ffffff" />
             </Trigger>
 
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="#6C7682"/>
+                <Setter Property="Background" Value="#6C7682"/>
+                <Setter Property="Opacity" Value="0.7"/>
                 <Setter Property="FontWeight" Value="Light"/>
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style x:Key="comboBoxStyle" TargetType="ComboBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Margin" Value="1 0" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+                        <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="5"
+                            Padding="10 5"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter x:Name="contentPresenter"
+                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                          Content="{TemplateBinding SelectionBoxItem}"
+                                          ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
+                                          VerticalAlignment="Center" />
+                        </Border>
+                        <ToggleButton x:Name="toggleButton"
+                                  Background="Transparent"
+                                  BorderBrush="{TemplateBinding BorderBrush}"
+                                  BorderThickness="0"
+                                  Focusable="False"
+                                  IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                  ClickMode="Press">
+                        </ToggleButton>
+                        <Popup x:Name="popup"
+                           AllowsTransparency="True"
+                           IsOpen="{TemplateBinding IsDropDownOpen}"
+                           Placement="Bottom"
+                           Focusable="False"
+                           PopupAnimation="Slide">
+                            <Grid x:Name="popupGrid"
+                              MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                              MinWidth="{TemplateBinding ActualWidth}"
+                              SnapsToDevicePixels="True">
+                                <Border x:Name="popupBorder"
+                                    Background="{StaticResource color11}"
+                                    BorderBrush="{StaticResource color12}"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    SnapsToDevicePixels="True">
+                                    <ScrollViewer x:Name="scrollViewer"
+                                              HorizontalScrollBarVisibility="Auto"
+                                              VerticalScrollBarVisibility="Auto"
+                                              SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Border>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="border" Property="Background" Value="#6C7682" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="Red" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource color12}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
     <Style x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
         <Setter Property="Template">
@@ -461,7 +538,8 @@
         <Setter Property="CanUserDeleteRows" Value="False" />
         <Setter Property="CanUserReorderColumns" Value="False" />
         <Setter Property="CanUserResizeRows" Value="False" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="Regular" />
         <Setter Property="GridLinesVisibility" Value="None" />
         <Setter Property="ColumnWidth" Value="*" />
         <Setter Property="Template">

@@ -23,9 +23,6 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <modalcontrol:Modal Grid.Row="4" Margin="0 0 0 0" VerticalAlignment="Center" Panel.ZIndex="21" Background="Transparent" IsOpen="{Binding IsOpen}" Grid.RowSpan="5" Grid.ColumnSpan="5">
-            <ContentControl VerticalAlignment="Top"  Content="{Binding ExcelSheetViewModel}"/>
-        </modalcontrol:Modal>
 
         <Border Grid.Column="0">
             <Grid>

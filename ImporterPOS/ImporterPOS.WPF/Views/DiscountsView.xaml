@@ -33,11 +33,11 @@
             <ContentControl Content="{Binding DiscountOptionsModel}" Background="{StaticResource panelActiveColor}"/>
         </modalcontrol:Modal>
 
-        <TextBlock Grid.ColumnSpan="2" Grid.Row="0" HorizontalAlignment="Right" Width="180" VerticalAlignment="Center" Foreground="#B0B9C6" IsHitTestVisible="False"
+        <TextBlock Grid.ColumnSpan="2" Grid.Row="0" HorizontalAlignment="Right" Margin="0 0 100 0" Width="180" VerticalAlignment="Center" Foreground="#B0B9C6" IsHitTestVisible="False"
                            Panel.ZIndex="1"
-                           Visibility="{Binding ElementName=textBoxFilter, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}" Text="Pretraži po barkodu..." Height="16"  />
+                           Visibility="{Binding ElementName=textBoxFilter, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}" Text="Pretraži po barkodu" Height="30" FontSize="20" />
 
-        <TextBox Grid.ColumnSpan="2"  Width="200" Grid.Row="0" HorizontalAlignment="Right"  Name="textBoxFilter" Style="{StaticResource filterTextBox}" Text="{Binding TextToFilter, UpdateSourceTrigger=PropertyChanged}" Height="32"/>
+        <TextBox Grid.ColumnSpan="2" Width="300" Grid.Row="0" HorizontalAlignment="Right" FontSize="18"  Name="textBoxFilter" Style="{StaticResource filterTextBox}" Text="{Binding TextToFilter, UpdateSourceTrigger=PropertyChanged}" Height="40"/>
 
         <TextBlock Grid.ColumnSpan="2"  FontSize="16" Text="{Binding Count}" Foreground="{StaticResource titleColor1}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20 0 0 0"/>
         <TextBlock Grid.ColumnSpan="2"  FontSize="16" Text="         artikala u listi" Foreground="{StaticResource titleColor1}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20 0 0 0"/>
@@ -55,13 +55,13 @@
                 </Grid.RowDefinitions>
 
                 <custom:LoadingSpinner Color="{StaticResource panelColor}" Thickness="10" IsLoading="{Binding IsLoading, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="100"/>
-                <TextBlock FontWeight="SemiBold"  Grid.Row="1" Foreground="{StaticResource panelActiveColor}" FontSize="28" Margin="0 10" Text="Loading . . . "/>
+                <TextBlock FontWeight="SemiBold"  Grid.Row="1" Foreground="{StaticResource panelActiveColor}" FontSize="28" Margin="0 10" Text="Molimo pričekajte dok se proces završi.."/>
 
             </Grid>
         </Border>
         <DataGrid Grid.ColumnSpan="2" Grid.Row="2" Name="ImportGrid" ItemsSource="{Binding ArticleCollection, Mode=TwoWay}" RowStyle="{DynamicResource DataGridRowStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Style="{DynamicResource DataGridStyle1}">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Ime" IsReadOnly="false" Width="470">
+                <DataGridTemplateColumn Header="Naziv artikla" IsReadOnly="false" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -73,10 +73,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Bar kod" Binding="{Binding BarCode}" IsReadOnly="false" Width="*"/>
-                <DataGridTextColumn Header="Cijena bez popusta" Binding="{Binding Price}" IsReadOnly="false" Width="*"/>
-                <DataGridTextColumn Header="Popust" Binding="{Binding Discount}" IsReadOnly="false" Width="*"/>
-                <DataGridTextColumn Header="Cijena bez popusta" Binding="{Binding NewPrice}" IsReadOnly="false" Width="*"/>
+                <DataGridTextColumn Header="Barkod" Binding="{Binding BarCode}" IsReadOnly="false" Width="auto"/>
+                <DataGridTextColumn Header="Cijena bez popusta" Binding="{Binding Price}" IsReadOnly="false" Width="auto"/>
+                <DataGridTextColumn Header="Popust" Binding="{Binding Discount}" IsReadOnly="false" Width="auto"/>
+                <DataGridTextColumn Header="Cijena sa popustom" Binding="{Binding NewPrice}" IsReadOnly="false" Width="auto"/>
                 <DataGridTemplateColumn Header="Operacije" IsReadOnly="True" Width="auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -90,31 +90,33 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+            <Border Grid.ColumnSpan="2"  Grid.Row="3" HorizontalAlignment="Right" Margin="0 20" Background="{StaticResource color11}" CornerRadius="5" Padding="5" BorderThickness="2" BorderBrush="White">
+                <StackPanel  Orientation="Horizontal">
+                    <TextBlock Text="Broj zapisa po stranici" Foreground="{StaticResource titleColor1}"  VerticalAlignment="Center" Margin="5"/>
+                    <ComboBox Style="{StaticResource comboBoxStyle}" Margin="5"  Width="100" SelectedItem="{Binding SelectedRecord,UpdateSourceTrigger=PropertyChanged}">
+                        <sys:Int32>15</sys:Int32>
+                        <sys:Int32>20</sys:Int32>
+                        <sys:Int32>25</sys:Int32>
+                    </ComboBox>
+                    <Button Content="&lt;&lt;" Style="{StaticResource pagingButton}" Width="40" IsEnabled="{Binding IsFirstEnabled}"  ToolTip="First page" Margin="5" Command="{Binding FirstPageCommand}" />
+                    <Button Content="&lt;" Style="{StaticResource pagingButton}" Width="40" IsEnabled="{Binding IsPreviousEnabled}" Margin="5" ToolTip="Previous page" Command="{Binding PreviousPageCommand}" />
 
-        <StackPanel Grid.ColumnSpan="2"  Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 20">
-            <TextBlock Text="Odaberi broj zapisa po stranici" Foreground="{StaticResource titleColor1}"  VerticalAlignment="Center" Margin="5"/>
-            <ComboBox  Margin="5"  Width="100" SelectedItem="{Binding SelectedRecord,UpdateSourceTrigger=PropertyChanged}">
-                <sys:Int32>15</sys:Int32>
-                <sys:Int32>20</sys:Int32>
-                <sys:Int32>25</sys:Int32>
-            </ComboBox>
-            <Button Content="&lt;&lt;" Style="{StaticResource pagingButton}" Width="40" IsEnabled="{Binding IsFirstEnabled}"  ToolTip="First page" Margin="5" Command="{Binding FirstPageCommand}" />
-            <Button Content="&lt;" Style="{StaticResource pagingButton}" Width="40" IsEnabled="{Binding IsPreviousEnabled}" Margin="5" ToolTip="Previous page" Command="{Binding PreviousPageCommand}" />
+                    <TextBlock VerticalAlignment="Center" Foreground="White">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{} {0} of {1}">
+                                <Binding Path="CurrentPage"/>
+                                <Binding Path="NumberOfPages"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
 
-            <TextBlock VerticalAlignment="Center" Foreground="White">
-                <TextBlock.Text>
-                    <MultiBinding StringFormat="{} {0} of {1}">
-                        <Binding Path="CurrentPage"/>
-                        <Binding Path="NumberOfPages"/>
-                    </MultiBinding>
-                </TextBlock.Text>
-            </TextBlock>
+                    <Button Content=">" Style="{StaticResource pagingButton}" Width="40" IsEnabled="{Binding IsNextEnabled}" ToolTip="Next page" Margin="5" Command="{Binding NextPageCommand}"/>
+                    <Button Content=">>" Style="{StaticResource pagingButton}" Width="40" IsEnabled="{Binding IsLastEnabled}" ToolTip="Last page" Margin="5" Command="{Binding LastPageCommand}" />
+                </StackPanel>
+            </Border>
 
-            <Button Content=">" Style="{StaticResource pagingButton}" Width="40" IsEnabled="{Binding IsNextEnabled}" ToolTip="Next page" Margin="5" Command="{Binding NextPageCommand}"/>
-            <Button Content=">>" Style="{StaticResource pagingButton}" Width="40" IsEnabled="{Binding IsLastEnabled}" ToolTip="Last page" Margin="5" Command="{Binding LastPageCommand}" />
-        </StackPanel>
 
-        <StackPanel Grid.Row="4" Orientation="Horizontal" Width="1000" HorizontalAlignment="Left">
+            <StackPanel Grid.Row="4" Orientation="Horizontal" Width="1000" HorizontalAlignment="Left">
             <Button Style="{StaticResource SaveButton}" Command="{Binding LoadFixedExcelColumnsCommand}" Height="50" Width="190">
                 <StackPanel Orientation="Horizontal">
                     <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Database" Width="30" Height="30"/>

@@ -82,7 +82,7 @@ namespace ImporterPOS.WPF.States
                         this.Icon = IconChar.TableList;
                         break;
                     case ViewType.ImportArticles:
-                        this.CurrentViewModel = new ArticlesViewModel(_excelService, _supplierService, _notifier, _myDictionary, _invDocsService, _storageService, _goodService, _invitemsService, _articleService);
+                        this.CurrentViewModel = new ArticlesViewModel(_excelService, _supplierService, _notifier, _invDocsService, _storageService, _goodService, _invitemsService, _articleService);
                         Caption = Translations.Articles;
                         this.Icon = IconChar.FileExcel;
                         break;

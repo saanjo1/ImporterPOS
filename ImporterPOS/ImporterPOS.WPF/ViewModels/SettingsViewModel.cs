@@ -119,19 +119,19 @@ namespace ImporterPOS.WPF.ViewModels
         }
 
         [RelayCommand]
-        public void SelectSheet()
-        {
-            try
-            {
-                IsOpen = true;
-                this.ExcelSheetViewModel = new SelectExcelSheetViewModel(_excelService, this, _notifier, _myDictionary);
-            }
-            catch
-            {
-                SelectSheetSuccess = false;
-                IsOpen = false;
-                throw;
-            }
+        public void SelectSheet() { 
+        //{
+        //    try
+        //    {
+        //        IsOpen = true;
+        //        this.ExcelSheetViewModel = new SelectExcelSheetViewModel(_excelService, this, _notifier, _myDictionary);
+        //    }
+        //    catch
+        //    {
+        //        SelectSheetSuccess = false;
+        //        IsOpen = false;
+        //        throw;
+        //    }
         }
 
 
@@ -156,13 +156,6 @@ namespace ImporterPOS.WPF.ViewModels
             if (_myDictionary.TryGetValue(Translations.CurrentExcelSheet, out string value2) == true)
                 SelectSheetSuccess = true;
 
-        }
-
-        [RelayCommand]
-        public void Cancel()
-        {
-            if (IsOpen)
-                IsOpen = false;
         }
 
     }

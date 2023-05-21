@@ -85,19 +85,14 @@ namespace ImporterPOS.WPF.Services.Excel
             return null;
         }
 
-        public async Task<ObservableCollection<ExcelArticlesListViewModel>> ReadColumnsFromExcel(ConcurrentDictionary<string, string> dictionary, ExcelArticlesListViewModel viewModel)
+        public async Task<ObservableCollection<ExcelArticlesListViewModel>> ReadColumnsFromExcel(string filePath, string sheetValue, ExcelArticlesListViewModel viewModel)
         {
 
-            bool success = dictionary.TryGetValue(Translations.CurrentExcelFile, out string value);
-            bool sheet = dictionary.TryGetValue(Translations.CurrentExcelSheet, out string sheetValue);
+
             FixedArticleColumns templateViewModel = new FixedArticleColumns();
 
-            if (success && sheet)
-            {
-                try
-                {
                     string _connection =
-           @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + value + ";" +
+           @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + filePath + ";" +
            @"Extended Properties='Excel 8.0;HDR=Yes;'";
 
                     _oleDbConnection = new OleDbConnection(_connection);
@@ -130,17 +125,6 @@ namespace ImporterPOS.WPF.Services.Excel
                     _oleDbConnection.Close();
 
                     return await Task.FromResult(_articleQtycViewModels);
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-
-            }
-            else
-            {
-                return null;
-            }
 
         }
 

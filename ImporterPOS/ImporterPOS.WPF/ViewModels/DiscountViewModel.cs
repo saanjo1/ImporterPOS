@@ -116,10 +116,13 @@ namespace ImporterPOS.WPF.ViewModels
 
         private void UpdateRecordCount()
         {
-            NumberOfPages = (int)Math.Ceiling((double)articleList.Count / SelectedRecord);
-            NumberOfPages = NumberOfPages == 0 ? 1 : NumberOfPages;
-            UpdateCollection(articleList.Take(SelectedRecord));
-            CurrentPage = 1;
+          if(articleList != null)
+            {
+                NumberOfPages = (int)Math.Ceiling((double)articleList.Count / SelectedRecord);
+                NumberOfPages = NumberOfPages == 0 ? 1 : NumberOfPages;
+                UpdateCollection(articleList.Take(SelectedRecord));
+                CurrentPage = 1;
+            }
         }
 
         [ObservableProperty]

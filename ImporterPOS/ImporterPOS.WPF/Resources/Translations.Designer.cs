@@ -70,6 +70,15 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lista je uspješno ispražnjena..
+        /// </summary>
+        internal static string ClearList {
+            get {
+                return ResourceManager.GetString("ClearList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CurrentExcelFile.
         /// </summary>
         internal static string CurrentExcelFile {
@@ -106,11 +115,38 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Greška. Pokušajte ponovo..
+        ///   Looks up a localized string similar to Dogodila se pogreška. Pokušajte ponovo..
         /// </summary>
         internal static string ErrorMessage {
             get {
                 return ResourceManager.GetString("ErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vaš Excel file nije odgovarajućeg formata. Provjerite ga..
+        /// </summary>
+        internal static string ExcelFileError {
+            get {
+                return ResourceManager.GetString("ExcelFileError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dogodio se problem prilikom integracije u bazu podataka. Pokušajte ponovo..
+        /// </summary>
+        internal static string ImportArticlesError {
+            get {
+                return ResourceManager.GetString("ImportArticlesError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Završeno! Artikli su uspješno integrirani u bazu podataka..
+        /// </summary>
+        internal static string ImportArticlesSuccess {
+            get {
+                return ResourceManager.GetString("ImportArticlesSuccess", resourceCulture);
             }
         }
         
@@ -120,6 +156,15 @@ namespace ImporterPOS.WPF.Resources {
         internal static string InventoryDocuments {
             get {
                 return ResourceManager.GetString("InventoryDocuments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Artikli su uspješno učitani i pripremljeni za integraciju u softver..
+        /// </summary>
+        internal static string LoadDataSuccess {
+            get {
+                return ResourceManager.GetString("LoadDataSuccess", resourceCulture);
             }
         }
         
@@ -151,7 +196,7 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Greška prilikom odabira excel file. .
+        ///   Looks up a localized string similar to Nešto nije uredu sa vašim fajlom. Pokušajte ponovo..
         /// </summary>
         internal static string SelectSheetError {
             get {
