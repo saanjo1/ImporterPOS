@@ -12,7 +12,7 @@ namespace ImporterPOS.Domain.Services.Goods
 {
     public interface IGoodService : BaseInterface<Good>
     {
-        Task<Guid> GetGoodByName(string name);
+        Task<Guid> GetGoodByName(string name, bool stockCorrection);
         Task<decimal> SumQuantityOfGoodsById(Guid goodId, Guid storageId);
     }
 }

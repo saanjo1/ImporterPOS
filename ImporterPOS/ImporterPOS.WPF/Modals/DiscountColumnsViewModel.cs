@@ -21,6 +21,7 @@ namespace ImporterPOS.WPF.Modals
     {
         private Notifier _notifier;
         public IExcelService? _excelDataService;
+        private string _excelPath;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SubmitCommand))]
@@ -49,7 +50,7 @@ namespace ImporterPOS.WPF.Modals
         private string? discount;
 
         [ObservableProperty]
-        private string? newPrice;
+        private decimal newPrice;
 
         [ObservableProperty]
         DiscountColumnsViewModel selectedItems;
@@ -66,14 +67,13 @@ namespace ImporterPOS.WPF.Modals
 
         private DiscountViewModel _discountViewModel;
 
-        public DiscountColumnsViewModel(DiscountViewModel discountViewModel, IExcelService? excelDataService, ConcurrentDictionary<string, string> myDictionary, Notifier notifier)
+        public DiscountColumnsViewModel(DiscountViewModel discountViewModel, IExcelService? excelDataService, string excelPath, Notifier notifier)
         {
             _discountViewModel = discountViewModel;
             _excelDataService = excelDataService;
-            _myDictionary = myDictionary;
-            LoadColumnNames();
+            _excelPath = excelPath;
             _notifier = notifier;
-            SelectedItems = Helpers.Extensions.SelectedColumns(this, ColumnNames, myDictionary);
+            LoadColumnNames();
         }
 
         public DiscountColumnsViewModel()
@@ -94,8 +94,7 @@ namespace ImporterPOS.WPF.Modals
             try
             {
                 ObservableCollection<DiscountColumnsViewModel>? excelDataList;
-                excelDataList = _excelDataService.ReadDiscountColumns(_myDictionary, this).Result;
-                _notifier.ShowInformation(excelDataList.Count() + " articles pulled. ");
+                excelDataList = _excelDataService.ReadDiscountColumns(null, this).Result;
                 _discountViewModel.LoadData(excelDataList);
             }
             catch (Exception)
@@ -107,7 +106,7 @@ namespace ImporterPOS.WPF.Modals
 
         public void LoadColumnNames()
         {
-            ColumnNames = _excelDataService.ListColumnNames(_myDictionary[Translations.CurrentExcelSheet]).Result;
+            ColumnNames = _excelDataService.ListColumnNames("Sheet1").Result;
         }
     }
 }

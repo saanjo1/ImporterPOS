@@ -24,7 +24,9 @@ namespace ImporterPOS.WPF.Helpers
             else
                 decimalValue = decimal.Parse(value);
 
-            return decimalValue;
+
+            var result = Math.Round(decimalValue + (decimal)0.005, 2);
+            return result;
         }
 
         public static string SetOleDbConnection(string excelfile)
@@ -33,35 +35,6 @@ namespace ImporterPOS.WPF.Helpers
        @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + excelfile + ";" +
        @"Extended Properties='Excel 12.0;HDR=No;IMEX=1'";
             return con;
-        }
-
-        public static DiscountColumnsViewModel SelectedColumns(DiscountColumnsViewModel mColumnModel, List<string> columnNamesList, ConcurrentDictionary<string, string> _myDictionary)
-        {
-            for (int i = 0; i < columnNamesList.Count(); i++)
-            {
-                if (columnNamesList[i].Contains("Name"))
-                    mColumnModel.Name = columnNamesList[i];
-
-                if (columnNamesList[i].Contains("Barcode"))
-                    mColumnModel.BarCode = columnNamesList[i];
-
-                if (columnNamesList[i].Contains("Full price €"))
-                    mColumnModel.Price = columnNamesList[i];
-
-                if (columnNamesList[i].Contains("Category"))
-                    mColumnModel.Category = columnNamesList[i];
-
-                if (columnNamesList[i].Equals("Discount"))
-                    mColumnModel.Discount = columnNamesList[i];
-
-                if (columnNamesList[i].Contains("Discounted price"))
-                    mColumnModel.NewPrice = columnNamesList[i];
-
-                mColumnModel.Storage = "Articles";
-
-            }
-
-            return mColumnModel;
         }
 
         public static string DisplayDiscountInPercentage(string discount)

@@ -125,29 +125,32 @@ namespace ImporterPOS.WPF.ViewModels
             {
                 var article = _articleService.GetPriceByGood(invitemBases.GoodId).Result;
 
-                var _soldPrice = article.Price * invitemBases.Quantity;
-                var _basePrice = Math.Round(Helpers.Extensions.GetBasePrice(_soldPrice, 25), 2);
-                var _purchasePrice = Math.Round((decimal)invitemBases.Total, 2);
-                var _taxes = _soldPrice - _basePrice;
-                var _ruc = Math.Round((_basePrice - _purchasePrice), 2);
-                var _name = article.Name;
-
-                listOfItems.Add(new InventoryDocumentsDetails
+              if(article != null)
                 {
-                    Name = _name,
-                    Quantity = invitemBases.Quantity,
-                    PurchasePrice = _purchasePrice,
-                    Taxes = Math.Round(_taxes, 2),
-                    BasePrice = _basePrice,
-                    SoldPrice = Math.Round(_soldPrice, 2),
-                    Ruc = _ruc
-                });
+                    var _soldPrice = article.Price * invitemBases.Quantity;
+                    var _basePrice = Math.Round(Helpers.Extensions.GetBasePrice(_soldPrice, 25), 2);
+                    var _purchasePrice = Math.Round((decimal)invitemBases.Total, 2);
+                    var _taxes = _soldPrice - _basePrice;
+                    var _ruc = Math.Round((_basePrice - _purchasePrice), 2);
+                    var _name = article.Name;
 
-                TotalPurchasePrice += _purchasePrice;
-                TotalSoldPrice += _soldPrice;
-                TotalTaxesPrice += _taxes;
-                TotalBasePrice += _basePrice;
-                TotalRuc += _ruc;
+                    listOfItems.Add(new InventoryDocumentsDetails
+                    {
+                        Name = _name,
+                        Quantity = invitemBases.Quantity,
+                        PurchasePrice = _purchasePrice,
+                        Taxes = Math.Round(_taxes, 2),
+                        BasePrice = _basePrice,
+                        SoldPrice = Math.Round(_soldPrice, 2),
+                        Ruc = _ruc
+                    });
+
+                    TotalPurchasePrice += _purchasePrice;
+                    TotalSoldPrice += _soldPrice;
+                    TotalTaxesPrice += _taxes;
+                    TotalBasePrice += _basePrice;
+                    TotalRuc += _ruc;
+                }
 
                 
             }

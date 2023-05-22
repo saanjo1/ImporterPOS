@@ -231,7 +231,7 @@ namespace ImporterPOS.WPF.ViewModels
                     {
                         Id = Guid.NewGuid(),
                         Name = item.Name,
-                        GoodId = _goodService.GetGoodByName(item.Name).Result,
+                        GoodId = _goodService.GetGoodByName(item.Name, false).Result,
                         Quantity = quantity,
                         Storage = storage,
                         TotalPurchasePrice = _totalPurchasePrice,

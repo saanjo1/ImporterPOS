@@ -82,11 +82,19 @@ namespace ImporterPOS.Domain.Services.Goods
             }
         }
 
-        public Task<Guid> GetGoodByName(string name)
+        public Task<Guid> GetGoodByName(string name, bool stockCorrection = false)
         {
             using (DatabaseContext context = _factory.CreateDbContext())
             {
-                Good good = context.Goods.Where(x => x.Name.Contains(name)).FirstOrDefault();
+                Good good = new Good();
+                if (stockCorrection)
+                {
+                    good = context.Goods.Where(x => x.Name == name).FirstOrDefault();
+                }
+                else
+                {
+                    good = context.Goods.Where(x => x.Name.Contains(name)).FirstOrDefault();
+                }
                 if (good == null)
                     return Task.FromResult(Guid.Empty);
                 return Task.FromResult(good.Id);

@@ -10,7 +10,7 @@ namespace ImporterPOS.WPF.ViewModels
         private string name;
 
         [ObservableProperty]
-        private string currentQuantity;
+        private string totalPrice;
 
         [ObservableProperty]
         private string newQuantity;

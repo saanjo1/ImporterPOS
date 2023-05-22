@@ -68,14 +68,9 @@ namespace ImporterPOS.WPF.ViewModels
 
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(MapDataCommand))]
-        private bool isMapped;
-
-        [ObservableProperty]
         private bool isLoading;
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(MapDataCommand))]
         private bool isOptions;
 
         [ObservableProperty]
@@ -210,40 +205,28 @@ namespace ImporterPOS.WPF.ViewModels
         }
 
         [RelayCommand]
-        public void LoadFixedExcelColumns()
+        public async Task LoadFixedExcelColumns()
         {
-            DiscountColumnsViewModel tempVm = new DiscountColumnsViewModel();
-
             try
             {
-                articleList = _excelDataService.ReadDiscountColumns(_myDictionary, tempVm).Result;
-                if (articleList != null)
-                {
-                    _notifier.ShowInformation(articleList.Count + " articles pulled. ");
-                    LoadData(articleList);
-                }
-                else
-                {
-                    _notifier.ShowError("Please check your ExcelFile & Sheet, and try again.");
+                DiscountColumnsViewModel tempVm = new DiscountColumnsViewModel();
+                string filePath = await _excelDataService.OpenDialog();
 
+                if(filePath != null)
+                {
+                    articleList = _excelDataService.ReadDiscountColumns(filePath, tempVm).Result;
+                    LoadData(articleList);
+                    _notifier.ShowInformation(Translations.LoadDataSuccess);
                 }
+
             }
             catch (Exception)
             {
                 if (articleList == null)
-                    _notifier.ShowError("Please check your ExcelFile & Sheet, and try again.");
-                else
-                    _notifier.ShowError(Translations.ErrorMessage);
+                    _notifier.ShowError(Translations.ExcelFileError);
 
             }
 
-        }
-
-        [RelayCommand(CanExecute = nameof(CanClick))]
-        public void MapData()
-        {
-            this.IsMapped = true;
-            this.MapDataModel = new DiscountColumnsViewModel(this, _excelDataService, _myDictionary, _notifier);
         }
 
 
@@ -257,9 +240,6 @@ namespace ImporterPOS.WPF.ViewModels
         [RelayCommand]
         public void Close()
         {
-            if (IsMapped)
-                IsMapped = false;
-
             if (IsOptions)
                 IsOptions = false;
         }
@@ -288,8 +268,6 @@ namespace ImporterPOS.WPF.ViewModels
                 articleList = vm;
                 ArticleCollection = CollectionViewSource.GetDefaultView(vm);
             }
-            IsMapped = false;
-
             ArticleCollection = CollectionViewSource.GetDefaultView(ArticlesCollection);
             UpdateCollection(articlesCollection.Take(SelectedRecord));
             UpdateRecordCount();
@@ -370,7 +348,7 @@ namespace ImporterPOS.WPF.ViewModels
                                         Id = Guid.NewGuid(),
                                         ArticleId = article.Id,
                                         RuleId = newRule.Id,
-                                        NewPrice = Helpers.Extensions.GetDecimal(articleList[i].NewPrice)
+                                        NewPrice = Helpers.Extensions.GetDecimal(articleList[i].NewPrice.ToString())
                                     };
 
                                     _discountDataService.CreateRuleItem(newRuleItem);
@@ -424,13 +402,6 @@ namespace ImporterPOS.WPF.ViewModels
 
         public bool CanClick()
         {
-            if (_myDictionary.TryGetValue(Translations.CurrentExcelSheet, out string value) == false)
-            {
-                _notifier.ShowWarning(Translations.SettingsError);
-                return false;
-            }
-            if (IsMapped)
-                return false;
             if (IsOptions)
                 return false;
 
@@ -450,11 +421,6 @@ namespace ImporterPOS.WPF.ViewModels
 
         public bool CanClickOptions()
         {
-            if (_myDictionary.TryGetValue(Translations.CurrentExcelSheet, out string value) == false)
-            {
-                _notifier.ShowWarning(Translations.SettingsError);
-                return false;
-            }
 
             if (IsOptions)
                 return false;

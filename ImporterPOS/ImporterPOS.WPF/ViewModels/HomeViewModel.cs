@@ -224,7 +224,6 @@ namespace ImporterPOS.WPF.ViewModels
         [RelayCommand]
         private async void StockCorrectionFromExcel()
         {
-
             ObservableCollection<StockCorrectionViewModel> stockCorrectionViewModels = new ObservableCollection<StockCorrectionViewModel>();
 
             try
@@ -238,7 +237,7 @@ namespace ImporterPOS.WPF.ViewModels
                 InventoryDocument inventoryDocument = new InventoryDocument()
                 {
                     Id = Guid.NewGuid(),
-                    Created = DateTime.Now,
+                    Created = new DateTime(2023, 01, 01, 06, 00, 00),
                     Order = _invService.GetInventoryOrderNumber().Result,
                     IsActivated = true,
                     IsDeleted = false,
@@ -250,14 +249,16 @@ namespace ImporterPOS.WPF.ViewModels
 
                 foreach (var item in stockCorrectionViewModels)
                 {
+                    Guid _good = _goodService.GetGoodByName(item.Name, true).Result;
 
-                    Guid _good = _goodService.GetGoodByName(item.Name).Result;
-
-                    decimal itemCurrentQty = 0;
+                    decimal itemTotalPrice = Helpers.Extensions.GetDecimal(item.TotalPrice);
                     decimal itemNewQty = Helpers.Extensions.GetDecimal(item.NewQuantity);
-                    decimal Qty = itemNewQty - itemCurrentQty;
+                    decimal Qty = itemNewQty;
 
-                    if (_good != Guid.Empty && Qty != 0)
+                
+                
+
+                if (_good != Guid.Empty && Qty > 0)
                     {
                         Good goodEntity = await _goodService.Get(_good.ToString());
 
@@ -265,15 +266,15 @@ namespace ImporterPOS.WPF.ViewModels
                         {
                             Id = Guid.NewGuid(),
                             StorageId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
-                            Created = DateTime.Now,
+                            Created = new DateTime(2023, 01, 01, 06, 00, 00),
                             Quantity = Qty,
                             CurrentQuantity = Qty,
                             Tax = 0,
                             Discriminator = "InventoryDocumentItem",
                             InventoryDocumentId = inventoryDocument.Id,
                             GoodId = goodEntity.Id,
-                            Price = goodEntity.LatestPrice,
-                            Total = Qty * goodEntity.LatestPrice,
+                            Price = itemTotalPrice / Qty,
+                            Total = itemTotalPrice,
                             IsDeleted = false,
                             Refuse = 0
                         };
@@ -309,7 +310,6 @@ namespace ImporterPOS.WPF.ViewModels
                     stockCorrectionViewModels = _excelService.ReadFromTxtFile(path).Result;
                 }
 
-
                 InventoryDocument inventoryDocument = new InventoryDocument()
                 {
                     Id = Guid.NewGuid(),
@@ -326,9 +326,9 @@ namespace ImporterPOS.WPF.ViewModels
                 foreach (var item in stockCorrectionViewModels)
                 {
 
-                    Guid _good = _goodService.GetGoodByName(item.Name).Result;
+                    Guid _good = _goodService.GetGoodByName(item.Name, true).Result;
 
-                    decimal itemCurrentQty = Helpers.Extensions.GetDecimal(item.CurrentQuantity);
+                    decimal itemCurrentQty = Helpers.Extensions.GetDecimal(item.TotalPrice);
                     decimal itemNewQty = Helpers.Extensions.GetDecimal(item.NewQuantity);
                     decimal Qty = itemNewQty - itemCurrentQty;
 

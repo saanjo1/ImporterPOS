@@ -304,7 +304,7 @@ namespace ImporterPOS.WPF.ViewModels
 
                         for (int i = 0; i < articleList.Count; i++)
                         {
-                            Guid _goodId = _goodService.GetGoodByName(articleList[i].BarCode).Result;
+                            Guid _goodId = _goodService.GetGoodByName(articleList[i].BarCode, false).Result;
                             Good newGood = new Good
                             {
                                 Id = Guid.NewGuid(),

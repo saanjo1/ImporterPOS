@@ -140,7 +140,7 @@ namespace ImporterPOS.WPF.Services.Excel
 
             Command = new OleDbCommand();
             Command.Connection = _oleDbConnection;
-            Command.CommandText = "select top 1 * from [" + sheetName + "]";
+            Command.CommandText = "select top 1 * from [Sheet1$]";
 
             var Reader = await Command.ExecuteReaderAsync();
 
@@ -167,66 +167,50 @@ namespace ImporterPOS.WPF.Services.Excel
             return await Task.FromResult(lines);
         }
 
-        public async Task<ObservableCollection<DiscountColumnsViewModel>> ReadDiscountColumns(ConcurrentDictionary<string, string> _myDictionary, DiscountColumnsViewModel viewModel)
+        public async Task<ObservableCollection<DiscountColumnsViewModel>> ReadDiscountColumns(string path, DiscountColumnsViewModel viewModel)
         {
             if (_discountViewModels.Count > 0)
                 _discountViewModels.Clear();
 
-            bool success = _myDictionary.TryGetValue(Translations.CurrentExcelFile, out string value);
-            bool sheet = _myDictionary.TryGetValue(Translations.CurrentExcelSheet, out string sheetValue);
             FixedDiscountColumns templateViewModel = new FixedDiscountColumns();
 
-            if(success && sheet)
+            string _connection =
+ @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + path + ";" +
+ @"Extended Properties='Excel 8.0;HDR=Yes;'";
+
+
+            _oleDbConnection = new OleDbConnection(_connection);
+
+            await _oleDbConnection.OpenAsync();
+
+            Command = new OleDbCommand();
+            Command.Connection = _oleDbConnection;
+            Command.CommandText = "select * from [Sheet1$]";
+
+            System.Data.Common.DbDataReader Reader = await Command.ExecuteReaderAsync();
+
+            while (Reader.Read())
             {
-                try
+
+                _discountViewModels.Add(new DiscountColumnsViewModel
                 {
-                    string _connection =
-         @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + value + ";" +
-         @"Extended Properties='Excel 8.0;HDR=Yes;";
-
-                    _oleDbConnection = new OleDbConnection(_connection);
-
-                    await _oleDbConnection.OpenAsync();
-
-
-                    Command = new OleDbCommand();
-                    Command.Connection = _oleDbConnection;
-                    Command.CommandText = "select * from [" + sheetValue + "]";
-
-                    System.Data.Common.DbDataReader Reader = await Command.ExecuteReaderAsync();
-
-                    while (Reader.Read())
-                    {
-
-                        _discountViewModels.Add(new DiscountColumnsViewModel
-                        {
-                            Name = Reader[templateViewModel.BarCode].ToString() + " " + Reader[templateViewModel.Item].ToString() + " " + Reader[templateViewModel.Description].ToString() + " " + Reader[templateViewModel.ColorDescription].ToString() + " " + Reader[templateViewModel.ItemSize].ToString(),
-                            Category = Reader[templateViewModel.Category].ToString(),
-                            BarCode = Reader[templateViewModel.BarCode].ToString(),
-                            Price = Reader[templateViewModel.FullPrice].ToString(),
-                            Discount = Helpers.Extensions.DisplayDiscountInPercentage(Reader[templateViewModel.Discount].ToString()),
-                            NewPrice = Reader[templateViewModel.DiscountedPrice].ToString(),
-                            Storage = Translations.Articles
-                        });
-                    }
-
-                    Reader.Close();
-                    _oleDbConnection.Close();
-
-                    return await Task.FromResult(_discountViewModels);
-
-
-                }
-                catch
-                {
-
-                    throw;
-                }
+                    Name = Reader[templateViewModel.BarCode].ToString() + " " + Reader[templateViewModel.Item].ToString() + " " + Reader[templateViewModel.Description].ToString() + " " + Reader[templateViewModel.ColorDescription].ToString() + " " + Reader[templateViewModel.ItemSize].ToString(),
+                    Category = Reader[templateViewModel.Category].ToString(),
+                    BarCode = Reader[templateViewModel.BarCode].ToString(),
+                    Price = Reader[templateViewModel.FullPrice].ToString(),
+                    Discount = Helpers.Extensions.DisplayDiscountInPercentage(Reader[templateViewModel.Discount].ToString()),
+                    NewPrice = Math.Round(Helpers.Extensions.GetDecimal(Reader[templateViewModel.DiscountedPrice].ToString()), 2),
+                    Storage = Translations.Articles
+                });
             }
-            else
-            {
-                return null;
-            }
+
+            Reader.Close();
+            _oleDbConnection.Close();
+
+            return await Task.FromResult(_discountViewModels);
+
+
+
         }
 
         public async Task<ObservableCollection<WriteOffViewModel>> ReadFromWriteOff(string excelFile, string sheet)
@@ -302,7 +286,8 @@ namespace ImporterPOS.WPF.Services.Excel
                     list.Add(new StockCorrectionViewModel
                     {
                         Name = Reader["Naziv"].ToString(),
-                        NewQuantity = Reader["Kolicina"].ToString()
+                        NewQuantity = Reader["Kolicina"].ToString(),
+                        TotalPrice = Reader["Cijena"].ToString(),
                     });
                 }
 
@@ -347,7 +332,7 @@ namespace ImporterPOS.WPF.Services.Excel
                         StockCorrectionViewModel stockCorrection = new StockCorrectionViewModel
                         {
                             Name = name,
-                            CurrentQuantity = currentQuantity,
+                            TotalPrice = currentQuantity,
                             NewQuantity = newQuantity
                         };
 
