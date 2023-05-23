@@ -205,6 +205,15 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Odabrani artikal je uspješno uklonjen sa liste..
+        /// </summary>
+        internal static string RemoveArticleSuccess {
+            get {
+                return ResourceManager.GetString("RemoveArticleSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Odaberi.
         /// </summary>
         internal static string Select {

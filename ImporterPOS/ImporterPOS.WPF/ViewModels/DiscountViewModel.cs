@@ -371,6 +371,27 @@ namespace ImporterPOS.WPF.ViewModels
             return false;
         }
 
+        [RelayCommand]
+        public Task DeleteArticleFromList(DiscountColumnsViewModel parameter)
+        {
+            try
+            {
+                var deletedArticle = articleList.Remove(parameter);
+                _notifier.ShowSuccess(Translations.RemoveArticleSuccess);
+                ArticleCollection = CollectionViewSource.GetDefaultView(articleList);
+                ArticleCollection = CollectionViewSource.GetDefaultView(ArticlesCollection);
+                UpdateCollection(articlesCollection.Take(SelectedRecord));
+                UpdateRecordCount();
+                Count = ArticleList.Count;
+            }
+            catch (Exception)
+            {
+                _notifier.ShowError(Translations.ErrorMessage);
+            }
+            return Task.CompletedTask;
+
+        }
+
     }
 }
 

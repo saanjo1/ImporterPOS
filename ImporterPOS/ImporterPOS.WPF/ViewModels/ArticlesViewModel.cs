@@ -34,6 +34,7 @@ namespace ImporterPOS.WPF.ViewModels
         private readonly IArticleService _articleService;
         private readonly IInventoryItemBasisService _inventoryItems;
         private readonly Notifier _notifier;
+        private string filePath;
 
 
         [ObservableProperty]
@@ -214,7 +215,7 @@ namespace ImporterPOS.WPF.ViewModels
             try
             {
                 ExcelArticlesListViewModel tempVm = new ExcelArticlesListViewModel();
-                string filePath = await _excelService.OpenDialog();
+                filePath = await _excelService.OpenDialog();
                 if (filePath != null)
                 {
                     await InitializeAndLoadData(filePath);
@@ -253,7 +254,8 @@ namespace ImporterPOS.WPF.ViewModels
                 UpdateCollection(articlesCollection.Take(SelectedRecord));
                 UpdateRecordCount();
                 Count = ArticleList.Count;
-                _notifier.ShowInformation(Translations.LoadDataSuccess);
+
+                    _notifier.ShowSuccess(Translations.LoadDataSuccess);
 
             }
             catch 
@@ -426,6 +428,28 @@ namespace ImporterPOS.WPF.ViewModels
         {
             if (IsSheetPopupOpened) 
                 IsSheetPopupOpened = false;
+        }
+
+
+        [RelayCommand]
+        public Task DeleteArticleFromList(ExcelArticlesListViewModel parameter)
+        {
+            try
+            {
+                var deletedArticle = articleList.Remove(parameter);
+                _notifier.ShowSuccess(Translations.RemoveArticleSuccess);
+                ArticleCollection = CollectionViewSource.GetDefaultView(articleList);
+                ArticleCollection = CollectionViewSource.GetDefaultView(ArticlesCollection);
+                UpdateCollection(articlesCollection.Take(SelectedRecord));
+                UpdateRecordCount();
+                Count = ArticleList.Count;
+            }
+            catch (Exception)
+            {
+                _notifier.ShowError(Translations.ErrorMessage);
+            }
+            return Task.CompletedTask;
+
         }
     }
 }

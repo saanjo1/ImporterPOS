@@ -80,7 +80,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <Button Margin="15 0 0 0" Style="{StaticResource gridRemoveButton}" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.DeleteArticleCommand}" CommandParameter="{Binding}">
+                                <Button Margin="15 0 0 0" Style="{StaticResource gridRemoveButton}" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.DeleteArticleFromListCommand}" CommandParameter="{Binding}">
                                     <fa:IconImage Icon="Remove" Style="{StaticResource gridButtonIcon}"/>
                                 </Button>
                             </StackPanel>

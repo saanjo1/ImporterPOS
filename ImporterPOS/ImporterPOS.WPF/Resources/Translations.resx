@@ -165,6 +165,9 @@
   <data name="OptionsRequired" xml:space="preserve">
     <value>Informacije o popustu nisu postavljene. Unesite ih prije nastavka.</value>
   </data>
+  <data name="RemoveArticleSuccess" xml:space="preserve">
+    <value>Odabrani artikal je uspješno uklonjen sa liste.</value>
+  </data>
   <data name="Select" xml:space="preserve">
     <value>Odaberi</value>
   </data>
