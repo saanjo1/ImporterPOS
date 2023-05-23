@@ -44,9 +44,9 @@
 
         <TextBlock Grid.ColumnSpan="2"  Grid.Row="2" FontSize="24" Style="{StaticResource textBlockStyle}" Text="Lista je prazna. Učitaj podatke." Visibility="{Binding Items.IsEmpty, Converter={StaticResource BoolToVis}, ElementName=ImportGrid}"/>
 
-        <Border Grid.Row="2" 
+        <Border Grid.Row="2"  Grid.RowSpan="3"
         Visibility="{Binding IsLoading, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVis}}"
-                Margin="30 0" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="5" Panel.ZIndex="3" Background="White" BorderThickness="3" BorderBrush="Black" Padding="20" CornerRadius="20">
+                 HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="5" Panel.ZIndex="3" Background="White" BorderThickness="10" BorderBrush="Black" Padding="20" CornerRadius="20">
             <Grid>
 
                 <Grid.RowDefinitions>
@@ -54,11 +54,12 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
-                <custom:LoadingSpinner Color="{StaticResource panelColor}" Thickness="10" IsLoading="{Binding IsLoading, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="100"/>
-                <TextBlock FontWeight="SemiBold"  Grid.Row="1" Foreground="{StaticResource panelActiveColor}" FontSize="28" Margin="0 10" Text="Molimo pričekajte dok se proces završi.."/>
+                <custom:LoadingSpinner Color="{StaticResource color12}" Thickness="10" IsLoading="{Binding IsLoading, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="100"/>
+                <TextBlock  Grid.Row="1" Foreground="{StaticResource color12}" FontSize="28" FontWeight="ExtraLight" Margin="0 10" Text="Molimo pričekajte dok se proces završi.."/>
 
             </Grid>
         </Border>
+
         <DataGrid Grid.ColumnSpan="2" Grid.Row="2" Name="ImportGrid" ItemsSource="{Binding ArticleCollection, Mode=TwoWay}" RowStyle="{DynamicResource DataGridRowStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Style="{DynamicResource DataGridStyle1}">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Naziv artikla" IsReadOnly="false" Width="*">
@@ -134,7 +135,7 @@
             <Button Style="{StaticResource optionsBtn}" Foreground="White" Command="{Binding OptionsCommand}" Height="50" Width="150" Margin="20 0 0 0">
                 <StackPanel Orientation="Horizontal">
                     <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Gear" Margin="10 0 0 0" Width="30" Height="30"/>
-                    <TextBlock TextAlignment="Center" FontSize="20" HorizontalAlignment="Center" Margin="12 8 5 5" VerticalAlignment="Stretch" FontWeight="ExtraLight" >Opcije</TextBlock>
+                    <TextBlock TextAlignment="Center" FontSize="20" HorizontalAlignment="Center" Margin="12 8 5 5" VerticalAlignment="Stretch" FontWeight="ExtraLight" >Postavke</TextBlock>
                 </StackPanel>
             </Button>
         </StackPanel>

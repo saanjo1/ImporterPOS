@@ -79,6 +79,15 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Završeno. Broj artikala na koji je primjenjen popust je: .
+        /// </summary>
+        internal static string CountDiscountArticles {
+            get {
+                return ResourceManager.GetString("CountDiscountArticles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CurrentExcelFile.
         /// </summary>
         internal static string CurrentExcelFile {
@@ -111,6 +120,15 @@ namespace ImporterPOS.WPF.Resources {
         internal static string Discounts {
             get {
                 return ResourceManager.GetString("Discounts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Podaci o popustu su uspješno postavljeni..
+        /// </summary>
+        internal static string DiscountSettings {
+            get {
+                return ResourceManager.GetString("DiscountSettings", resourceCulture);
             }
         }
         
@@ -282,6 +300,24 @@ namespace ImporterPOS.WPF.Resources {
         internal static string WritedOffSuccessfully {
             get {
                 return ResourceManager.GetString("WritedOffSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Odabrali ste pogrešan interval u kojem popust vrijedi. Postavite ga ponovo..
+        /// </summary>
+        internal static string WrongDateError {
+            get {
+                return ResourceManager.GetString("WrongDateError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pokušavate učitati pogrešan dokument. Provjerite, pa pokušajte opet..
+        /// </summary>
+        internal static string WrongDiscountFile {
+            get {
+                return ResourceManager.GetString("WrongDiscountFile", resourceCulture);
             }
         }
     }

@@ -123,6 +123,9 @@
   <data name="ClearList" xml:space="preserve">
     <value>Lista je uspješno ispražnjena.</value>
   </data>
+  <data name="CountDiscountArticles" xml:space="preserve">
+    <value>Završeno. Broj artikala na koji je primjenjen popust je: </value>
+  </data>
   <data name="CurrentExcelFile" xml:space="preserve">
     <value>CurrentExcelFile</value>
   </data>
@@ -134,6 +137,9 @@
   </data>
   <data name="Discounts" xml:space="preserve">
     <value>Popusti</value>
+  </data>
+  <data name="DiscountSettings" xml:space="preserve">
+    <value>Podaci o popustu su uspješno postavljeni.</value>
   </data>
   <data name="ErrorMessage" xml:space="preserve">
     <value>Dogodila se pogreška. Pokušajte ponovo.</value>
@@ -191,5 +197,11 @@
   </data>
   <data name="WritedOffSuccessfully" xml:space="preserve">
     <value>Uspješno otpisana roba.</value>
+  </data>
+  <data name="WrongDateError" xml:space="preserve">
+    <value>Odabrali ste pogrešan interval u kojem popust vrijedi. Postavite ga ponovo.</value>
+  </data>
+  <data name="WrongDiscountFile" xml:space="preserve">
+    <value>Pokušavate učitati pogrešan dokument. Provjerite, pa pokušajte opet.</value>
   </data>
 </root>

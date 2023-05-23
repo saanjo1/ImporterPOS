@@ -11,16 +11,24 @@
              FontFamily="Montserrat"
              FontWeight="ExtraLight"
              FontSize="18"
-             Height="326"
+             Height="380"
              Width="680">
 
-    <Grid Background="#ebebeb">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="42" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <Border>
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1, 0.7">
+                <GradientStop Color="{StaticResource secondaryBackColor2}" Offset="0"/>
+                <GradientStop Color="{StaticResource secondaryBackColor1}" Offset="1"/>
+                <GradientStop Color="{StaticResource InformationColor}" Offset="0.3"/>
+            </LinearGradientBrush>
+        </Border.Background>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="42" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <materialDesign:Card x:Name="cardHeader"
+            <materialDesign:Card x:Name="cardHeader"
                              Grid.Row="0"
                              Padding="10"
                              Margin="0"
@@ -28,58 +36,62 @@
                              Foreground="White"
                              Visibility="Visible"
                              Grid.ColumnSpan="2">
-            <StackPanel>
-                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Stretch" FontSize="20" Text="Discount options"/>
-            </StackPanel>
-        </materialDesign:Card>
-        <Border Margin="623 0 0 0" Grid.Column="1" VerticalAlignment="Top">
-            <StackPanel>
-                <Button Height="47" Background="{StaticResource color11}" Style="{StaticResource CloseButton}" Command="{Binding CancelCommand}">
-                    <TextBlock Text="close" Foreground="White" FontWeight="Light" FontSize="18"/>
+                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" >
+                    <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Gear" Foreground="White" Margin="0 0 10 0" Width="20" Height="30"/>
+                    <TextBlock VerticalAlignment="Stretch" FontSize="20" Text="Postavke"/>
+                </StackPanel>
+            </materialDesign:Card>
+            <Border HorizontalAlignment="Right" Grid.Column="2" Width="45" Height="40">
+                <Button Height="47" Style="{StaticResource CloseButton}" Command="{Binding CancelCommand}" Margin="5 0 0 0">
+                    <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Close" Width="20" Height="30"/>
                 </Button>
-            </StackPanel>
-        </Border>
+            </Border>
 
-        <Border Grid.Row="1" Margin="10 20">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <Border Grid.Row="1" Margin="20 30">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-
-                <Label Content="Determine the durability of discounts: " Grid.Row="0" Grid.ColumnSpan="2"/>
-
-                <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0" Margin="20,20,20,20" >
-                    <Label Content="Start date:" Foreground="Black" Margin="0 3 0 3"/>
-                    <Label Content="End date:" Foreground="Black" Margin="0 3 0 3"/>
-                    <Label Content="Activate discount: " Foreground="Black" Margin="0 3 0 3"/>
-                </StackPanel>
-
-                <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="0,18,0,20" Grid.ColumnSpan="2">
-                    <xctk:DateTimePicker Value="{Binding ValidFrom, Mode=TwoWay}" Margin="0,0,0,17"/>
-                    <xctk:DateTimePicker Value="{Binding ValidTo, Mode=TwoWay}" Margin="0"/>
-                    <CheckBox Margin="20" Width="25" Height="20" IsChecked="{Binding ActivateDiscount}"/>
-                </StackPanel>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
 
 
+                    <StackPanel>
+                        
+                    </StackPanel>
+                    
+                    <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0" >
+                        <Label Content="Datum aktivacije popusta:" Foreground="White" Margin="5 25 0 0"/>
+                        <Label Content="Datum završetka popusta:" Foreground="White" Margin="5 25 0 0"/>
+                        <Label Content="Aktivirati odmah: " Foreground="White" Margin="5 30"/>
+                    </StackPanel>
 
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Width="180" Grid.ColumnSpan="2">
-                    <Button BorderThickness="2" Content="Save" Padding="10" Width="80" Height="42" Style="{StaticResource SaveButton}" Margin="0 0 20 0" Command="{Binding SaveCommand}"/>
-                    <Button BorderBrush="Black" Content="Cancel" Style="{StaticResource CancelButton}" Command="{Binding CancelCommand}" Width="80"/>
-                </StackPanel>
-
-            </Grid>
-        </Border>
+                    <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
+                        <xctk:DateTimePicker Style="{StaticResource DateTimePickerStyle}" Value="{Binding ValidFrom, Mode=TwoWay}" Margin="5 25 0 0"/>
+                        <xctk:DateTimePicker Style="{StaticResource DateTimePickerStyle}" Value="{Binding ValidTo, Mode=TwoWay}" Margin="5 25 0 0" />
+                        <CheckBox HorizontalAlignment="Left" Style="{StaticResource LargerCheckBoxStyle}" IsChecked="{Binding ActivateDiscount}" Margin="0 20" />
+                    </StackPanel>
 
 
 
-    </Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Margin="20" Width="180" Grid.ColumnSpan="2">
+                        <Button BorderThickness="2" Content="Potvrdi" Padding="10" Width="80" Height="42" Style="{StaticResource ImportButton}" Margin="0 0 20 0" Command="{Binding SaveCommand}"/>
+                        <Button BorderBrush="Black" Content="Poništi" Style="{StaticResource CancelButton}" Command="{Binding CancelCommand}" Width="80"/>
+                    </StackPanel>
+
+                </Grid>
+            </Border>
+
+
+
+        </Grid>
+    </Border>
+
 
 
 </UserControl>

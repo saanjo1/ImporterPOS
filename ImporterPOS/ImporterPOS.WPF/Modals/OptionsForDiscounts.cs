@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.ViewModels;
 using System;
 using System.CodeDom;
@@ -27,6 +28,9 @@ namespace ImporterPOS.WPF.Modals
         [ObservableProperty]
         private bool activateDiscount;
 
+        [ObservableProperty]
+        private bool optionsFlag;
+
         public OptionsForDiscounts(DiscountViewModel discountViewModel, Notifier notifier)
         {
             _discountViewModel = discountViewModel;
@@ -41,13 +45,22 @@ namespace ImporterPOS.WPF.Modals
         [RelayCommand]
         public void Save()
         {
-            _discountViewModel.Close();
-            _notifier.ShowSuccess("Options saved successfully.");
+           if(ValidTo < ValidFrom)
+            {
+                _notifier.ShowWarning(Translations.WrongDateError);
+            }
+            else
+            {
+                OptionsFlag = true;
+                _discountViewModel.Close();
+                _notifier.ShowSuccess(Translations.DiscountSettings);
+            }
         }
 
         [RelayCommand]
         public void Cancel()
         {
+            OptionsFlag = false;
             _discountViewModel.Close();
         }
     }
