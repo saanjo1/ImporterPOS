@@ -178,6 +178,15 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Informacije o popustu nisu postavljene. Unesite ih prije nastavka..
+        /// </summary>
+        internal static string OptionsRequired {
+            get {
+                return ResourceManager.GetString("OptionsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Odaberi.
         /// </summary>
         internal static string Select {

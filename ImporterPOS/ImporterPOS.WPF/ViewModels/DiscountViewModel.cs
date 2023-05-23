@@ -80,6 +80,7 @@ namespace ImporterPOS.WPF.ViewModels
         private OptionsForDiscounts discountOptionsModel;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(LoadFixedExcelColumnsCommand))]
         ObservableCollection<DiscountColumnsViewModel>? articleList;
 
         [ObservableProperty]
@@ -280,13 +281,9 @@ namespace ImporterPOS.WPF.ViewModels
         public async void ImportItems()
         {
             IsLoading = true;
-
-            await Task.Run(() =>
-            {
-
                 if (DiscountOptionsModel == null)
                 {
-                    _notifier.ShowWarning("Oops! You need to provide discount options. ");
+                    _notifier.ShowWarning(Translations.OptionsRequired);
                 }
                 else
                 {
@@ -369,6 +366,8 @@ namespace ImporterPOS.WPF.ViewModels
                                 _notifier.ShowWarning("Discounts for " + notImported + " items can not be added. Discounts for non existing article is not possible.");
 
                             }
+
+                            ClearAllData();
                         }
                         catch (Exception)
                         {
@@ -377,10 +376,6 @@ namespace ImporterPOS.WPF.ViewModels
                         }
                     }
                 }
-            });
-
-            IsLoading = false;
-            ClearAllData();
         }
 
         private bool CheckDates(Rule disc)
@@ -421,6 +416,9 @@ namespace ImporterPOS.WPF.ViewModels
 
         public bool CanClickOptions()
         {
+
+            if (articleList == null || articleList.Count == 0)
+                return false;
 
             if (IsOptions)
                 return false;

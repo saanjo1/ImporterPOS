@@ -156,6 +156,9 @@
   <data name="OpenDialogTitle" xml:space="preserve">
     <value>Odaberite Excel file</value>
   </data>
+  <data name="OptionsRequired" xml:space="preserve">
+    <value>Informacije o popustu nisu postavljene. Unesite ih prije nastavka.</value>
+  </data>
   <data name="Select" xml:space="preserve">
     <value>Odaberi</value>
   </data>
