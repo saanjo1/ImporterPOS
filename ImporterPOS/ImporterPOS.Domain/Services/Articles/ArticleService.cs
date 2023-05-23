@@ -368,5 +368,45 @@ namespace ImporterPOS.Domain.Services.Articles
                 return Task.FromResult(article);
             }
         }
+
+        public async Task CreateGoodsBasedOnArticleName()
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                foreach (Article item in context.Articles)
+                {
+                    // Provjeri je li istoimeni "good" već prisutan u tablici "goods"
+                    bool goodExists = await context.Goods.AnyAsync(g => g.Name == item.Name);
+
+                    if (!goodExists)
+                    {
+                        // Stvori novi "good" na temelju "artikla"
+                        Good newGood = new Good
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = item.Name,
+                            UnitId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
+                            LatestPrice = 0,
+                            Volumen = 1,
+                            Refuse = 0
+                        };
+
+                        ArticleGood articleGood = new ArticleGood()
+                        {
+                            Id = Guid.NewGuid(),
+                            ArticleId = item.Id,
+                            GoodId = newGood.Id,
+                            ValidFrom = DateTime.Now,
+                            ValidUntil = DateTime.Now.AddYears(30)
+                        };
+                        context.ArticleGoods.Add(articleGood);
+                        context.Goods.Add(newGood);
+                    }
+                }
+
+                await context.SaveChangesAsync();
+            }
+        }
+
     }
 }

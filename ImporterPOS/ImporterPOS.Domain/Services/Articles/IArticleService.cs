@@ -22,7 +22,9 @@ namespace ImporterPOS.Domain.Services.Articles
 
         Task<decimal> GetTotalBasePrices(InventoryDocument inventoryDocument);
 
-        Task<Article> GetPriceByGood(Guid? goodId); 
+        Task<Article> GetPriceByGood(Guid? goodId);
+
+        Task CreateGoodsBasedOnArticleName();
     }
 
 

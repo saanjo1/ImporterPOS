@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Services.Articles;
+using ImporterPOS.Domain.Services.Goods;
 using ImporterPOS.WPF.Modals;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.Services.Excel;
@@ -26,6 +27,7 @@ namespace ImporterPOS.WPF.ViewModels
         private readonly Notifier _notifier;
         private IExcelService _excelService;
         private IArticleService _articleService;
+        private IGoodService _goodService;
         private ConcurrentDictionary<string, string> _myDictionary;
 
 
@@ -53,12 +55,13 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         private bool selectFileSuccess;
 
-        public SettingsViewModel(Notifier notifier, IExcelService excelService, ConcurrentDictionary<string, string> myDictionary, IArticleService articleService)
+        public SettingsViewModel(Notifier notifier, IExcelService excelService, ConcurrentDictionary<string, string> myDictionary, IArticleService articleService, IGoodService goodService)
         {
             _notifier = notifier;
             _myDictionary = myDictionary;
             _excelService = excelService;
             _articleService = articleService;
+            _goodService = goodService;
             GetDatabaseInfo();
         }
 
@@ -106,15 +109,31 @@ namespace ImporterPOS.WPF.ViewModels
         }
 
         [RelayCommand]
-        public void ConnectArticleToGoods()
+        public async Task CreateGoodsBasedOnArticleName()
         {
             try
             {
-                _notifier.ShowInformation(_articleService.ConnectArticlesToGoods().Result);
+                await _articleService.CreateGoodsBasedOnArticleName();
+
+            }
+            catch 
+            {
+                _notifier.ShowError(Translations.ErrorMessage);
+                
+            }
+        }
+
+        [RelayCommand]
+        public async Task SetMainStockToZero()
+        {
+            try
+            {
+                await _goodService.SetMainStockToZero();
             }
             catch
             {
-                _notifier.ShowError("Can't connect articles to goods.");
+                _notifier.ShowError(Translations.ErrorMessage);
+                throw;
             }
         }
 
