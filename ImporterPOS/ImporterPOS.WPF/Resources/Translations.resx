@@ -156,6 +156,9 @@
   <data name="InventoryDocuments" xml:space="preserve">
     <value>Inventurni dokumenti</value>
   </data>
+  <data name="InventoryDone" xml:space="preserve">
+    <value>Inventura je uspješno izvršena.</value>
+  </data>
   <data name="LoadDataSuccess" xml:space="preserve">
     <value>Artikli su uspješno učitani i pripremljeni za integraciju u softver.</value>
   </data>

@@ -313,7 +313,7 @@ namespace ImporterPOS.WPF.ViewModels
                 InventoryDocument inventoryDocument = new InventoryDocument()
                 {
                     Id = Guid.NewGuid(),
-                    Created = DateTime.Now,
+                    Created = new DateTime(2023,04,05,00,30,00),
                     Order = _invService.GetInventoryOrderNumber().Result,
                     IsActivated = true,
                     IsDeleted = false,
@@ -326,7 +326,7 @@ namespace ImporterPOS.WPF.ViewModels
                 foreach (var item in stockCorrectionViewModels)
                 {
 
-                    Guid _good = _goodService.GetGoodByName(item.Name, true).Result;
+                    Guid _good = _goodService.GetGoodByName(item.Name, false).Result;
 
                     decimal itemCurrentQty = Helpers.Extensions.GetDecimal(item.TotalPrice);
                     decimal itemNewQty = Helpers.Extensions.GetDecimal(item.NewQuantity);
@@ -340,7 +340,7 @@ namespace ImporterPOS.WPF.ViewModels
                         {
                             Id = Guid.NewGuid(),
                             StorageId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
-                            Created = DateTime.Now,
+                            Created = new DateTime(2023, 04, 05, 00, 30, 00),
                             Quantity = Qty,
                             CurrentQuantity = Qty,
                             Tax = 0,
@@ -357,13 +357,12 @@ namespace ImporterPOS.WPF.ViewModels
 
                 }
 
-                _notifier.ShowSuccess("Inventura uspjesno izvrsena.");
+                _notifier.ShowSuccess(Translations.InventoryDone);
 
             }
             catch
             {
-                _notifier.ShowError("Dogodila se greska prilikom korekcije stanja. Provjerite vas dokument.");
-                throw;
+                _notifier.ShowError(Translations.ErrorMessage);
             }
 
 

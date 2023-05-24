@@ -287,7 +287,6 @@ namespace ImporterPOS.WPF.Services.Excel
                     {
                         Name = Reader["Naziv"].ToString(),
                         NewQuantity = Reader["Kolicina"].ToString(),
-                        TotalPrice = Reader["Cijena"].ToString(),
                     });
                 }
 

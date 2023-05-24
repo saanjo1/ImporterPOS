@@ -43,6 +43,8 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         private SelectExcelSheetViewModel excelSheetViewModel;
 
+
+     
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ClearAllDataCommand))]
         [NotifyCanExecuteChangedFor(nameof(ImportDataCommand))]
@@ -443,6 +445,22 @@ namespace ImporterPOS.WPF.ViewModels
                 UpdateCollection(articlesCollection.Take(SelectedRecord));
                 UpdateRecordCount();
                 Count = ArticleList.Count;
+            }
+            catch (Exception)
+            {
+                _notifier.ShowError(Translations.ErrorMessage);
+            }
+            return Task.CompletedTask;
+
+        }
+
+
+        [RelayCommand]
+        public Task EditArticle(ExcelArticlesListViewModel parameter)
+        {
+            try
+            {
+                
             }
             catch (Exception)
             {

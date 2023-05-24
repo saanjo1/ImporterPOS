@@ -26,31 +26,33 @@
 
         <Border Grid.Column="0">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
+                <Border Grid.Row="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                <Label HorizontalAlignment="Left" FontSize="18" FontWeight="SemiBold" Foreground="White" Content="Excel postavke:" Margin="0 0 0 20"/>
+                        <Label HorizontalAlignment="Left" FontSize="22" FontWeight="Regular" Foreground="White" Content="Postavke:" Margin="0 0 0 20"/>
 
 
-                <Label HorizontalAlignment="Left" Grid.Row="1" Content="Odaberi Excel file" Style="{StaticResource settingsControlLabel}"></Label>
-                <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Margin="10 0" Style="{StaticResource settingsClickButton}" Content="Odaberi" Command="{Binding UploadExcelFileCommand}" Width="80" Height="35"/>
-                <fa:IconImage HorizontalAlignment="Left" Grid.Row="1" Grid.Column="2" Icon="Check" Foreground="LightGreen" Height="20" Width="20" Visibility="{Binding SelectFileSuccess, Converter={StaticResource BoolToVis}}"/>
+                        <Label HorizontalAlignment="Left" Grid.Row="1" Content="Kreiraj robu na osnovu artikla" Style="{StaticResource settingsControlLabel}"></Label>
+                        <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Margin="10 0" Style="{StaticResource settingsClickButton}" Content="Odaberi" Command="{Binding CreateGoodsBasedOnArticleNameCommand}" Width="80" Height="35"/>
+                        <fa:IconImage HorizontalAlignment="Left" Grid.Row="1" Grid.Column="2" Icon="Check" Foreground="LightGreen" Height="20" Width="20" Visibility="{Binding SelectFileSuccess, Converter={StaticResource BoolToVis}}"/>
 
-                <Label HorizontalAlignment="Left" Grid.Row="2" Content="Odaberi sheet sa filea" Style="{StaticResource settingsControlLabel}"></Label>
-                <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Margin="10 0" Style="{StaticResource settingsClickButton}" x:Name="btnSheet" Content="Odaberi" Command="{Binding SelectSheetCommand}" Width="80" Height="35"/>
-                <fa:IconImage HorizontalAlignment="Left" Grid.Row="2" Grid.Column="3" Icon="Check" Foreground="LightGreen" Height="20" Width="20" Visibility="{Binding SelectSheetSuccess, Converter={StaticResource BoolToVis}}"/>
+                        <Label HorizontalAlignment="Left" Grid.Row="2" Content="Nuliraj skladište" Style="{StaticResource settingsControlLabel}"></Label>
+                        <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Margin="10 0" Style="{StaticResource settingsClickButton}" Content="Odaberi" Command="{Binding SetMainStockToZeroCommand}" Width="80" Height="35"/>
+
+                    </Grid>
+                </Border>
+
 
             </Grid>
         </Border>
@@ -81,34 +83,6 @@
 
             </Grid>
         </Border>
-
-        <Border Grid.Row="1">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <Label HorizontalAlignment="Left" FontSize="18" FontWeight="SemiBold" Foreground="White" Content="Napredne postavke:" Margin="0 0 0 20"/>
-
-
-                <Label HorizontalAlignment="Left" Grid.Row="1" Content="Kreiraj robu za artikle" Style="{StaticResource settingsControlLabel}"></Label>
-                <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Margin="10 0" Style="{StaticResource settingsClickButton}" Content="Spoji" Command="{Binding CreateGoodsBasedOnArticleNameCommand}" Width="80" Height="35"/>
-                <fa:IconImage HorizontalAlignment="Left" Grid.Row="1" Grid.Column="2" Icon="Check" Foreground="LightGreen" Height="20" Width="20" Visibility="{Binding SelectFileSuccess, Converter={StaticResource BoolToVis}}"/>
-
-                <Label HorizontalAlignment="Left" Grid.Row="2" Content="Nuliraj skladište" Style="{StaticResource settingsControlLabel}"></Label>
-                <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Margin="10 0" Style="{StaticResource settingsClickButton}" Content="Odaberi" Command="{Binding SetMainStockToZeroCommand}" Width="80" Height="35"/>
-
-            </Grid>
-        </Border>
-
     </Grid>
 
 </UserControl>

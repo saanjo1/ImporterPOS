@@ -178,6 +178,15 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Inventura je uspješno izvršena..
+        /// </summary>
+        internal static string InventoryDone {
+            get {
+                return ResourceManager.GetString("InventoryDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Artikli su uspješno učitani i pripremljeni za integraciju u softver..
         /// </summary>
         internal static string LoadDataSuccess {
