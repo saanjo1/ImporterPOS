@@ -87,7 +87,7 @@ namespace ImporterPOS.WPF.States
                         this.Icon = IconChar.FileExcel;
                         break;
                     case ViewType.Settings:
-                        this.CurrentViewModel = new SettingsViewModel(_notifier, _excelService, _myDictionary, _articleService, _goodService);
+                        this.CurrentViewModel = new SettingsViewModel(_notifier, _excelService, _articleService, _goodService);
                         Caption = Translations.Settings;
                         this.Icon = IconChar.Gear;
                         break;

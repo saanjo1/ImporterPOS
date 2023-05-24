@@ -28,11 +28,6 @@ namespace ImporterPOS.WPF.ViewModels
         private IExcelService _excelService;
         private IArticleService _articleService;
         private IGoodService _goodService;
-        private ConcurrentDictionary<string, string> _myDictionary;
-
-
-        [ObservableProperty]
-        private SelectExcelSheetViewModel excelSheetViewModel;
 
         [ObservableProperty]
         private string databaseConnection;
@@ -42,23 +37,14 @@ namespace ImporterPOS.WPF.ViewModels
 
         [ObservableProperty]
         private string port;
-
-        [ObservableProperty]
-        private string excelFile;
-
         [ObservableProperty]
         private bool isOpen;
 
-        [ObservableProperty]
-        private bool selectSheetSuccess;
 
-        [ObservableProperty]
-        private bool selectFileSuccess;
 
-        public SettingsViewModel(Notifier notifier, IExcelService excelService, ConcurrentDictionary<string, string> myDictionary, IArticleService articleService, IGoodService goodService)
+        public SettingsViewModel(Notifier notifier, IExcelService excelService, IArticleService articleService, IGoodService goodService)
         {
             _notifier = notifier;
-            _myDictionary = myDictionary;
             _excelService = excelService;
             _articleService = articleService;
             _goodService = goodService;
@@ -66,48 +52,7 @@ namespace ImporterPOS.WPF.ViewModels
         }
 
 
-        [RelayCommand]
-        public void UploadExcelFile()
-        {
-            try
-            {
-                ExcelFile = _excelService.OpenDialog().Result;
-
-                if (ExcelFile != null)
-                {
-                    if (_myDictionary.TryGetValue(Translations.CurrentExcelFile, out string value) == false)
-                    {
-                        bool success = _myDictionary.TryAdd(Translations.CurrentExcelFile, excelFile);
-
-                        if (success)
-                            _notifier.ShowSuccess(Translations.SelectExcelFileSuccess);
-                        else
-                            _notifier.ShowError(Translations.ErrorMessage);
-                    }
-                    else
-                    {
-                        _myDictionary.TryGetValue(Translations.CurrentExcelFile, out string value1);
-                        bool success = _myDictionary.TryUpdate(Translations.CurrentExcelFile, excelFile, value1);
-
-                        if (value1 == excelFile)
-                            _notifier.ShowInformation(Translations.UpdatedSameFile);
-
-                        if (success && value1 != excelFile)
-                            _notifier.ShowInformation(Translations.UpdatedExcelFile);
-                    }
-                }
-
-                if (ExcelFile != null)
-                    SelectFileSuccess = true;
-            }
-            catch
-            {
-                _notifier.ShowError(Translations.ErrorMessage);
-                SelectFileSuccess = false;
-            }
-
-        }
-
+       
         [RelayCommand]
         public async Task CreateGoodsBasedOnArticleName()
         {
@@ -137,22 +82,6 @@ namespace ImporterPOS.WPF.ViewModels
             }
         }
 
-        [RelayCommand]
-        public void SelectSheet() { 
-        //{
-        //    try
-        //    {
-        //        IsOpen = true;
-        //        this.ExcelSheetViewModel = new SelectExcelSheetViewModel(_excelService, this, _notifier, _myDictionary);
-        //    }
-        //    catch
-        //    {
-        //        SelectSheetSuccess = false;
-        //        IsOpen = false;
-        //        throw;
-        //    }
-        }
-
 
         public void GetDatabaseInfo()
         {
@@ -169,12 +98,6 @@ namespace ImporterPOS.WPF.ViewModels
             DatabaseConnection = databaseNode.InnerText;
             ServerInstance = serverInstanceNode.InnerText;
             Port = portNode.InnerText;
-
-            if (_myDictionary.TryGetValue(Translations.CurrentExcelFile, out string value) == true)
-                SelectFileSuccess = true;
-            if (_myDictionary.TryGetValue(Translations.CurrentExcelSheet, out string value2) == true)
-                SelectSheetSuccess = true;
-
         }
 
     }
