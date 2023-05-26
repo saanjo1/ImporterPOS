@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DocumentFormat.OpenXml.Office2019.Drawing.Diagram11;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Services.Articles;
 using ImporterPOS.Domain.Services.Goods;
@@ -52,8 +53,6 @@ namespace ImporterPOS.WPF.States
 
         [ObservableProperty]
         private int countedGoods;
-
-
         public Store(Notifier notifier, IArticleService articleService, IStorageService storageDataService, IInventoryDocumentsService inventoryService, IGoodService goodService, IInventoryItemBasisService invItemService, IExcelService excelService)
         {
             _notifier = notifier;
@@ -62,36 +61,15 @@ namespace ImporterPOS.WPF.States
             _inventoryService = inventoryService;
             _goodService = goodService;
             _invItemService = invItemService;
-            LoadStorages();
             _excelService = excelService;
+            LoadStorages();
         }
 
         private void LoadStorages()
         {
-            CurrentStorages = new List<string>
-            {
-                "Glavno skladište"
-            };
-
-            SelectedStorage = CurrentStorages[0];
+            this.CurrentDataGrid = new ArticleStorageViewModel(_articleService, _storageDataService, _notifier, _inventoryService, _goodService, _invItemService);
         }
 
-        [RelayCommand]
-        public void EditCurrentDataGrid(object? parameter)
-        {
-            if (parameter is string)
-            {
-                string storeType = (string)parameter;
-                switch (storeType)
-                {
-                    case "Glavno skladište":
-                        this.CurrentDataGrid = new ArticleStorageViewModel(_articleService, storeType, _storageDataService, _notifier, _inventoryService, _goodService, _invItemService);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
 
         [RelayCommand]
         public async void WriteOffFromExcel()

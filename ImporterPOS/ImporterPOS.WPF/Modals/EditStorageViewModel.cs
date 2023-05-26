@@ -22,10 +22,9 @@ namespace ImporterPOS.WPF.Modals
         private ArticleStorageViewModel viewModel;
         private InventoryDocument inventoryDocument;
 
-        public EditStorageViewModel(GoodsArticlesViewModel goodsArticlesViewModel, Notifier notifier, IStorageService storageDataService, ArticleStorageViewModel vm, InventoryDocument inventoryDocument, IInventoryItemBasisService inventoryService)
+        public EditStorageViewModel(GoodsArticlesViewModel goodsArticlesViewModel, Notifier notifier, IStorageService storageDataService, InventoryDocument inventoryDocument, IInventoryItemBasisService inventoryService)
         {
             _goodsArticlesViewModel = goodsArticlesViewModel;
-            viewModel = vm;
             Name = _goodsArticlesViewModel.Name;
             Quantity = _goodsArticlesViewModel.Quantity;
             CurrentQuantity = _goodsArticlesViewModel.Quantity;

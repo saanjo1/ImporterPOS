@@ -354,7 +354,7 @@ namespace ImporterPOS.WPF.ViewModels
                                 Id = Guid.NewGuid(),
                                 Name = articleList[i].Name,
                                 ArticleNumber = _articleService.GetCounter(Guid.Empty).Result,
-                                SubCategoryId = _articleService.ManageSubcategories(articleList[i].Category, articleList[i].Storage).Result,
+                                SubCategoryId = new Guid("457A28E8-68DA-4524-BB2C-3C3179A77201"),
                                 BarCode = articleList[i].BarCode,
                                 Price = Helpers.Extensions.GetDecimal(articleList[i].Price),
                                 Tag = articleList[i].Tag

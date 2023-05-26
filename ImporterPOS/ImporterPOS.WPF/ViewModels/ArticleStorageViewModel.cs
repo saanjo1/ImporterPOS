@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using ToastNotifications;
 using ToastNotifications.Messages;
+using ImporterPOS.WPF.Resources;
 
 namespace ImporterPOS.WPF.ViewModels
 {
@@ -31,10 +32,9 @@ namespace ImporterPOS.WPF.ViewModels
         private readonly IInventoryDocumentsService _inventoryService;
         private readonly IInventoryItemBasisService _invItemService;
         private readonly IGoodService _goodService;
-        private readonly string storeType;
         private Notifier _notifier;
 
-        public ArticleStorageViewModel(IArticleService articleService, string _storeType, IStorageService storageService, Notifier notifier, IInventoryDocumentsService inventoryService, IGoodService goodService, IInventoryItemBasisService invItemService)
+        public ArticleStorageViewModel(IArticleService articleService, IStorageService storageService, Notifier notifier, IInventoryDocumentsService inventoryService, IGoodService goodService, IInventoryItemBasisService invItemService)
         {
             _articleService = articleService;
             _storageService = storageService;
@@ -42,7 +42,6 @@ namespace ImporterPOS.WPF.ViewModels
             _inventoryService = inventoryService;
             _goodService = goodService;
             _invItemService = invItemService;
-            storeType = _storeType;
             LoadData();
         }
 
@@ -105,7 +104,7 @@ namespace ImporterPOS.WPF.ViewModels
 
             await Task.Run(() =>
             {
-                ArticleList = StorageQuantityCounter(storeType).Result;
+                ArticleList = StorageQuantityCounter(Informations.Storage).Result;
 
                 ArticleCollection = CollectionViewSource.GetDefaultView(ArticleList);
                 Count = ArticleList.Count;
@@ -125,7 +124,7 @@ namespace ImporterPOS.WPF.ViewModels
         public void EditArticle(GoodsArticlesViewModel parameter)
         {
             IsEditOpen = true;
-            this.EditArticleViewModel = new EditStorageViewModel(parameter, _notifier, _storageService, this, inventoryDocument, _invItemService);
+            this.EditArticleViewModel = new EditStorageViewModel(parameter, _notifier, _storageService, inventoryDocument, _invItemService);
         }
 
 

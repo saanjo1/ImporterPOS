@@ -122,5 +122,14 @@ namespace ImporterPOS.WPF.Resources {
                 return ResourceManager.GetString("ServerInstancePath", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Glavno skladište.
+        /// </summary>
+        internal static string Storage {
+            get {
+                return ResourceManager.GetString("Storage", resourceCulture);
+            }
+        }
     }
 }

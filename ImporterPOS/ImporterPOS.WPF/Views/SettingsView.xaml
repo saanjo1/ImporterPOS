@@ -20,7 +20,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Border CornerRadius="10" Background="#1073B1">
+        <Border Background="#1073B1" CornerRadius="10">
             <TabControl Grid.Row="0" Grid.ColumnSpan="2">
                 <TabControl.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1, 0.7">
@@ -30,50 +30,41 @@
                     </LinearGradientBrush>
                 </TabControl.Background>
                 <TabItem Header="Postavke">
-                    <Grid>
+                    <Grid Margin="20">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="1">
-                            <StackPanel.Resources>
-                                <Style TargetType="Button" BasedOn="{StaticResource settingsClickButton}">
-                                    <Setter Property="Margin" Value="10 0" />
-                                    <Setter Property="Width" Value="80" />
-                                    <Setter Property="Height" Value="35" />
-                                </Style>
-                            </StackPanel.Resources>
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="Kreiraj robu na osnovu artikla" Style="{StaticResource settingsControlLabel}" />
-                                <Button Content="Odaberi" Command="{Binding CreateGoodsBasedOnArticleNameCommand}" />
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="Nuliraj skladište" Style="{StaticResource settingsControlLabel}" />
-                                <Button Content="Odaberi" Command="{Binding SetMainStockToZeroCommand}" />
-                            </StackPanel>
-                        </StackPanel>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Content="Kreiraj robu na osnovu artikla" Style="{StaticResource settingsControlLabel}" />
+                                <Button Grid.Column="1"  Content="Odaberi" Height="35" Width="80" Margin="10 0" Style="{StaticResource settingsClickButton}" Command="{Binding CreateGoodsBasedOnArticleNameCommand}" />
+                                <Label Grid.Row="1" Content="Nuliraj skladište" Style="{StaticResource settingsControlLabel}" />
+                                <Button Grid.Row="1" Grid.Column="1" Content="Odaberi" Height="35" Width="80" Margin="10 0" Style="{StaticResource settingsClickButton}" Command="{Binding SetMainStockToZeroCommand}" />
                     </Grid>
                 </TabItem>
                 <TabItem Header="Postavke baze podataka">
-                    <Grid>
+                    <Grid Margin="20">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
                             <Label Content="Instanca servera:" Style="{StaticResource settingsControlLabel}" />
-                            <TextBox IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding ServerInstance, Mode=TwoWay}" />
-                        </StackPanel>
-                        <StackPanel Grid.Row="2" Orientation="Horizontal">
-                            <Label Content="Baza podataka:" Style="{StaticResource settingsControlLabel}" />
-                            <TextBox IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding DatabaseConnection, Mode=TwoWay}" />
-                        </StackPanel>
-                        <StackPanel Grid.Row="3" Orientation="Horizontal">
-                            <Label Content="Port:" Style="{StaticResource settingsControlLabel}" />
-                            <TextBox IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding Port, Mode=TwoWay}" />
-                        </StackPanel>
+                            <TextBox Grid.Column="1" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding ServerInstance, Mode=TwoWay}" />
+                            <Label Grid.Row="1" Content="Baza podataka:" Style="{StaticResource settingsControlLabel}" />
+                            <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding DatabaseConnection, Mode=TwoWay}" />
+                            <Label Grid.Row="2" Content="Port:" Style="{StaticResource settingsControlLabel}" />
+                            <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding Port, Mode=TwoWay}" />
                     </Grid>
                 </TabItem>
             </TabControl>

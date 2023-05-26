@@ -195,6 +195,9 @@
   <data name="Storages" xml:space="preserve">
     <value>Skladišta</value>
   </data>
+  <data name="Success" xml:space="preserve">
+    <value>Uspješno izvršeno. </value>
+  </data>
   <data name="UpdatedExcelFile" xml:space="preserve">
     <value>Excel file je uspješno izmijenjen.</value>
   </data>

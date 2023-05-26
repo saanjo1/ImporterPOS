@@ -917,35 +917,31 @@
         <Setter Property="xctk:DateTimePicker.Watermark" Value="Odaberite datum i vrijeme" />
     </Style>
 
-
-    <Style TargetType="TabControl">
-        <Setter Property="BorderBrush" Value="{StaticResource color12}" />
-        <Setter Property="BorderThickness" Value="3" />
-        <Setter Property="Margin" Value="10" />
-    </Style>
-
     <Style TargetType="TabItem">
-        <Setter Property="HeaderTemplate">
+        <Setter Property="Width" Value="200"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Template">
             <Setter.Value>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}" Margin="10 5" />
-                </DataTemplate>
+                <ControlTemplate TargetType="TabItem">
+                    <Border Name="Border"  CornerRadius="4,4,0,0" Margin="2,0">
+                        <ContentPresenter x:Name="ContentSite"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        ContentSource="Header"
+                                        Margin="10,2"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="LightSkyBlue" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="False">
+                            <Setter TargetName="Border" Property="Background" Value="GhostWhite" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="FontSize" Value="16" />
-        <Setter Property="Foreground" Value="Black" />
-        <Setter Property="BorderBrush" Value="Gray" />
-        <Setter Property="BorderThickness" Value="0 0 0 1" />
-        <Setter Property="Padding" Value="10" />
-        <Setter Property="Background" Value="{StaticResource color11}" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource color12}" />
-            </Trigger>
-            <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="{StaticResource color13}" />
-            </Trigger>
-        </Style.Triggers>
     </Style>
 
 </ResourceDictionary>

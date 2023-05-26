@@ -59,6 +59,7 @@ namespace ImporterPOS.WPF.ViewModels
             try
             {
                 await _articleService.CreateGoodsBasedOnArticleName();
+                _notifier.ShowError(Translations.Success);
 
             }
             catch 
@@ -74,6 +75,7 @@ namespace ImporterPOS.WPF.ViewModels
             try
             {
                 await _goodService.SetMainStockToZero();
+                _notifier.ShowError(Translations.Success);
             }
             catch
             {
