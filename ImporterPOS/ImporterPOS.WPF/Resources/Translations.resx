@@ -195,6 +195,9 @@
   <data name="SettingsError" xml:space="preserve">
     <value>Postavke nisu podešene.</value>
   </data>
+  <data name="StockCorrectionDone" xml:space="preserve">
+    <value>Korekcija stanja skladišta uspješno izvršena.</value>
+  </data>
   <data name="Storages" xml:space="preserve">
     <value>Skladišta</value>
   </data>

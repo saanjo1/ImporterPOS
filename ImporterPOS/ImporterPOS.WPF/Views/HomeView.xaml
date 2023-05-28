@@ -24,7 +24,6 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.8*"/>
-            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <modalcontrol:Modal Panel.ZIndex="1" Background="Transparent" IsOpen="{Binding IsShowInventoryDetails}" Margin="50 0 0 0" Height="700" Grid.RowSpan="3" Grid.ColumnSpan="5">
@@ -146,34 +145,6 @@
                         </StackPanel>
                     </Button>
                 </StackPanel>
-            </Grid>
-        </Border>
-
-        <Border Grid.Row="2" Grid.Column="1" Background="{StaticResource color12}" 
-                Margin="20"
-                Width="500" Height="300" CornerRadius="10" BorderBrush="White" BorderThickness="1" VerticalAlignment="Top">
-
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Row="0" FontSize="20" Foreground="{StaticResource titleColor1}" Margin="20" FontWeight="Light" Text="Upravljanjem skladištem"/>
-                <RibbonSeparator Grid.Row="1"/>
-                <TextBlock Grid.Row="3" FontSize="18" Foreground="{StaticResource titleColor1}" Margin="20" FontWeight="Light" Text="Ispravak stanja skladišta (Excel)"/>
-                <Button HorizontalAlignment="Right" Margin="150 0" Grid.Row="3" Grid.Column="1" FontSize="14" Style="{StaticResource settingsClickButton}" Content="Odaberi" Command="{Binding StockCorrectionFromExcelCommand}" Width="60" Height="30"/>
-                <TextBlock Grid.Row="4" FontSize="18" Foreground="{StaticResource titleColor1}" Margin="20" FontWeight="Light" Text="Inventura putem barkod čitača"/>
-                <Button HorizontalAlignment="Right" Margin="150 0" Grid.Row="4" Grid.Column="1" FontSize="14" Style="{StaticResource settingsClickButton}" Content="Odaberi" Command="{Binding ReadBarcodeTxtFileCommand}" Width="60" Height="30"/>
-
             </Grid>
         </Border>
 

@@ -295,6 +295,15 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Korekcija stanja skladišta uspješno izvršena..
+        /// </summary>
+        internal static string StockCorrectionDone {
+            get {
+                return ResourceManager.GetString("StockCorrectionDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Skladišta.
         /// </summary>
         internal static string Storages {
