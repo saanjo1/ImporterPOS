@@ -4,6 +4,7 @@ using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Services.InventoryItems;
 using ImporterPOS.Domain.Services.Storages;
 using ImporterPOS.WPF.Helpers;
+using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.ViewModels;
 using System;
 using ToastNotifications;
@@ -12,31 +13,36 @@ using ToastNotifications.Messages;
 namespace ImporterPOS.WPF.Modals
 {
     [ObservableObject]
-    public partial class EditStorageViewModel
+    public partial class StorageItemsViewModel
     {
 
         private GoodsArticlesViewModel _goodsArticlesViewModel;
         private Notifier _notifier;
         private IStorageService _storageDataService;
         private IInventoryItemBasisService _inventoryService;
-        private ArticleStorageViewModel viewModel;
+        private StoreViewModel viewModel;
         private InventoryDocument inventoryDocument;
 
-        public EditStorageViewModel(GoodsArticlesViewModel goodsArticlesViewModel, Notifier notifier, IStorageService storageDataService, InventoryDocument inventoryDocument, IInventoryItemBasisService inventoryService)
+        public StorageItemsViewModel(GoodsArticlesViewModel goodsArticlesViewModel, Notifier notifier, IStorageService storageDataService, InventoryDocument inventoryDocument, IInventoryItemBasisService inventoryService, StoreViewModel viewModel)
         {
             _goodsArticlesViewModel = goodsArticlesViewModel;
+            LoadObservableProperties();
+            _notifier = notifier;
+            _storageDataService = storageDataService;
+            this.inventoryDocument = inventoryDocument;
+            _inventoryService = inventoryService;
+            this.viewModel = viewModel;
+        }
+
+        private void LoadObservableProperties()
+        {
             Name = _goodsArticlesViewModel.Name;
             Quantity = _goodsArticlesViewModel.Quantity;
             CurrentQuantity = _goodsArticlesViewModel.Quantity;
             LatestPrice = _goodsArticlesViewModel.TotalPurchasePrice;
             GoodId = _goodsArticlesViewModel.GoodId;
             Sttorage = _goodsArticlesViewModel.Storage;
-            _notifier = notifier;
-            _storageDataService = storageDataService;
-            this.inventoryDocument = inventoryDocument;
-            _inventoryService = inventoryService;
         }
-
 
         [ObservableProperty]
         private decimal? quantity;
@@ -86,11 +92,9 @@ namespace ImporterPOS.WPF.Modals
 
                 _inventoryService.Create(newInventoryItem);
 
-
-                _notifier.ShowSuccess("Quantity updated!");
+                _notifier.ShowSuccess(Translations.GoodUpdated);
+                viewModel.SetUpdatedToTrue(GoodId);
                 viewModel.Cancel();
-                viewModel.LoadData();
-
                 viewModel.ListOfItems.Add(newInventoryItem);
             }
 

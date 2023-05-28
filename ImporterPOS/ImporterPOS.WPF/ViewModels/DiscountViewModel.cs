@@ -34,7 +34,7 @@ namespace ImporterPOS.WPF.ViewModels
         private readonly ConcurrentDictionary<string, string> _myDictionary;
 
         [ObservableProperty]
-        private ObservableCollection<DiscountColumnsViewModel> articlesCollection = new ObservableCollection<DiscountColumnsViewModel>();
+        private ObservableCollection<ArticleDiscountViewModel> articlesCollection = new ObservableCollection<ArticleDiscountViewModel>();
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ClearAllDataCommand))]
@@ -59,7 +59,7 @@ namespace ImporterPOS.WPF.ViewModels
         {
             if (!string.IsNullOrEmpty(TextToFilter))
             {
-                var filt = obj as DiscountColumnsViewModel;
+                var filt = obj as ArticleDiscountViewModel;
                 return filt != null && (filt.BarCode.Contains(TextToFilter));
             }
             return true;
@@ -72,13 +72,13 @@ namespace ImporterPOS.WPF.ViewModels
         private bool isOptions;
 
         [ObservableProperty]
-        private DiscountColumnsViewModel mapDataModel;
+        private ArticleDiscountViewModel mapDataModel;
 
         [ObservableProperty]
-        private OptionsForDiscounts discountOptionsModel;
+        private DiscountSettingsViewModel discountOptionsModel;
 
         [ObservableProperty]
-        ObservableCollection<DiscountColumnsViewModel>? articleList;
+        ObservableCollection<ArticleDiscountViewModel>? articleList;
 
         [ObservableProperty]
         private ICollectionView articleCollection;
@@ -180,7 +180,7 @@ namespace ImporterPOS.WPF.ViewModels
             IsLastEnabled = CurrentPage < NumberOfPages;
         }
 
-        private void UpdateCollection(IEnumerable<DiscountColumnsViewModel> recordsToShow)
+        private void UpdateCollection(IEnumerable<ArticleDiscountViewModel> recordsToShow)
         {
             ArticlesCollection.Clear();
             foreach (var item in recordsToShow)
@@ -204,7 +204,7 @@ namespace ImporterPOS.WPF.ViewModels
         {
             try
             {
-                DiscountColumnsViewModel tempVm = new DiscountColumnsViewModel();
+                ArticleDiscountViewModel tempVm = new ArticleDiscountViewModel();
                 string filePath = await _excelDataService.OpenDialog();
 
                 if (filePath != null)
@@ -227,7 +227,7 @@ namespace ImporterPOS.WPF.ViewModels
         public void Options()
         {
             this.IsOptions = true;
-            this.DiscountOptionsModel = new OptionsForDiscounts(this, _notifier);
+            this.DiscountOptionsModel = new DiscountSettingsViewModel(this, _notifier);
         }
 
         [RelayCommand]
@@ -254,7 +254,7 @@ namespace ImporterPOS.WPF.ViewModels
         }
 
         [RelayCommand]
-        public void LoadData(ObservableCollection<DiscountColumnsViewModel>? vm)
+        public void LoadData(ObservableCollection<ArticleDiscountViewModel>? vm)
         {
             if (vm != null)
             {
@@ -372,7 +372,7 @@ namespace ImporterPOS.WPF.ViewModels
         }
 
         [RelayCommand]
-        public Task DeleteArticleFromList(DiscountColumnsViewModel parameter)
+        public Task DeleteArticleFromList(ArticleDiscountViewModel parameter)
         {
             try
             {

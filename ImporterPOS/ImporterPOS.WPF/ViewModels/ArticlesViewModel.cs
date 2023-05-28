@@ -41,7 +41,7 @@ namespace ImporterPOS.WPF.ViewModels
         private ObservableCollection<ExcelArticlesListViewModel> articlesCollection;
 
         [ObservableProperty]
-        private SelectExcelSheetViewModel excelSheetViewModel;
+        private ExcelSheetChooserViewModel excelSheetViewModel;
 
 
      
@@ -235,7 +235,7 @@ namespace ImporterPOS.WPF.ViewModels
         private async Task InitializeAndLoadData(string filePath)
         {
             IsSheetPopupOpened = true;
-            this.ExcelSheetViewModel = new SelectExcelSheetViewModel(_excelService, this, _notifier, filePath);
+            this.ExcelSheetViewModel = new ExcelSheetChooserViewModel(_excelService, this, _notifier, filePath);
         }
 
         public async void LoadData(string filePath, ObservableCollection<ExcelArticlesListViewModel>? vm = null)

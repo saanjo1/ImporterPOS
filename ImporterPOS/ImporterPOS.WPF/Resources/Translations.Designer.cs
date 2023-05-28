@@ -151,6 +151,15 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Uspješno ste ažurirali odabranu robu..
+        /// </summary>
+        internal static string GoodUpdated {
+            get {
+                return ResourceManager.GetString("GoodUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dogodio se problem prilikom integracije u bazu podataka. Pokušajte ponovo..
         /// </summary>
         internal static string ImportArticlesError {
