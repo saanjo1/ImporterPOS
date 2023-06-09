@@ -63,7 +63,7 @@ namespace ImporterPOS.WPF.ViewModels
         private bool isLoading;
 
         [ObservableProperty]
-        private EditStorageViewModel editArticleViewModel;
+        private StorageItemsViewModel editArticleViewModel;
 
         [ObservableProperty]
         private ICollection<GoodsArticlesViewModel> articleList;
@@ -107,11 +107,11 @@ namespace ImporterPOS.WPF.ViewModels
             await Task.Run(() =>
             {
                 ArticleList = StorageQuantityCounter(Informations.Storage).Result;
-
+                ArticleList = ArticleList.OrderByDescending(x => x.IsUpdated).ToList();
                 ArticleCollection = CollectionViewSource.GetDefaultView(ArticleList);
                 Count = ArticleList.Count;
             });
-
+            ArticleList.OrderBy(x => x.IsUpdated);
             IsLoading = false;
         }
 
@@ -126,7 +126,7 @@ namespace ImporterPOS.WPF.ViewModels
         public void EditArticle(GoodsArticlesViewModel parameter)
         {
             IsEditOpen = true;
-            this.EditArticleViewModel = new EditStorageViewModel(parameter, _notifier, _storageService, inventoryDocument, _invItemService);
+            this.EditArticleViewModel = new StorageItemsViewModel(parameter, _notifier, _storageService, inventoryDocument, _invItemService, this);
         }
 
 
@@ -145,13 +145,12 @@ namespace ImporterPOS.WPF.ViewModels
                 IsActivated = true,
                 IsDeleted = false
             };
-            _inventoryService.Create(inventoryDocument);
         }
 
         [RelayCommand]
         public void SaveChanges()
         {
-
+            _inventoryService.Create(inventoryDocument);
             int counter = 0;
             if (ListOfItems.Count > 0)
             {
@@ -239,7 +238,8 @@ namespace ImporterPOS.WPF.ViewModels
                         TotalSoldPrice = Math.Round(_soldPrice, 2),
                         TotalBasePrice = _totalBase,
                         TotalTaxes = _totalTaxes,
-                        Ruc = _ruc
+                        Ruc = _ruc,
+                        IsUpdated = false
                     });
 
                 }
@@ -389,5 +389,16 @@ namespace ImporterPOS.WPF.ViewModels
             }
         }
 
+        public Task SetUpdatedToTrue(Guid goodId)
+        {
+            GoodsArticlesViewModel article = articleList.FirstOrDefault(x => x.GoodId == goodId);
+
+            if(article != null) { 
+                
+                article.IsUpdated = true;
+            }
+
+            return Task.CompletedTask;
+        }
     }
 }

@@ -147,6 +147,9 @@
   <data name="ExcelFileError" xml:space="preserve">
     <value>Vaš Excel file nije odgovarajućeg formata. Provjerite ga.</value>
   </data>
+  <data name="GoodUpdated" xml:space="preserve">
+    <value>Uspješno ste ažurirali odabranu robu.</value>
+  </data>
   <data name="ImportArticlesError" xml:space="preserve">
     <value>Dogodio se problem prilikom integracije u bazu podataka. Pokušajte ponovo.</value>
   </data>
@@ -194,6 +197,9 @@
   </data>
   <data name="SettingsError" xml:space="preserve">
     <value>Postavke nisu podešene.</value>
+  </data>
+  <data name="StockCorrectionDone" xml:space="preserve">
+    <value>Korekcija stanja skladišta uspješno izvršena.</value>
   </data>
   <data name="Storages" xml:space="preserve">
     <value>Skladišta</value>

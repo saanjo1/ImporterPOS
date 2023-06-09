@@ -17,7 +17,7 @@ namespace ImporterPOS.WPF.Services.Excel
         Task<List<string>> GetListOfSheets(string excelFile);
 
         Task<ObservableCollection<ExcelArticlesListViewModel>> ReadColumnsFromExcel(string filePath, string sheetValue, ExcelArticlesListViewModel viewModel);
-        Task<ObservableCollection<DiscountColumnsViewModel>> ReadDiscountColumns(string path, DiscountColumnsViewModel viewModel);
+        Task<ObservableCollection<ArticleDiscountViewModel>> ReadDiscountColumns(string path, ArticleDiscountViewModel viewModel);
         Task<ObservableCollection<WriteOffViewModel>> ReadFromWriteOff(string excelFile, string sheet);
         Task<List<string>> ListColumnNames(string sheetName);
         Task<ObservableCollection<StockCorrectionViewModel>> ReadStockCorrectionDocument(string excelFile);

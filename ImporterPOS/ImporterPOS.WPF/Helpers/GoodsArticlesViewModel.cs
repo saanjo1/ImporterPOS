@@ -37,5 +37,7 @@ namespace ImporterPOS.WPF.Helpers
         [ObservableProperty]
         private Guid goodId;
 
+        [ObservableProperty]
+        private bool isUpdated;
     }
 }

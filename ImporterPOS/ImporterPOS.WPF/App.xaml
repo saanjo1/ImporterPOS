@@ -43,25 +43,21 @@
                 <views:DiscountsView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type modals:SelectExcelSheetViewModel}">
+            <DataTemplate DataType="{x:Type modals:ExcelSheetChooserViewModel}">
                 <views:SelectSheetView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type modals:OptionsForDiscounts}">
+            <DataTemplate DataType="{x:Type modals:DiscountSettingsViewModel}">
                 <controls:DiscountOptionsView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type viewmodels:InventoryDocumentsDetails}">
                 <views:InventoryDocumentDetailsView/>
             </DataTemplate>
-            
-            
-            <DataTemplate DataType="{x:Type modals:EditStorageViewModel}">
-                <controls:EditStorageView/>
-            </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewmodels:ArticleStorageViewModel}">
-                <views:ArticleStorageView/>
+
+            <DataTemplate DataType="{x:Type modals:StorageItemsViewModel}">
+                <controls:EditStorageView/>
             </DataTemplate>
 
 

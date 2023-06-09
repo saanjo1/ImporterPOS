@@ -284,12 +284,12 @@ namespace ImporterPOS.WPF.ViewModels
 
                 }
 
-                _notifier.ShowSuccess("Uspjesno izvrsena korekcija skladista.");
+                _notifier.ShowSuccess(Translations.StockCorrectionDone);
 
             }
             catch
             {
-                _notifier.ShowError("Dogodila se greska prilikom korekcije stanja. Provjerite vas dokument.");
+                _notifier.ShowError(Translations.ImportArticlesError);
                 throw;
             }
 
@@ -297,77 +297,7 @@ namespace ImporterPOS.WPF.ViewModels
 
         }
 
-        [RelayCommand]
-        private async void ReadBarcodeTxtFile()
-        {
-            ObservableCollection<StockCorrectionViewModel> stockCorrectionViewModels = new ObservableCollection<StockCorrectionViewModel>();
-
-            try
-            {
-                string path = _excelService.OpenDialog().Result;
-
-                if (path != null)
-                {
-                    stockCorrectionViewModels = _excelService.ReadFromTxtFile(path).Result;
-                }
-
-                InventoryDocument inventoryDocument = new InventoryDocument()
-                {
-                    Id = Guid.NewGuid(),
-                    Created = new DateTime(2023,04,05,00,30,00),
-                    Order = _invService.GetInventoryOrderNumber().Result,
-                    IsActivated = true,
-                    IsDeleted = false,
-                    StorageId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
-                    Type = 2
-                };
-
-                _invService.Create(inventoryDocument);
-
-                foreach (var item in stockCorrectionViewModels)
-                {
-
-                    Guid _good = _goodService.GetGoodByName(item.Name, false).Result;
-
-                    decimal itemCurrentQty = Helpers.Extensions.GetDecimal(item.TotalPrice);
-                    decimal itemNewQty = Helpers.Extensions.GetDecimal(item.NewQuantity);
-                    decimal Qty = itemNewQty - itemCurrentQty;
-
-                    if (_good != Guid.Empty && Qty != 0)
-                    {
-                        Good goodEntity = await _goodService.Get(_good.ToString());
-
-                        InventoryItemBasis inventoryItemBasis = new InventoryItemBasis
-                        {
-                            Id = Guid.NewGuid(),
-                            StorageId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
-                            Created = new DateTime(2023, 04, 05, 00, 30, 00),
-                            Quantity = Qty,
-                            CurrentQuantity = Qty,
-                            Tax = 0,
-                            Discriminator = "InventoryDocumentItem",
-                            InventoryDocumentId = inventoryDocument.Id,
-                            GoodId = goodEntity.Id,
-                            Price = goodEntity.LatestPrice,
-                            Total = Qty * goodEntity.LatestPrice,
-                            IsDeleted = false,
-                            Refuse = 0
-                        };
-                        _invItemService.Create(inventoryItemBasis);
-                    }
-
-                }
-
-                _notifier.ShowSuccess(Translations.InventoryDone);
-
-            }
-            catch
-            {
-                _notifier.ShowError(Translations.ErrorMessage);
-            }
-
-
-        }
+      
         public decimal? GetTotalIncome(InventoryDocument inventoryDocument)
         {
             return _invService.GetTotalInventoryItems(inventoryDocument.Id.ToString()).Result;

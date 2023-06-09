@@ -8,11 +8,16 @@
              xmlns:sys="clr-namespace:System;assembly=System.Runtime" 
              xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp" 
              xmlns:modalcontrol="clr-namespace:ModalControl;assembly=ModalControl" 
-             xmlns:custom="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl"
+             xmlns:custom="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl" xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="100">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <CollectionViewSource x:Key="ArticleListViewSource" Source="{Binding ArticleList}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="IsUpdated" Direction="Descending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
     </UserControl.Resources>
     <Grid Margin="50">
         <Grid.RowDefinitions>
@@ -60,7 +65,7 @@
 
         <DataGrid Grid.ColumnSpan="5" Grid.Row="1" Name="membersDataGrid" ItemsSource="{Binding ArticleCollection}" RowStyle="{DynamicResource DataGridRowStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Style="{DynamicResource DataGridStyle1}" CanUserDeleteRows="True" IsReadOnly="False">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Artikal" IsReadOnly="True" Width="2.5*">
+                <DataGridTemplateColumn Header="Artikal" IsReadOnly="True" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -72,20 +77,24 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Kolicina" Binding="{Binding Quantity}" Width="*"/>
-                <DataGridTextColumn Header="Ulazna cijena" Binding="{Binding TotalPurchasePrice}" Width="*"/>
-                <DataGridTextColumn Header="Izlazna cijena" Binding="{Binding TotalSoldPrice}" Width="*"/>
-                <DataGridTextColumn Header="Iznos osnovica" Binding="{Binding TotalBasePrice}" Width="*"/>
-                <DataGridTextColumn Header="Iznos poreza" Binding="{Binding TotalTaxes}" Width="*"/>
-                <DataGridTextColumn Header="RUC" Binding="{Binding Ruc}" Width="*"/>
-                <DataGridTemplateColumn Header="Operacije" Width="*">
+                <DataGridTextColumn Header="Kolicina" Binding="{Binding Quantity}" Width="auto"/>
+                <DataGridTextColumn Header="Ulazna cijena" Binding="{Binding TotalPurchasePrice}" Width="auto"/>
+                <DataGridTextColumn Header="Izlazna cijena" Binding="{Binding TotalSoldPrice}" Width="auto"/>
+                <DataGridTextColumn Header="Iznos osnovica" Binding="{Binding TotalBasePrice}" Width="auto"/>
+                <DataGridTextColumn Header="Iznos poreza" Binding="{Binding TotalTaxes}" Width="auto"/>
+                <DataGridTextColumn Header="RUC" Binding="{Binding Ruc}" Width="auto"/>
+                <DataGridTemplateColumn Header="Operacije" Width="120">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button Style="{StaticResource gridEditButton}" IsEnabled="{Binding ElementName=membersDataGrid, Path=DataContext.IsEnabled}" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.EditArticleCommand}" CommandParameter="{Binding}">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5 0">
+                                <Button Style="{StaticResource gridEditButton}" IsEnabled="{Binding ElementName=membersDataGrid, Path=DataContext.IsEnabled}" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.EditArticleCommand}" CommandParameter="{Binding}" Width="30" Height="30">
                                     <fa:IconImage Icon="Pencil" Style="{StaticResource gridButtonIcon}"/>
                                 </Button>
+                                <Button Margin="10 0" Style="{StaticResource gridRemoveButton}" IsEnabled="{Binding ElementName=membersDataGrid, Path=DataContext.IsEnabled}" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.EditArticleCommand}" CommandParameter="{Binding}" Width="30" Height="30">
+                                    <fa:IconImage Icon="Xmark" Style="{StaticResource gridButtonIcon}"/>
+                                </Button>
                             </StackPanel>
+                            
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -93,30 +102,28 @@
         </DataGrid>
 
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.RowSpan="3" HorizontalAlignment="Left" Margin="0 30" >
-            <Button x:Name="correctBtn" Style="{StaticResource optionsBtn}" Foreground="White" Command="{Binding MultipleEditCommand}" Height="50" Width="250">
+            <Button x:Name="correctBtn" Style="{StaticResource optionsBtn}" ToolTip="Korekcija stanja skladišta" Foreground="White" Command="{Binding MultipleEditCommand}" Height="70" Width="70">
                 <StackPanel Orientation="Horizontal">
-                    <fa:IconImage Style="{StaticResource controlButtonIcon}" Margin="10 0 0 0" Icon="FileEdit" Width="30" Height="30"/>
+                    <fa:IconImage Style="{StaticResource controlButtonIcon}" Margin="20 0" Icon="FileEdit" Width="35" Height="35"/>
                 </StackPanel>
             </Button>
-            <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding ExportDataCommand}"  Height="50" Width="170" Margin="20 0 0 0">
+            <Button Style="{StaticResource ImportButton}" ToolTip="Izvezi u excel formatu" Foreground="White" Command="{Binding ExportDataCommand}"  Height="70" Width="70" Margin="20 0 0 0">
                 <StackPanel Orientation="Horizontal">
-                    <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="FileExcel" Width="30" Height="30" />
+                    <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="FileExcel" Margin="8 0" Width="35" Height="35" />
                 </StackPanel>
             </Button>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Grid.Column="1">
-            <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding SaveChangesCommand}" Visibility="{Binding ElementName=correctBtn, Path=DataContext.IsEnabled, Converter={StaticResource BoolToVis}}" Height="50" Width="200" Margin="10 0">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Grid.Column="1" Margin="0 30">
+            <Button Style="{StaticResource ImportButton}" Foreground="White" ToolTip="Spasi promjene" Command="{Binding SaveChangesCommand}" Visibility="{Binding ElementName=correctBtn, Path=DataContext.IsEnabled, Converter={StaticResource BoolToVis}}" Height="70" Width="70" Margin="10 0">
                 <StackPanel Orientation="Horizontal">
-                    <fa:IconImage Style="{StaticResource controlButtonIcon}" Margin="10 0 0 0" Icon="Save" Width="30" Height="30"/>
-                    <TextBlock TextAlignment="Center" FontSize="20" HorizontalAlignment="Center" Margin="12 0 5 0" VerticalAlignment="Stretch" FontWeight="ExtraLight" >Spasi promjene</TextBlock>
+                    <fa:IconImage Style="{StaticResource controlButtonIcon}" Margin="8 0" Icon="Save" Width="35"  Height="35"/>
                 </StackPanel>
             </Button>
 
-            <Button Style="{StaticResource clearDict}" Foreground="White" Command="{Binding DiscardChangesCommand}" Visibility="{Binding ElementName=correctBtn, Path=DataContext.IsEnabled, Converter={StaticResource BoolToVis}}" Height="50" Width="200">
+            <Button Style="{StaticResource clearDict}" Foreground="White" Command="{Binding DiscardChangesCommand}" ToolTip="Poništi promjene" Visibility="{Binding ElementName=correctBtn, Path=DataContext.IsEnabled, Converter={StaticResource BoolToVis}}" Height="70" Width="70">
                 <StackPanel Orientation="Horizontal">
-                    <fa:IconImage Style="{StaticResource controlButtonIcon}" Margin="10 0 0 0" Icon="CircleXmark" Width="30" Height="30"/>
-                    <TextBlock TextAlignment="Center" FontSize="20" HorizontalAlignment="Center" Margin="12 8 5 5" VerticalAlignment="Stretch" FontWeight="ExtraLight" >Poništi promjene</TextBlock>
+                    <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="CircleXmark" Margin="15 0" Width="35" Height="35"/>
                 </StackPanel>
             </Button>
         </StackPanel>

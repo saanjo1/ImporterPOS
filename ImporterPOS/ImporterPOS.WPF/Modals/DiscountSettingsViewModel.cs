@@ -14,7 +14,7 @@ using ToastNotifications.Messages;
 namespace ImporterPOS.WPF.Modals
 {
     [ObservableObject]
-    public partial class OptionsForDiscounts
+    public partial class DiscountSettingsViewModel
     {
         private readonly DiscountViewModel _discountViewModel;
         private readonly Notifier _notifier;
@@ -31,7 +31,7 @@ namespace ImporterPOS.WPF.Modals
         [ObservableProperty]
         private bool optionsFlag;
 
-        public OptionsForDiscounts(DiscountViewModel discountViewModel, Notifier notifier)
+        public DiscountSettingsViewModel(DiscountViewModel discountViewModel, Notifier notifier)
         {
             _discountViewModel = discountViewModel;
             _notifier = notifier;

@@ -24,7 +24,7 @@ namespace ImporterPOS.WPF.Services.Excel
     {
         public static string ExcelFile { get; set; }
         private static ObservableCollection<ExcelArticlesListViewModel> _articleQtycViewModels = new ObservableCollection<ExcelArticlesListViewModel>();
-        private static ObservableCollection<DiscountColumnsViewModel> _discountViewModels = new ObservableCollection<DiscountColumnsViewModel>();
+        private static ObservableCollection<ArticleDiscountViewModel> _discountViewModels = new ObservableCollection<ArticleDiscountViewModel>();
 
 
 
@@ -167,7 +167,7 @@ namespace ImporterPOS.WPF.Services.Excel
             return await Task.FromResult(lines);
         }
 
-        public async Task<ObservableCollection<DiscountColumnsViewModel>> ReadDiscountColumns(string path, DiscountColumnsViewModel viewModel)
+        public async Task<ObservableCollection<ArticleDiscountViewModel>> ReadDiscountColumns(string path, ArticleDiscountViewModel viewModel)
         {
             if (_discountViewModels.Count > 0)
                 _discountViewModels.Clear();
@@ -192,7 +192,7 @@ namespace ImporterPOS.WPF.Services.Excel
             while (Reader.Read())
             {
 
-                _discountViewModels.Add(new DiscountColumnsViewModel
+                _discountViewModels.Add(new ArticleDiscountViewModel
                 {
                     Name = Reader[templateViewModel.BarCode].ToString() + " " + Reader[templateViewModel.Item].ToString() + " " + Reader[templateViewModel.Description].ToString() + " " + Reader[templateViewModel.ColorDescription].ToString() + " " + Reader[templateViewModel.ItemSize].ToString(),
                     Category = Reader[templateViewModel.Category].ToString(),

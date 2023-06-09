@@ -21,32 +21,23 @@ using System.IO;
 namespace ImporterPOS.WPF.Modals
 {
     [ObservableObject]
-    public partial class SelectExcelSheetViewModel : BaseViewModel
+    public partial class ExcelSheetChooserViewModel : BaseViewModel
     {
         private readonly Notifier _notifier;
         private readonly IExcelService _excelService;
         private readonly ArticlesViewModel articlesViewModel;
-        private readonly Store _store;
         private readonly string filePath;
 
         [ObservableProperty]
         private string fileName;
 
-        public SelectExcelSheetViewModel(IExcelService excelService, ArticlesViewModel _articlesViewModel, Notifier notifier, string _filePath)
+        public ExcelSheetChooserViewModel(IExcelService excelService, ArticlesViewModel _articlesViewModel, Notifier notifier, string _filePath)
         {
             _excelService = excelService;
             articlesViewModel = _articlesViewModel;
             _notifier = notifier;
             filePath = _filePath;
             LoadSheet(filePath);
-        }
-
-        public SelectExcelSheetViewModel(IExcelService excelService, Store store, Notifier notifier, string excelFile)
-        {
-            _excelService = excelService;
-            _store = store;
-            _notifier = notifier;
-            LoadSheet(excelFile);
         }
 
         [ObservableProperty]
