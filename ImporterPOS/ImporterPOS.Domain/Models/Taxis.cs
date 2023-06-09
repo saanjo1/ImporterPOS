@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ImporterPOS.Domain.Models;
+namespace ImporterPOS.Domain.Models1;
 
 public partial class Taxis
 {
@@ -19,7 +19,7 @@ public partial class Taxis
 
     public string? Description { get; set; }
 
-    public virtual ICollection<Article> Articles { get; } = new List<Article>();
+    public virtual ICollection<TaxArticle> TaxArticles { get; } = new List<TaxArticle>();
 
     public virtual ICollection<Rule> Rules { get; } = new List<Rule>();
 }

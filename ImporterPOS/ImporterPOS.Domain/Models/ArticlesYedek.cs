@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ImporterPOS.Domain.Models1;
 
-public partial class Article
+public partial class ArticlesYedek
 {
     public Guid Id { get; set; }
 
@@ -30,6 +30,4 @@ public partial class Article
     public decimal ReturnFee { get; set; }
 
     public int FreeModifiers { get; set; }
-
-    public virtual SubCategory? SubCategory { get; set; }
 }

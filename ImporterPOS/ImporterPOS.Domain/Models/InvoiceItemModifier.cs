@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ImporterPOS.Domain.Models;
+namespace ImporterPOS.Domain.Models1;
 
 public partial class InvoiceItemModifier
 {
@@ -14,6 +14,4 @@ public partial class InvoiceItemModifier
     public Guid? InvoiceItemId { get; set; }
 
     public virtual InvoiceItem? InvoiceItem { get; set; }
-
-    public virtual Article? Modifier { get; set; }
 }

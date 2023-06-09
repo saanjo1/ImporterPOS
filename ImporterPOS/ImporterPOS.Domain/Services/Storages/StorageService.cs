@@ -1,5 +1,6 @@
 ﻿using ImporterPOS.Domain.EF;
 using ImporterPOS.Domain.Models;
+using ImporterPOS.Domain.Models1;
 using ImporterPOS.Domain.Services.Generic;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,7 +20,7 @@ namespace ImporterPOS.Domain.Services.Storages
             _factory = factory;
         }
 
-        public async Task<bool> Create(Models.Storage entity)
+        public async Task<bool> Create(Models1.Storage entity)
         {
             using (DatabaseContext context = _factory.CreateDbContext())
             {
@@ -36,39 +37,39 @@ namespace ImporterPOS.Domain.Services.Storages
             }
         }
 
-        public async Task<ICollection<Models.Storage>> Delete(Guid id)
+        public async Task<ICollection<Models1.Storage>> Delete(Guid id)
         {
             using (DatabaseContext context = _factory.CreateDbContext())
             {
-                Models.Storage? entity = await context.Storages.FirstOrDefaultAsync(x => x.Id == id);
+                Models1.Storage? entity = await context.Storages.FirstOrDefaultAsync(x => x.Id == id);
                 if (entity != null)
                     context.Remove(entity);
 
                 context.SaveChangesAsync();
-                ICollection<Models.Storage> entities = context.Storages.ToList();
+                ICollection<Models1.Storage> entities = context.Storages.ToList();
                 return entities;
             }
         }
 
-        public async Task<Models.Storage> Get(string id)
+        public async Task<Models1.Storage> Get(string id)
         {
             using (DatabaseContext context = _factory.CreateDbContext())
             {
-                Models.Storage? entity = await context.Storages.FirstOrDefaultAsync(x => x.Id.ToString() == id);
+                Models1.Storage? entity = await context.Storages.FirstOrDefaultAsync(x => x.Id.ToString() == id);
                 return entity;
             }
         }
 
-        public async Task<ICollection<Models.Storage>> GetAll()
+        public async Task<ICollection<Models1.Storage>> GetAll()
         {
             using (DatabaseContext context = _factory.CreateDbContext())
             {
-                ICollection<Models.Storage> entities = await context.Storages.ToListAsync();
+                ICollection<Models1.Storage> entities = await context.Storages.ToListAsync();
                 return entities;
             }
         }
 
-        public async Task<Models.Storage> Update(Guid id, Models.Storage entity)
+        public async Task<Models1.Storage> Update(Guid id, Models1.Storage entity)
         {
             using (DatabaseContext context = _factory.CreateDbContext())
             {

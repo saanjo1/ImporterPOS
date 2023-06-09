@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ImporterPOS.Domain.Models;
+using ImporterPOS.Domain.Models1;
 using ImporterPOS.Domain.Services.Articles;
 using ImporterPOS.Domain.Services.Goods;
 using ImporterPOS.Domain.Services.InventoryDocuments;
@@ -10,6 +11,7 @@ using ImporterPOS.Domain.Services.Suppliers;
 using ImporterPOS.WPF.Modals;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.Services.Excel;
+using ImporterPOS.WPF.ViewModels;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

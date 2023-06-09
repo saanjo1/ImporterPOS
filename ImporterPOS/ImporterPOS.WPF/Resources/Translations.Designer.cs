@@ -214,6 +214,15 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unesite nazive kolona iz Excel dokumenta pored odgovarajućih polja u donjim kolonama..
+        /// </summary>
+        internal static string PageDescription {
+            get {
+                return ResourceManager.GetString("PageDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Odabrani artikal je uspješno uklonjen sa liste..
         /// </summary>
         internal static string RemoveArticleSuccess {

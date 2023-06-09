@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using DocumentFormat.OpenXml.Office2019.Drawing.Diagram11;
 using ImporterPOS.Domain.Models;
+using ImporterPOS.Domain.Models1;
 using ImporterPOS.Domain.Services.Articles;
 using ImporterPOS.Domain.Services.Goods;
 using ImporterPOS.Domain.Services.InventoryDocuments;

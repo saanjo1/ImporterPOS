@@ -1,9 +1,8 @@
-﻿using ImporterPOS.Domain.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
-namespace ImporterPOS.Domain.EF;
+namespace ImporterPOS.Domain.Models1;
 
 public partial class DatabaseContext : DbContext
 {
@@ -21,6 +20,8 @@ public partial class DatabaseContext : DbContext
     public virtual DbSet<ArticleGood> ArticleGoods { get; set; }
 
     public virtual DbSet<ArticleModifier> ArticleModifiers { get; set; }
+
+    public virtual DbSet<ArticlesYedek> ArticlesYedeks { get; set; }
 
     public virtual DbSet<Category> Categories { get; set; }
 
@@ -50,6 +51,8 @@ public partial class DatabaseContext : DbContext
 
     public virtual DbSet<Message> Messages { get; set; }
 
+    public virtual DbSet<NewPrice> NewPrices { get; set; }
+
     public virtual DbSet<OrdersPerDate> OrdersPerDates { get; set; }
 
     public virtual DbSet<PaymentType> PaymentTypes { get; set; }
@@ -66,9 +69,9 @@ public partial class DatabaseContext : DbContext
 
     public virtual DbSet<Sector> Sectors { get; set; }
 
-    public virtual DbSet<SplitPaymant> SplitPaymants { get; set; }
-
     public virtual DbSet<Station> Stations { get; set; }
+
+    public virtual DbSet<StationArticle> StationArticles { get; set; }
 
     public virtual DbSet<Storage> Storages { get; set; }
 
@@ -78,18 +81,22 @@ public partial class DatabaseContext : DbContext
 
     public virtual DbSet<Table> Tables { get; set; }
 
+    public virtual DbSet<TaxArticle> TaxArticles { get; set; }
+
     public virtual DbSet<Taxis> Taxes { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<UserGroup> UserGroups { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=.\\POSSECTOR;Database=possector0906;Trusted_Connection=True;MultipleActiveResultSets=True;Encrypt=False");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Article>(entity =>
         {
-            entity.HasIndex(e => e.SubCategoryId, "IX_SubCategory_Id");
-
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Image).HasColumnType("image");
             entity.Property(e => e.Price).HasColumnType("decimal(18, 4)");
@@ -116,8 +123,6 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.ValidFrom).HasColumnType("datetime");
             entity.Property(e => e.ValidUntil).HasColumnType("datetime");
 
-            entity.HasOne(d => d.Article).WithMany(p => p.ArticleGoods).HasForeignKey(d => d.ArticleId);
-
             entity.HasOne(d => d.Good).WithMany(p => p.ArticleGoods).HasForeignKey(d => d.GoodId);
         });
 
@@ -132,14 +137,18 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.ArticleId).HasColumnName("Article_Id");
             entity.Property(e => e.ModifierId).HasColumnName("Modifier_Id");
+        });
 
-            entity.HasOne(d => d.Article).WithMany(p => p.ArticleModifierArticles)
-                .HasForeignKey(d => d.ArticleId)
-                .HasConstraintName("FK_dbo.ArticleModifiers_dbo.Articles_Article_Id");
+        modelBuilder.Entity<ArticlesYedek>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("Articles_yedek");
 
-            entity.HasOne(d => d.Modifier).WithMany(p => p.ArticleModifierModifiers)
-                .HasForeignKey(d => d.ModifierId)
-                .HasConstraintName("FK_dbo.ArticleModifiers_dbo.Articles_Modifier_Id");
+            entity.Property(e => e.Image).HasColumnType("image");
+            entity.Property(e => e.Price).HasColumnType("decimal(18, 4)");
+            entity.Property(e => e.ReturnFee).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.SubCategoryId).HasColumnName("SubCategory_Id");
         });
 
         modelBuilder.Entity<Category>(entity =>
@@ -356,7 +365,6 @@ public partial class DatabaseContext : DbContext
                 .HasColumnType("datetime");
             entity.Property(e => e.PaymentTypeId).HasColumnName("PaymentType_Id");
             entity.Property(e => e.ReturnChange).HasColumnType("decimal(14, 4)");
-            entity.Property(e => e.SplitPaymantsId).HasColumnName("SplitPaymantsID");
             entity.Property(e => e.StationId).HasColumnName("Station_Id");
             entity.Property(e => e.TableId).HasColumnName("Table_Id");
             entity.Property(e => e.Total).HasColumnType("decimal(14, 4)");
@@ -412,8 +420,6 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.TotalWithoutDiscount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.TotalWithoutTax).HasColumnType("decimal(18, 2)");
 
-            entity.HasOne(d => d.Article).WithMany(p => p.InvoiceItems).HasForeignKey(d => d.ArticleId);
-
             entity.HasOne(d => d.Invoice).WithMany(p => p.InvoiceItems).HasForeignKey(d => d.InvoiceId);
         });
 
@@ -433,10 +439,6 @@ public partial class DatabaseContext : DbContext
             entity.HasOne(d => d.InvoiceItem).WithMany(p => p.InvoiceItemModifiers)
                 .HasForeignKey(d => d.InvoiceItemId)
                 .HasConstraintName("FK_dbo.InvoiceItemModifiers_dbo.InvoiceItems_InvoiceItem_Id");
-
-            entity.HasOne(d => d.Modifier).WithMany(p => p.InvoiceItemModifiers)
-                .HasForeignKey(d => d.ModifierId)
-                .HasConstraintName("FK_dbo.InvoiceItemModifiers_dbo.Articles_Modifier_Id");
         });
 
         modelBuilder.Entity<Log>(entity =>
@@ -473,6 +475,16 @@ public partial class DatabaseContext : DbContext
             entity.HasOne(d => d.To).WithMany(p => p.MessageTos)
                 .HasForeignKey(d => d.ToId)
                 .HasConstraintName("FK_dbo.Messages_dbo.Users_To_Id");
+        });
+
+        modelBuilder.Entity<NewPrice>(entity =>
+        {
+            entity.HasNoKey();
+
+            entity.Property(e => e.Ad).HasMaxLength(255);
+            entity.Property(e => e.Tttt)
+                .HasColumnType("ntext")
+                .HasColumnName("TTTT");
         });
 
         modelBuilder.Entity<OrdersPerDate>(entity =>
@@ -555,10 +567,6 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.NewPrice).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.RuleId).HasColumnName("Rule_Id");
 
-            entity.HasOne(d => d.Article).WithMany(p => p.RuleItems)
-                .HasForeignKey(d => d.ArticleId)
-                .HasConstraintName("FK_dbo.RuleItems_dbo.Articles_Article_Id");
-
             entity.HasOne(d => d.Rule).WithMany(p => p.RuleItems)
                 .HasForeignKey(d => d.RuleId)
                 .HasConstraintName("FK_dbo.RuleItems_dbo.Rules_Rule_Id");
@@ -567,22 +575,6 @@ public partial class DatabaseContext : DbContext
         modelBuilder.Entity<Sector>(entity =>
         {
             entity.Property(e => e.Id).ValueGeneratedNever();
-        });
-
-        modelBuilder.Entity<SplitPaymant>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK_dbo.SplitPaymants");
-
-            entity.HasIndex(e => e.PaymentTypeId, "IX_PaymentType_Id");
-
-            entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.PaymentTypeId).HasColumnName("PaymentType_Id");
-            entity.Property(e => e.SplitPaymentsId).HasColumnName("SplitPaymentsID");
-            entity.Property(e => e.Value).HasColumnType("decimal(18, 2)");
-
-            entity.HasOne(d => d.PaymentType).WithMany(p => p.SplitPaymants)
-                .HasForeignKey(d => d.PaymentTypeId)
-                .HasConstraintName("FK_dbo.SplitPaymants_dbo.PaymentTypes_PaymentType_Id");
         });
 
         modelBuilder.Entity<Station>(entity =>
@@ -606,21 +598,20 @@ public partial class DatabaseContext : DbContext
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("ShowWaiterNameOnA4Invoice");
             entity.Property(e => e.WorkDayStartAt).HasColumnType("datetime");
+        });
 
-            entity.HasMany(d => d.Articles).WithMany(p => p.Stations)
-                .UsingEntity<Dictionary<string, object>>(
-                    "StationArticle",
-                    r => r.HasOne<Article>().WithMany().HasForeignKey("ArticleId"),
-                    l => l.HasOne<Station>().WithMany().HasForeignKey("StationId"),
-                    j =>
-                    {
-                        j.HasKey("StationId", "ArticleId");
-                        j.ToTable("StationArticles");
-                        j.HasIndex(new[] { "ArticleId" }, "IX_Article_Id");
-                        j.HasIndex(new[] { "StationId" }, "IX_Station_Id");
-                        j.IndexerProperty<Guid>("StationId").HasColumnName("Station_Id");
-                        j.IndexerProperty<Guid>("ArticleId").HasColumnName("Article_Id");
-                    });
+        modelBuilder.Entity<StationArticle>(entity =>
+        {
+            entity.HasKey(e => new { e.StationId, e.ArticleId });
+
+            entity.HasIndex(e => e.ArticleId, "IX_Article_Id");
+
+            entity.HasIndex(e => e.StationId, "IX_Station_Id");
+
+            entity.Property(e => e.StationId).HasColumnName("Station_Id");
+            entity.Property(e => e.ArticleId).HasColumnName("Article_Id");
+
+            entity.HasOne(d => d.Station).WithMany(p => p.StationArticles).HasForeignKey(d => d.StationId);
         });
 
         modelBuilder.Entity<Storage>(entity =>
@@ -663,27 +654,26 @@ public partial class DatabaseContext : DbContext
             entity.HasOne(d => d.Waiter).WithMany(p => p.Tables).HasForeignKey(d => d.WaiterId);
         });
 
+        modelBuilder.Entity<TaxArticle>(entity =>
+        {
+            entity.HasKey(e => new { e.TaxId, e.ArticleId });
+
+            entity.HasIndex(e => e.ArticleId, "IX_Article_Id");
+
+            entity.HasIndex(e => e.TaxId, "IX_Tax_Id");
+
+            entity.Property(e => e.TaxId).HasColumnName("Tax_Id");
+            entity.Property(e => e.ArticleId).HasColumnName("Article_Id");
+
+            entity.HasOne(d => d.Tax).WithMany(p => p.TaxArticles).HasForeignKey(d => d.TaxId);
+        });
+
         modelBuilder.Entity<Taxis>(entity =>
         {
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.ValidFrom).HasColumnType("datetime");
             entity.Property(e => e.ValidTo).HasColumnType("datetime");
             entity.Property(e => e.Value).HasColumnType("decimal(18, 2)");
-
-            entity.HasMany(d => d.Articles).WithMany(p => p.Taxes)
-                .UsingEntity<Dictionary<string, object>>(
-                    "TaxArticle",
-                    r => r.HasOne<Article>().WithMany().HasForeignKey("ArticleId"),
-                    l => l.HasOne<Taxis>().WithMany().HasForeignKey("TaxId"),
-                    j =>
-                    {
-                        j.HasKey("TaxId", "ArticleId");
-                        j.ToTable("TaxArticles");
-                        j.HasIndex(new[] { "ArticleId" }, "IX_Article_Id");
-                        j.HasIndex(new[] { "TaxId" }, "IX_Tax_Id");
-                        j.IndexerProperty<Guid>("TaxId").HasColumnName("Tax_Id");
-                        j.IndexerProperty<Guid>("ArticleId").HasColumnName("Article_Id");
-                    });
         });
 
         modelBuilder.Entity<User>(entity =>

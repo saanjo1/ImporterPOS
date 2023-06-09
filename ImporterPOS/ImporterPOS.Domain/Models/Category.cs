@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ImporterPOS.Domain.Models;
+namespace ImporterPOS.Domain.Models1;
 
 public partial class Category
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ImporterPOS.Domain.Models;
+namespace ImporterPOS.Domain.Models1;
 
 public partial class Invoice
 {
@@ -62,16 +62,6 @@ public partial class Invoice
     public int ServiceChargePercentage { get; set; }
 
     public string? FiscalReceiptNumber { get; set; }
-
-    public bool IsCopy { get; set; }
-
-    public bool IsTraining { get; set; }
-
-    public bool IsAdvance { get; set; }
-
-    public string? Journal { get; set; }
-
-    public Guid? SplitPaymantsId { get; set; }
 
     public virtual Customer? Customer { get; set; }
 

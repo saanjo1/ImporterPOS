@@ -10,9 +10,11 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.IO;
 using System.Linq;
 using System.Resources;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Xml;
@@ -30,6 +32,9 @@ namespace ImporterPOS.WPF.ViewModels
         private IGoodService _goodService;
 
         [ObservableProperty]
+        private string pageDescription;
+
+        [ObservableProperty]
         private string databaseConnection;
 
         [ObservableProperty]
@@ -40,6 +45,20 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         private bool isOpen;
 
+        [ObservableProperty]
+        private string articleName;
+
+        [ObservableProperty]
+        private string articleBarcode;
+
+        [ObservableProperty]
+        private string articleSubCategory;
+
+        [ObservableProperty]
+        private string articleTaxes;
+
+        [ObservableProperty]
+        private string articlePrice;
 
 
         public SettingsViewModel(Notifier notifier, IExcelService excelService, IArticleService articleService, IGoodService goodService)
@@ -48,40 +67,8 @@ namespace ImporterPOS.WPF.ViewModels
             _excelService = excelService;
             _articleService = articleService;
             _goodService = goodService;
+            LoadArticleParameters();
             GetDatabaseInfo();
-        }
-
-
-       
-        [RelayCommand]
-        public async Task CreateGoodsBasedOnArticleName()
-        {
-            try
-            {
-                await _articleService.CreateGoodsBasedOnArticleName();
-                _notifier.ShowError(Translations.Success);
-
-            }
-            catch 
-            {
-                _notifier.ShowError(Translations.ErrorMessage);
-                
-            }
-        }
-
-        [RelayCommand]
-        public async Task SetMainStockToZero()
-        {
-            try
-            {
-                await _goodService.SetMainStockToZero();
-                _notifier.ShowError(Translations.Success);
-            }
-            catch
-            {
-                _notifier.ShowError(Translations.ErrorMessage);
-                throw;
-            }
         }
 
 
@@ -100,6 +87,73 @@ namespace ImporterPOS.WPF.ViewModels
             DatabaseConnection = databaseNode.InnerText;
             ServerInstance = serverInstanceNode.InnerText;
             Port = portNode.InnerText;
+        }
+
+        private void LoadArticleParameters()
+        {
+            try
+            {
+                string folderPath = AppDomain.CurrentDomain.BaseDirectory;
+                string fileName = "articleColumnNames.json";
+                string filePath = Path.Combine(folderPath, fileName);
+
+                if (File.Exists(filePath))
+                {
+                    string json = File.ReadAllText(filePath);
+                    var columnNames = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+
+                    if (columnNames.ContainsKey("ArticleName"))
+                        ArticleName = columnNames["ArticleName"];
+                    if (columnNames.ContainsKey("ArticleBarcode"))
+                        ArticleBarcode = columnNames["ArticleBarcode"];
+                    if (columnNames.ContainsKey("ArticleSubCategory"))
+                        ArticleSubCategory = columnNames["ArticleSubCategory"];
+                    if (columnNames.ContainsKey("ArticleTaxes"))
+                        ArticleTaxes = columnNames["ArticleTaxes"];
+                    if (columnNames.ContainsKey("ArticlePrice"))
+                        ArticlePrice = columnNames["ArticlePrice"];
+                }
+            }
+            catch
+            {
+                _notifier.ShowError(Translations.ErrorMessage);
+                throw;
+            }
+        }
+
+
+        [RelayCommand]
+        public Task SaveArticleParameters()
+        {
+            try
+            {
+                var columnNames = new
+                {
+                    ArticleName,
+                    ArticleBarcode,
+                    ArticleSubCategory,
+                    ArticleTaxes,
+                    ArticlePrice
+                };
+
+                string json = JsonSerializer.Serialize(columnNames);
+
+                string folderPath = AppDomain.CurrentDomain.BaseDirectory;
+                string fileName = "articleColumnNames.json";
+                string filePath = Path.Combine(folderPath, fileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                using (var streamWriter = new StreamWriter(fileStream))
+                {
+                    streamWriter.Write(json);
+                }
+                _notifier.ShowSuccess(Translations.Success);
+                return Task.CompletedTask;
+            }
+            catch
+            {
+                _notifier.ShowError(Translations.ErrorMessage);
+                return Task.CompletedTask;
+            }
         }
 
     }

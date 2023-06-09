@@ -1,4 +1,5 @@
 ﻿using ImporterPOS.Domain.EF;
+using ImporterPOS.Domain.Models1;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

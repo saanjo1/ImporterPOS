@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ImporterPOS.Domain.Models;
+namespace ImporterPOS.Domain.Models1;
 
 public partial class PaymentType
 {
@@ -12,6 +12,4 @@ public partial class PaymentType
     public string? Name { get; set; }
 
     public virtual ICollection<Invoice> Invoices { get; } = new List<Invoice>();
-
-    public virtual ICollection<SplitPaymant> SplitPaymants { get; } = new List<SplitPaymant>();
 }

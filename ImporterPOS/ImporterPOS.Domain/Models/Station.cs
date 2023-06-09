@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ImporterPOS.Domain.Models;
+namespace ImporterPOS.Domain.Models1;
 
 public partial class Station
 {
@@ -109,5 +109,5 @@ public partial class Station
 
     public virtual ICollection<Invoice> Invoices { get; } = new List<Invoice>();
 
-    public virtual ICollection<Article> Articles { get; } = new List<Article>();
+    public virtual ICollection<StationArticle> StationArticles { get; } = new List<StationArticle>();
 }

@@ -1,4 +1,5 @@
 ﻿using ImporterPOS.Domain.Models;
+using ImporterPOS.Domain.Models1;
 using ImporterPOS.Domain.Services.Articles;
 using ImporterPOS.Domain.Services.Generic;
 using ImporterPOS.Domain.Services.Goods;

@@ -18,7 +18,6 @@ using ToastNotifications;
 using ToastNotifications.Messages;
 using System.IO;
 
-
 namespace ImporterPOS.WPF.Modals
 {
     [ObservableObject]

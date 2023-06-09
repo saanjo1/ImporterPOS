@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ImporterPOS.Domain.Models;
+namespace ImporterPOS.Domain.Models1;
 
 public partial class ArticleGood
 {
@@ -16,8 +16,6 @@ public partial class ArticleGood
     public Guid? ArticleId { get; set; }
 
     public Guid? GoodId { get; set; }
-
-    public virtual Article? Article { get; set; }
 
     public virtual Good? Good { get; set; }
 }

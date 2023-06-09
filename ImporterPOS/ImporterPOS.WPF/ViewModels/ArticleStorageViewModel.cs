@@ -21,6 +21,7 @@ using System.Windows.Data;
 using ToastNotifications;
 using ToastNotifications.Messages;
 using ImporterPOS.WPF.Resources;
+using ImporterPOS.Domain.Models1;
 
 namespace ImporterPOS.WPF.ViewModels
 {

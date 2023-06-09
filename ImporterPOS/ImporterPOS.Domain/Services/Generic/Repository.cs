@@ -1,5 +1,6 @@
 ﻿using ImporterPOS.Domain.EF;
 using ImporterPOS.Domain.Models;
+using ImporterPOS.Domain.Models1;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client.Extensions.Msal;
 using System;
@@ -64,11 +65,11 @@ namespace ImporterPOS.Domain.Services.Generic
             }
         }
 
-        public Task<Models.Storage> GetStorageByName(string storage)
+        public Task<Models1.Storage> GetStorageByName(string storage)
         {
             using (var context = new DatabaseContext())
             {
-                Models.Storage _storage = _dbContext.Storages.Where(x => x.Name == storage).FirstOrDefault();
+                Models1.Storage _storage = _dbContext.Storages.Where(x => x.Name == storage).FirstOrDefault();
                 if (_storage != null)
                     return Task.FromResult(_storage);
                 return null;

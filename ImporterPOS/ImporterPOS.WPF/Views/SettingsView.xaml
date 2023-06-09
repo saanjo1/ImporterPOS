@@ -20,8 +20,8 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Border Background="#1073B1" CornerRadius="10">
-            <TabControl Grid.Row="0" Grid.ColumnSpan="2">
+        <Border Background="#1073B1" CornerRadius="10" Grid.ColumnSpan="1" Grid.RowSpan="2">
+            <TabControl>
                 <TabControl.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1, 0.7">
                         <GradientStop Color="{StaticResource secondaryBackColor2}" Offset="0"/>
@@ -29,9 +29,13 @@
                         <GradientStop Color="{StaticResource InformationColor}" Offset="0.3"/>
                     </LinearGradientBrush>
                 </TabControl.Background>
-                <TabItem Header="Postavke">
-                    <Grid Margin="20">
+                <TabItem Header="Artikli">
+                    <Grid Margin="40">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -41,13 +45,34 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Content="Kreiraj robu na osnovu artikla" Style="{StaticResource settingsControlLabel}" />
-                                <Button Grid.Column="1"  Content="Odaberi" Height="35" Width="80" Margin="10 0" Style="{StaticResource settingsClickButton}" Command="{Binding CreateGoodsBasedOnArticleNameCommand}" />
-                                <Label Grid.Row="1" Content="Nuliraj skladište" Style="{StaticResource settingsControlLabel}" />
-                                <Button Grid.Row="1" Grid.Column="1" Content="Odaberi" Height="35" Width="80" Margin="10 0" Style="{StaticResource settingsClickButton}" Command="{Binding SetMainStockToZeroCommand}" />
+
+
+                        <Label Grid.Row="1" Content="Naziv artikla:" Style="{StaticResource settingsControlLabel}" FontSize="30" Margin="0 0 70 0"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" Width="400" Height="40" Text="{Binding ArticleName, Mode=TwoWay}" FontSize="30" />
+
+                        <Label Grid.Row="2" Content="Bar-kod:" Style="{StaticResource settingsControlLabel}" FontSize="30" />
+                        <TextBox Grid.Row="2" Grid.Column="1" Width="400" Height="40" Text="{Binding ArticleBarcode, Mode=TwoWay}" FontSize="30" />
+
+                        <Label Grid.Row="3" Content="Podkategorija:" Style="{StaticResource settingsControlLabel}" FontSize="30" />
+                        <TextBox Grid.Row="3" Grid.Column="1" Width="400" Height="40" Text="{Binding ArticleSubcategory, Mode=TwoWay}" Margin="10 0" FontSize="30" />
+
+                        <Label Grid.Row="5" Content="Porez: " Style="{StaticResource settingsControlLabel}" FontSize="30" />
+                        <TextBox Grid.Row="5" Grid.Column="1" Width="400" Height="40" Text="{Binding ArticleTaxes, Mode=TwoWay}" FontSize="30" Margin="10 0" />
+
+                        <Label Grid.Row="6" Content="Izlazna cijena: " Style="{StaticResource settingsControlLabel}" FontSize="30" />
+                        <TextBox Grid.Row="6" Grid.Column="1" Width="400" Height="40" Text="{Binding ArticlePrice, Mode=TwoWay}" FontSize="30" Margin="10 0" />
+
+                        <Button Content="Spremi" FontSize="22" Padding="15" Width="120" Style="{StaticResource ImportButton}" Command="{Binding SaveArticleParametersCommand}" Grid.Row="7" Margin="0 50" HorizontalAlignment="Right" Grid.Column="1"/>
+
                     </Grid>
                 </TabItem>
-                <TabItem Header="Postavke baze podataka">
+
+
+                <TabItem Header="Roba">
+
+                </TabItem>
+
+                <TabItem Header="Baza podataka">
                     <Grid Margin="20">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -59,12 +84,12 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                            <Label Content="Instanca servera:" Style="{StaticResource settingsControlLabel}" />
-                            <TextBox Grid.Column="1" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding ServerInstance, Mode=TwoWay}" />
-                            <Label Grid.Row="1" Content="Baza podataka:" Style="{StaticResource settingsControlLabel}" />
-                            <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding DatabaseConnection, Mode=TwoWay}" />
-                            <Label Grid.Row="2" Content="Port:" Style="{StaticResource settingsControlLabel}" />
-                            <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding Port, Mode=TwoWay}" />
+                        <Label Content="Instanca servera:" Style="{StaticResource settingsControlLabel}" />
+                        <TextBox Grid.Column="1" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding ServerInstance, Mode=TwoWay}" />
+                        <Label Grid.Row="1" Content="Baza podataka:" Style="{StaticResource settingsControlLabel}" />
+                        <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding DatabaseConnection, Mode=TwoWay}" />
+                        <Label Grid.Row="2" Content="Port:" Style="{StaticResource settingsControlLabel}" />
+                        <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding Port, Mode=TwoWay}" />
                     </Grid>
                 </TabItem>
             </TabControl>

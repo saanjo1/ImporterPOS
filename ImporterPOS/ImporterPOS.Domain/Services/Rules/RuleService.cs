@@ -1,5 +1,6 @@
 ﻿using ImporterPOS.Domain.EF;
 using ImporterPOS.Domain.Models;
+using ImporterPOS.Domain.Models1;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

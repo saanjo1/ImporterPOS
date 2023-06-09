@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ImporterPOS.Domain.Models;
+namespace ImporterPOS.Domain.Models1;
 
 public partial class InvoiceItem
 {
@@ -48,8 +48,6 @@ public partial class InvoiceItem
     public decimal? TaxVal { get; set; }
 
     public string? ArticleName { get; set; }
-
-    public virtual Article? Article { get; set; }
 
     public virtual ICollection<InventoryItemBasis> InventoryItemBases { get; } = new List<InventoryItemBasis>();
 

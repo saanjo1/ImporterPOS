@@ -1,4 +1,5 @@
 ﻿using ImporterPOS.Domain.EF;
+using ImporterPOS.Domain.Models1;
 using ImporterPOS.WPF.Helpers;
 using ImporterPOS.WPF.HostBuilders;
 using ImporterPOS.WPF.Resources;

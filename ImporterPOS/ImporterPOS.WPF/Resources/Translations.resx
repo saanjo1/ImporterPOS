@@ -168,6 +168,9 @@
   <data name="OptionsRequired" xml:space="preserve">
     <value>Informacije o popustu nisu postavljene. Unesite ih prije nastavka.</value>
   </data>
+  <data name="PageDescription" xml:space="preserve">
+    <value>Unesite nazive kolona iz Excel dokumenta pored odgovarajućih polja u donjim kolonama.</value>
+  </data>
   <data name="RemoveArticleSuccess" xml:space="preserve">
     <value>Odabrani artikal je uspješno uklonjen sa liste.</value>
   </data>
