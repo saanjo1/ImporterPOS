@@ -287,8 +287,6 @@ namespace ImporterPOS.WPF.ViewModels
         {
             try
             {
-                IsLoading = true;
-                await Task.Run(() => {
                     if (articleList.Any())
                     {
                         Guid _supplierId = _supplierService.GetSupplierByName("Unos robe").Result;
@@ -402,8 +400,6 @@ namespace ImporterPOS.WPF.ViewModels
 
                         }
                     }
-                });
-                IsLoading = false;
                 _notifier.ShowSuccess(Translations.ImportArticlesSuccess);
                 articleList.Clear();
                 ArticleCollection = null;
@@ -418,7 +414,7 @@ namespace ImporterPOS.WPF.ViewModels
 
         }
 
-
+        
 
         public bool CanClick()
         {

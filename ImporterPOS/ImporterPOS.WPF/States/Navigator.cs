@@ -77,7 +77,7 @@ namespace ImporterPOS.WPF.States
                         this.Icon = IconChar.Percentage;
                         break;
                     case ViewType.Articles:
-                        this.CurrentViewModel = new StoreViewModel(_articleService, _storageService, _notifier, _invDocsService, _goodService, _invitemsService);
+                        this.CurrentViewModel = new ArticleStorageViewModel(_articleService, _storageService, _notifier, _invDocsService, _goodService, _invitemsService);
                         Caption = Translations.Storages;
                         this.Icon = IconChar.TableList;
                         break;
@@ -87,7 +87,7 @@ namespace ImporterPOS.WPF.States
                         this.Icon = IconChar.FileExcel;
                         break;
                     case ViewType.Settings:
-                        this.CurrentViewModel = new SettingsViewModel(_notifier, _excelService, _articleService, _goodService, _invDocsService, _invitemsService);
+                        this.CurrentViewModel = new SettingsViewModel(_notifier, _excelService, _articleService, _goodService);
                         Caption = Translations.Settings;
                         this.Icon = IconChar.Gear;
                         break;

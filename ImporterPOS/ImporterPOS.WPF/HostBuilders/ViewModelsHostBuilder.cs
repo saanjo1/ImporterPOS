@@ -15,7 +15,6 @@ namespace ImporterPOS.WPF.HostBuilders
         {
             host.ConfigureServices(services =>
             {
-                services.AddTransient<StoreViewModel>();
                 services.AddTransient<MainViewModel>();
                 services.AddTransient<ArticlesViewModel>();
                 services.AddTransient<DiscountViewModel>();

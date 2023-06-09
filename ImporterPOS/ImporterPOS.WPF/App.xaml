@@ -34,10 +34,6 @@
             </DataTemplate>
 
 
-            <DataTemplate DataType="{x:Type viewmodels:StoreViewModel}">
-                <views:StorageView/>
-            </DataTemplate>
-
 
             <DataTemplate DataType="{x:Type viewmodels:DiscountViewModel}">
                 <views:DiscountsView/>

@@ -21,10 +21,10 @@ namespace ImporterPOS.WPF.Modals
         private Notifier _notifier;
         private IStorageService _storageDataService;
         private IInventoryItemBasisService _inventoryService;
-        private StoreViewModel viewModel;
+        private ArticleStorageViewModel viewModel;
         private InventoryDocument inventoryDocument;
 
-        public StorageItemsViewModel(GoodsArticlesViewModel goodsArticlesViewModel, Notifier notifier, IStorageService storageDataService, InventoryDocument inventoryDocument, IInventoryItemBasisService inventoryService, StoreViewModel viewModel)
+        public StorageItemsViewModel(GoodsArticlesViewModel goodsArticlesViewModel, Notifier notifier, IStorageService storageDataService, InventoryDocument inventoryDocument, IInventoryItemBasisService inventoryService, ArticleStorageViewModel viewModel)
         {
             _goodsArticlesViewModel = goodsArticlesViewModel;
             LoadObservableProperties();
@@ -94,9 +94,7 @@ namespace ImporterPOS.WPF.Modals
                 _inventoryService.Create(newInventoryItem);
 
                 _notifier.ShowSuccess(Translations.GoodUpdated);
-                viewModel.SetUpdatedToTrue(GoodId);
                 viewModel.Cancel();
-                viewModel.ListOfItems.Add(newInventoryItem);
             }
 
         }
