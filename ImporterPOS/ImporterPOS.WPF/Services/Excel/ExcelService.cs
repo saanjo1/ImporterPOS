@@ -110,14 +110,14 @@ namespace ImporterPOS.WPF.Services.Excel
 
                         _articleQtycViewModels.Add(new ExcelArticlesListViewModel
                         {
-                            Name = Reader[templateViewModel.BarCode].ToString() + " " + Reader["ITEM"].ToString() + " " + Reader["NAME"].ToString() + " " + Reader["COLOR_DESCRIPTION"].ToString() + " " + Reader["ITEM_SIZE"].ToString(),
-                            Category = Reader[templateViewModel.Category].ToString(),
-                            Storage = Reader[templateViewModel.Storage].ToString(),
-                            BarCode = Reader[templateViewModel.BarCode].ToString(),
-                            Price = Reader[templateViewModel.Price].ToString(),
-                            Quantity = Reader[templateViewModel.Quantity].ToString(),
-                            PricePerUnit = Reader[templateViewModel.PricePerUnit].ToString(),
-                            Tag = Reader["ITEM"].ToString() + " " + Reader["ITEM_SIZE"].ToString() + " " + Reader["COLOR"].ToString()
+                            Name = Reader["NAME"].ToString(),
+                            BarCode = Reader["CODE"].ToString(),
+                            ArticlePrice = Reader["SO_PRICE"].ToString(),
+                            Quantity = Reader["QTYC"].ToString(),
+                            PricePerUnit = Reader["PRICE"].ToString(),
+                            Unit = Reader["UNIT"].ToString(),
+                            TotalPrice = Reader["TOTAL"].ToString(),
+                            Tax = Reader["TAX"].ToString()
                         });
                     }
 

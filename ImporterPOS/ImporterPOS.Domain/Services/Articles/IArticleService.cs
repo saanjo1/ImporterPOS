@@ -26,6 +26,7 @@ namespace ImporterPOS.Domain.Services.Articles
         Task<Article> GetPriceByGood(Guid? goodId);
 
         Task CreateGoodsBasedOnArticleName();
+        Guid? FindSubcategoryByName(string subcategory);
     }
 
 

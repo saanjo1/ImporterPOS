@@ -20,6 +20,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Shell;
 using ToastNotifications;
 using ToastNotifications.Messages;
 
@@ -64,7 +65,6 @@ namespace ImporterPOS.WPF.ViewModels
 
         [ObservableProperty]
         ObservableCollection<ExcelArticlesListViewModel>? articleList;
-
 
         public ArticlesViewModel(IExcelService excelService, ISupplierService supplierService, Notifier notifier, IInventoryDocumentsService invDocsService, IStorageService storageService, IGoodService goodService, IInventoryItemBasisService inventoryItems, IArticleService articleService)
         {
@@ -289,7 +289,7 @@ namespace ImporterPOS.WPF.ViewModels
             {
                     if (articleList.Any())
                     {
-                        Guid _supplierId = _supplierService.GetSupplierByName("Unos robe").Result;
+                        Guid _supplierId = _supplierService.GetSupplierByName("JELENIĆ").Result;
                         Guid _storageId = _storageService.GetStorageByName("Glavno skladište").Result;
                         int orderNmbr = _invDocsService.GetInventoryOrderNumber().Result;
 
@@ -308,12 +308,12 @@ namespace ImporterPOS.WPF.ViewModels
 
                         for (int i = 0; i < articleList.Count; i++)
                         {
-                            Guid _goodId = _goodService.GetGoodByName(articleList[i].BarCode, false).Result;
+                            Guid _goodId = _goodService.GetGoodByName(articleList[i].Name, false).Result;
                             Good newGood = new Good
                             {
                                 Id = Guid.NewGuid(),
                                 Name = articleList[i].Name,
-                                UnitId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
+                                UnitId = _goodService.FindUnitByName(articleList[i].Unit),
                                 LatestPrice = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit),
                                 Volumen = 1,
                                 Refuse = 0
@@ -335,7 +335,7 @@ namespace ImporterPOS.WPF.ViewModels
                                 Created = DateTime.Now,
                                 Price = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit),
                                 Quantity = Helpers.Extensions.GetDecimal(articleList[i].Quantity),
-                                Total = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit) * Helpers.Extensions.GetDecimal(articleList[i].Quantity),
+                                Total = Helpers.Extensions.GetDecimal(articleList[i].TotalPrice),
                                 Tax = 0,
                                 GoodId = _goodId,
                                 IsDeleted = false,
@@ -354,52 +354,52 @@ namespace ImporterPOS.WPF.ViewModels
                                 Id = Guid.NewGuid(),
                                 Name = articleList[i].Name,
                                 ArticleNumber = _articleService.GetCounter(Guid.Empty).Result,
-                                SubCategoryId = new Guid("457A28E8-68DA-4524-BB2C-3C3179A77201"),
+                                SubCategoryId = _articleService.FindSubcategoryByName("JELENIĆ"),
                                 BarCode = articleList[i].BarCode,
-                                Price = Helpers.Extensions.GetDecimal(articleList[i].Price),
-                                Tag = articleList[i].Tag
+                                Price = Helpers.Extensions.GetDecimal(articleList[i].ArticlePrice),
                             };
 
                             newArticle.Order = _articleService.GetCounter((Guid)newArticle.SubCategoryId).Result;
+                            _articleService.Create(newArticle);
 
-                            if (_articleId == Guid.Empty)
-                            {
-                                _articleService.Create(newArticle);
-                                ArticleGood newArticleGood = new ArticleGood
-                                {
-                                    Id = Guid.NewGuid(),
-                                    ArticleId = newArticle.Id,
-                                    GoodId = _goodId,
-                                    Quantity = 1,
-                                    ValidFrom = DateTime.Today,
-                                    ValidUntil = DateTime.Today.AddYears(50)
-                                };
+                        //if (_articleId == Guid.Empty)
+                        //{
+                        //    _articleService.Create(newArticle);
+                        //    ArticleGood newArticleGood = new ArticleGood
+                        //    {
+                        //        Id = Guid.NewGuid(),
+                        //        ArticleId = newArticle.Id,
+                        //        GoodId = _goodId,
+                        //        Quantity = 1,
+                        //        ValidFrom = DateTime.Today,
+                        //        ValidUntil = DateTime.Today.AddYears(50)
+                        //    };
 
-                                _articleService.SaveArticleGood(newArticleGood);
-                            }
-                            else
-                            {
-                                newArticle.Id = _articleId;
-                                newArticle.Order = _articleService.Get(_articleId.ToString()).Result.Order;
-                                newArticle.ArticleNumber = _articleService.Get(_articleId.ToString()).Result.ArticleNumber;
-                                _articleService.Update(_articleId, newArticle);
-                                if (!_articleService.CheckForNormative(_articleId).Result)
-                                {
-                                    ArticleGood newArticleGood = new ArticleGood
-                                    {
-                                        Id = Guid.NewGuid(),
-                                        ArticleId = newArticle.Id,
-                                        GoodId = _goodId,
-                                        Quantity = 1,
-                                        ValidFrom = DateTime.Today,
-                                        ValidUntil = DateTime.Today.AddYears(50)
-                                    };
-                                    _articleService.SaveArticleGood(newArticleGood);
-                                }
-                            }
+                        //    _articleService.SaveArticleGood(newArticleGood);
+                        //}
+                        //else
+                        //{
+                        //    newArticle.Id = _articleId;
+                        //    newArticle.Order = _articleService.Get(_articleId.ToString()).Result.Order;
+                        //    newArticle.ArticleNumber = _articleService.Get(_articleId.ToString()).Result.ArticleNumber;
+                        //    _articleService.Update(_articleId, newArticle);
+                        //    if (!_articleService.CheckForNormative(_articleId).Result)
+                        //    {
+                        //        ArticleGood newArticleGood = new ArticleGood
+                        //        {
+                        //            Id = Guid.NewGuid(),
+                        //            ArticleId = newArticle.Id,
+                        //            GoodId = _goodId,
+                        //            Quantity = 1,
+                        //            ValidFrom = DateTime.Today,
+                        //            ValidUntil = DateTime.Today.AddYears(50)
+                        //        };
+                        //        _articleService.SaveArticleGood(newArticleGood);
+                        //    }
+                        //}
 
-                        }
                     }
+                }
                 _notifier.ShowSuccess(Translations.ImportArticlesSuccess);
                 articleList.Clear();
                 ArticleCollection = null;
@@ -414,7 +414,7 @@ namespace ImporterPOS.WPF.ViewModels
 
         }
 
-        
+  
 
         public bool CanClick()
         {

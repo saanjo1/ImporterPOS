@@ -38,7 +38,6 @@
 
         <TextBlock Grid.ColumnSpan="2" FontSize="16" Text="{Binding Count}" Foreground="{StaticResource titleColor1}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20 0 0 0"/>
         <TextBlock Grid.ColumnSpan="2" FontSize="16" Text="         artikala u listi" Foreground="{StaticResource titleColor1}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20 0 0 0"/>
-
         <TextBlock Grid.ColumnSpan="2" Grid.Row="1" FontSize="24" Style="{StaticResource textBlockStyle}" Text="Lista je prazna. Učitaj podatke." Visibility="{Binding Items.IsEmpty, Converter={StaticResource BoolToVis}, ElementName=ImportGrid}"/>
 
         <Border Grid.Row="1" 
@@ -73,9 +72,11 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Barkod" Binding="{Binding BarCode}" IsReadOnly="false" Width="auto"/>
-                <DataGridTextColumn Header="Skladište" Binding="{Binding Storage}" IsReadOnly="false" Width="auto"/>
+                <DataGridTextColumn Header="Mjera" Binding="{Binding Unit}" IsReadOnly="false" Width="auto"/>
                 <DataGridTextColumn Header="Količina" Binding="{Binding Quantity}" IsReadOnly="false" Width="auto"/>
-                <DataGridTextColumn Header="Cijena" Binding="{Binding Price}" IsReadOnly="false" Width="auto"/>
+                <DataGridTextColumn Header="Prodajna cijena" Binding="{Binding ArticlePrice}" IsReadOnly="false" Width="auto"/>
+                <DataGridTextColumn Header="Nabavna cijena" Binding="{Binding PricePerUnit}" IsReadOnly="false" Width="auto"/>
+                <DataGridTextColumn Header="Uk. nabavna" Binding="{Binding TotalPrice}" IsReadOnly="false" Width="auto"/>
                 <DataGridTemplateColumn Header="Operacije" IsReadOnly="True" Width="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

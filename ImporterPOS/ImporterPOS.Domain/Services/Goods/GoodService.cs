@@ -185,5 +185,14 @@ namespace ImporterPOS.Domain.Services.Goods
                 await context.SaveChangesAsync();
             }
         }
+
+        public Guid? FindUnitByName(string unit)
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                var _unit = context.MeasureUnits.FirstOrDefault(x => x.Name.ToLower() == unit.ToLower());
+                    return _unit.Id;
+            }
+        }
     }
 }

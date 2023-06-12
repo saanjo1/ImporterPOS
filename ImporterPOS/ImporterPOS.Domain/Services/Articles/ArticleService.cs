@@ -408,5 +408,33 @@ namespace ImporterPOS.Domain.Services.Articles
             }
         }
 
+        public Guid? FindSubcategoryByName(string subcategory)
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                SubCategory? subCategory = context.SubCategories.FirstOrDefault(g => g.Name == subcategory); 
+                
+                if(subCategory != null)
+                {
+                    return subCategory.Id;
+                }
+                else
+                {
+                    SubCategory newSubcategory = new SubCategory
+                    {
+                        Id = Guid.NewGuid(),
+                        CategoryId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
+                        StorageId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
+                        Name = subcategory,
+                        Deleted = false,
+                        Order = 1
+                    };
+                    context.Add(newSubcategory);
+                    context.SaveChanges();
+
+                    return newSubcategory.Id;  
+                }
+            }
+        }
     }
 }

@@ -30,16 +30,22 @@ namespace ImporterPOS.WPF.ViewModels
         private string? barCode;
 
         [ObservableProperty]
-        private string? price;
+        private string? articlePrice;
+
+        [ObservableProperty]
+        private string? totalPrice;
 
         [ObservableProperty]
         private string? quantity;
 
         [ObservableProperty]
+        private string? unit;
+
+        [ObservableProperty]
         private string? pricePerUnit;
 
         [ObservableProperty]
-        private string? tag;
+        private string? tax;
 
 
     }
