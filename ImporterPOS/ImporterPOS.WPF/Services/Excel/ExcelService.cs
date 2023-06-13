@@ -132,6 +132,8 @@ namespace ImporterPOS.WPF.Services.Excel
                 
             }
 
+
+
             Reader.Close();
             _oleDbConnection.Close();
 

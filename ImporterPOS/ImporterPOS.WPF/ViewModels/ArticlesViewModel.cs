@@ -17,7 +17,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Shell;
@@ -59,6 +61,12 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         private bool isSheetPopupOpened;
 
+        [ObservableProperty]
+        private string supplierName;
+
+        [ObservableProperty]
+        private string storageName;
+
 
         [ObservableProperty]
         private ICollectionView articleCollection;
@@ -77,8 +85,24 @@ namespace ImporterPOS.WPF.ViewModels
             _goodService = goodService;
             _inventoryItems = inventoryItems;
             _articleService = articleService;
+            LoadSupplierAndStorage();
         }
 
+        private void LoadSupplierAndStorage()
+        {
+            string folderPath = AppDomain.CurrentDomain.BaseDirectory;
+                string fileName = "supplierAndStorageData.json";
+                string filePath = System.IO.Path.Combine(folderPath, fileName);
+
+                if (File.Exists(filePath))
+                {
+                    string json = File.ReadAllText(filePath);
+                    var data = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+
+                        SupplierName = data["SelectedSupplier"];
+                        StorageName = data["SelectedStorage"];
+                }
+        }
 
         private string textToFilter;
 
@@ -214,7 +238,7 @@ namespace ImporterPOS.WPF.ViewModels
 
 
         [RelayCommand]
-        public async Task LoadFixedExcelColumns()
+        public async Task LoadDefinedExcelColumns()
         {
             try
             {
@@ -287,10 +311,10 @@ namespace ImporterPOS.WPF.ViewModels
         {
             try
             {
-                    if (articleList.Any())
+                    if (articleList.Any() && SupplierName != null && StorageName != null)
                     {
-                        Guid _supplierId = _supplierService.GetSupplierByName("JELENIĆ").Result;
-                        Guid _storageId = _storageService.GetStorageByName("Glavno skladište").Result;
+                        Guid _supplierId = _supplierService.GetSupplierByName(SupplierName).Result;
+                        Guid _storageId = _storageService.GetStorageByName(StorageName).Result;
                         int orderNmbr = _invDocsService.GetInventoryOrderNumber().Result;
 
                         var newInvDocument = new InventoryDocument

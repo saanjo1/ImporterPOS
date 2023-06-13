@@ -2,8 +2,11 @@
 using CommunityToolkit.Mvvm.Input;
 using DocumentFormat.OpenXml.Vml;
 using ImporterPOS.Domain.Models;
+using ImporterPOS.Domain.Models1;
 using ImporterPOS.Domain.Services.Articles;
 using ImporterPOS.Domain.Services.Goods;
+using ImporterPOS.Domain.Services.Storages;
+using ImporterPOS.Domain.Services.Suppliers;
 using ImporterPOS.WPF.Modals;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.Services.Excel;
@@ -31,6 +34,8 @@ namespace ImporterPOS.WPF.ViewModels
         private IExcelService _excelService;
         private IArticleService _articleService;
         private IGoodService _goodService;
+        private ISupplierService _supplierService;
+        private IStorageService _storageService;
 
         [ObservableProperty]
         private string pageDescription;
@@ -77,16 +82,75 @@ namespace ImporterPOS.WPF.ViewModels
         private string goodQuantity;
 
 
-        public SettingsViewModel(Notifier notifier, IExcelService excelService, IArticleService articleService, IGoodService goodService)
+        [ObservableProperty]
+        private List<string> suppliersList;
+
+        [ObservableProperty]
+        private string selectedSupplier;
+
+        [ObservableProperty]
+        private List<string> storageList;
+
+        [ObservableProperty]
+        private string selectedStorage;
+
+        public SettingsViewModel(Notifier notifier, IExcelService excelService, IArticleService articleService, IGoodService goodService, ISupplierService supplierService, IStorageService storageService)
         {
             _notifier = notifier;
             _excelService = excelService;
             _articleService = articleService;
             _goodService = goodService;
+            _supplierService = supplierService;
+            _storageService = storageService;
             LoadArticleParameters();
+            LoadDataFromDatabase();
             GetDatabaseInfo();
+
         }
 
+        private async Task LoadDataFromDatabase()
+        {
+            try
+            {
+                // Učitaj dobavljače iz baze
+                if (SuppliersList == null || SuppliersList.Count == 0)
+                {
+                    var suppliers = await _supplierService.GetAll();
+                    SuppliersList = suppliers.Select(supplier => supplier.Name).ToList();
+                }
+
+                // Učitaj skladišta iz baze
+                if (StorageList == null || StorageList.Count == 0)
+                {
+                    var storages = await _storageService.GetAll();
+                    StorageList = storages.Select(storage => storage.Name).ToList();
+                }
+
+
+                // Provjeri postojanje datoteke supplierAndStorageData.json
+                string folderPath = AppDomain.CurrentDomain.BaseDirectory;
+                string fileName = "supplierAndStorageData.json";
+                string filePath = System.IO.Path.Combine(folderPath, fileName);
+
+                if (File.Exists(filePath))
+                {
+                    // Učitaj vrijednosti iz datoteke
+                    string json = File.ReadAllText(filePath);
+                    var data = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+
+                    // Postavi vrijednosti u SelectedSupplier i SelectedStorage
+                    if (SuppliersList.Contains(data["SelectedSupplier"]))
+                        SelectedSupplier = data["SelectedSupplier"];
+
+                    if (StorageList.Contains(data["SelectedStorage"]))
+                        SelectedStorage = data["SelectedStorage"];
+                }
+            }
+            catch
+            {
+                _notifier.ShowError(Translations.ErrorMessage);
+            }
+        }
 
         public void GetDatabaseInfo()
         {
@@ -115,10 +179,11 @@ namespace ImporterPOS.WPF.ViewModels
                 string fileName = "articleColumnNames.json";
                 string filePath = System.IO.Path.Combine(folderPath, fileName);
 
+
                 if (File.Exists(filePath))
                 {
                     string json = File.ReadAllText(filePath);
-                    var columnNames = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+                    Dictionary<string, string>? columnNames = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
 
                     if (columnNames.ContainsKey("ArticleName"))
                         ArticleName = columnNames["ArticleName"];
@@ -217,6 +282,70 @@ namespace ImporterPOS.WPF.ViewModels
                 return Task.CompletedTask;
             }
         }
+
+        [RelayCommand]
+        public async Task SaveSupplierAndStorage()
+        {
+            try
+            {
+                var data = new
+                {
+                    SelectedSupplier,
+                    SelectedStorage
+                };
+
+                string json = JsonSerializer.Serialize(data);
+
+                string folderPath = AppDomain.CurrentDomain.BaseDirectory;
+                string fileName = "supplierAndStorageData.json";
+                string filePath = System.IO.Path.Combine(folderPath, fileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                using (var streamWriter = new StreamWriter(fileStream))
+                {
+                    await streamWriter.WriteAsync(json);
+                }
+
+                _notifier.ShowSuccess(Translations.Success);
+            }
+            catch
+            {
+                _notifier.ShowError(Translations.ErrorMessage);
+            }
+        }
+
+        [RelayCommand]
+        public async Task ClearSupplierAndStorage()
+        {
+            try
+            {
+                string folderPath = AppDomain.CurrentDomain.BaseDirectory;
+                string fileName = "supplierAndStorageData.json";
+                string filePath = System.IO.Path.Combine(folderPath, fileName);
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                    CleanUpSupplierAndStorage();
+                    _notifier.ShowSuccess(Translations.Success);
+                }
+                else
+                {
+                    _notifier.ShowInformation(Translations.FileNotFound);
+                }
+            }
+            catch
+            {
+                _notifier.ShowError(Translations.ErrorMessage);
+            }
+        }
+
+        private void CleanUpSupplierAndStorage()
+        {
+            SelectedSupplier = null;
+            SelectedStorage = null;
+        }
+
 
         private void CleanupProperties()
         {

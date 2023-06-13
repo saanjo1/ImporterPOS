@@ -120,7 +120,7 @@
         </Border>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" Width="auto" HorizontalAlignment="Left">
-            <Button Style="{StaticResource SaveButton}" Command="{Binding LoadFixedExcelColumnsCommand}" Height="50" Width="190" Margin="5">
+            <Button Style="{StaticResource SaveButton}" Command="{Binding LoadDefinedExcelColumnsCommand}" Height="50" Width="190" Margin="5">
                 <StackPanel Orientation="Horizontal">
                     <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Database" Width="30" Height="30"/>
                     <TextBlock TextAlignment="Center" FontSize="20" HorizontalAlignment="Center" Margin="10 0" VerticalAlignment="Stretch" FontWeight="ExtraLight" >Učitaj podatke</TextBlock>
