@@ -84,8 +84,15 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         private AddNewSupplierViewModel addNewSupplierVM;
 
+
+        [ObservableProperty]
+        private AddNewStorageViewModel addNewStorageVM;
+
         [ObservableProperty]
         private bool isAddingNewSupplierOpen;
+
+        [ObservableProperty]
+        private bool isAddingNewStorageOpen;
 
 
         [ObservableProperty]
@@ -114,19 +121,21 @@ namespace ImporterPOS.WPF.ViewModels
 
         }
 
-        private async Task LoadDataFromDatabase()
+        private async Task LoadDataFromDatabase(bool flag = false)
         {
             try
             {
                 // Učitaj dobavljače iz baze
-                if (SuppliersList == null || SuppliersList.Count == 0)
+                if ((SuppliersList == null || SuppliersList.Count == 0) || flag)
                 {
                     var suppliers = await _supplierService.GetAll();
                     SuppliersList = suppliers.Select(supplier => supplier.Name).ToList();
                 }
 
+
+
                 // Učitaj skladišta iz baze
-                if (StorageList == null || StorageList.Count == 0)
+                if ((StorageList == null || StorageList.Count == 0) || flag)
                 {
                     var storages = await _storageService.GetAll();
                     StorageList = storages.Select(storage => storage.Name).ToList();
@@ -163,6 +172,14 @@ namespace ImporterPOS.WPF.ViewModels
         {
             IsAddingNewSupplierOpen = true;
             this.AddNewSupplierVM = new AddNewSupplierViewModel(_supplierService, _notifier, this);
+        }
+
+
+        [RelayCommand]
+        public void AddNewStorage()
+        {
+            IsAddingNewStorageOpen = true;
+            this.AddNewStorageVM = new AddNewStorageViewModel(_storageService, _notifier, this);
         }
         public void GetDatabaseInfo()
         {
@@ -374,11 +391,21 @@ namespace ImporterPOS.WPF.ViewModels
         }
 
         [RelayCommand]
-        public void ClosePopUp()
+        public void ClosePopUp(bool flag = false)
         {
             if(IsAddingNewSupplierOpen)
             {
                 IsAddingNewSupplierOpen = false;
+            }
+
+            if (IsAddingNewStorageOpen)
+            {
+                IsAddingNewStorageOpen = false;
+            }
+
+            if(flag)
+            {
+                LoadDataFromDatabase(true);
             }
         }
     }

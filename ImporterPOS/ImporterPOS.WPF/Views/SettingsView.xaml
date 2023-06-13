@@ -20,6 +20,9 @@
         <modalcontrol:Modal Panel.ZIndex="21" Background="Transparent" IsOpen="{Binding IsAddingNewSupplierOpen}" Height="400" Grid.RowSpan="3" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Stretch">
             <ContentControl Content="{Binding AddNewSupplierVM}" Background="{StaticResource panelActiveColor}"/>
         </modalcontrol:Modal>
+        <modalcontrol:Modal Panel.ZIndex="21" Background="Transparent" IsOpen="{Binding IsAddingNewStorageOpen}" Height="400" Grid.RowSpan="3" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+            <ContentControl Content="{Binding AddNewStorageVM}" Background="{StaticResource panelActiveColor}"/>
+        </modalcontrol:Modal>
         <Grid Margin="10 70" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />

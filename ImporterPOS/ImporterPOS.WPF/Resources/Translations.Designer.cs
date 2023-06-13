@@ -322,6 +322,15 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ime skladišta je obavezno polje..
+        /// </summary>
+        internal static string StorageNameRequired {
+            get {
+                return ResourceManager.GetString("StorageNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Skladišta.
         /// </summary>
         internal static string Storages {
@@ -336,6 +345,15 @@ namespace ImporterPOS.WPF.Resources {
         internal static string Success {
             get {
                 return ResourceManager.GetString("Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ime dobavljača je obavezno polje..
+        /// </summary>
+        internal static string SupplierNameRequired {
+            get {
+                return ResourceManager.GetString("SupplierNameRequired", resourceCulture);
             }
         }
         

@@ -204,11 +204,17 @@
   <data name="StockCorrectionDone" xml:space="preserve">
     <value>Korekcija stanja skladišta uspješno izvršena.</value>
   </data>
+  <data name="StorageNameRequired" xml:space="preserve">
+    <value>Ime skladišta je obavezno polje.</value>
+  </data>
   <data name="Storages" xml:space="preserve">
     <value>Skladišta</value>
   </data>
   <data name="Success" xml:space="preserve">
     <value>Uspješno izvršeno. </value>
+  </data>
+  <data name="SupplierNameRequired" xml:space="preserve">
+    <value>Ime dobavljača je obavezno polje.</value>
   </data>
   <data name="TitleDescription" xml:space="preserve">
     <value>• Unesite odgovarajuće nazive kolona iz Excela u tekstualna polja kako biste uskladili podatke.</value>

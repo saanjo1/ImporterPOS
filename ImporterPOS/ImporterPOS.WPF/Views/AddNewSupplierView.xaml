@@ -47,7 +47,7 @@
             </materialDesign:Card>
 
             <Border HorizontalAlignment="Right" Grid.Column="2" Width="45" Height="40">
-                <Button Height="47" Style="{StaticResource CloseButton}" Command="{Binding ClosePopUpCommand}" Margin="5 0 0 0">
+                <Button Height="47" Style="{StaticResource CloseButton}" Command="{Binding ClosePopUpWithoutSavingCommand}" Margin="5 0 0 0">
                     <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Close" Width="20" Height="30"/>
                 </Button>
             </Border>
@@ -61,7 +61,7 @@
 
 
             <Button BorderThickness="2" BorderBrush="White"  Content="Potvrdi" Padding="15" Width="80" Style="{StaticResource ImportButton}" Margin="0 40 20 0" Command="{Binding SaveCommand}" Grid.Row="4" HorizontalAlignment="Right"/>
-            <Button BorderThickness="2" BorderBrush="White"  Margin="0 40 20 0"  Content="Poništi" Padding="15" Style="{StaticResource CancelButton}" Command="{Binding ClosePopUpCommand}" Width="80" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left"/>
+            <Button BorderThickness="2" BorderBrush="White"  Margin="0 40 20 0"  Content="Poništi" Padding="15" Style="{StaticResource CancelButton}" Command="{Binding ClosePopUpWithoutSavingCommand}" Width="80" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left"/>
 
         </Grid>
     </Border>

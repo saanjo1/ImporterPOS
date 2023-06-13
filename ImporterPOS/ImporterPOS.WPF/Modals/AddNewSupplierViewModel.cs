@@ -39,12 +39,10 @@ namespace ImporterPOS.WPF.Modals
             _notifier = notifier;
         }
 
-
-
         [RelayCommand]
-        public void Cancel()
+        public void ClosePopUpWithoutSaving()
         {
-
+            _settings.ClosePopUp(false);
         }
 
 
@@ -53,17 +51,23 @@ namespace ImporterPOS.WPF.Modals
         {
             try
             {
-                _supplierService.Create(new Supplier
-                {
-                    Id = Guid.NewGuid(),
-                    Name = SupplierName,
-                    VatNumber = VatNumber,
-                    Address = Address,
-                    IsDeleted = false
-                });
+                if(SupplierName != null) {
+                    _supplierService.Create(new Supplier
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = SupplierName,
+                        VatNumber = VatNumber,
+                        Address = Address,
+                        IsDeleted = false
+                    });
 
-                _notifier.ShowSuccess(Translations.Success);
-                _settings.ClosePopUp();
+                    _notifier.ShowSuccess(Translations.Success);
+                    _settings.ClosePopUp(true);
+                }
+                else
+                {
+                    _notifier.ShowInformation(Translations.SupplierNameRequired);
+                }
             }
             catch 
             {

@@ -47,6 +47,10 @@
                 <views:AddNewSupplierView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type modals:AddNewStorageViewModel}">
+                <views:AddNewStorageView/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type modals:DiscountSettingsViewModel}">
                 <controls:DiscountOptionsView/>
             </DataTemplate>
