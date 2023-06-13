@@ -293,7 +293,7 @@ namespace ImporterPOS.WPF.ViewModels
                         Guid _storageId = _storageService.GetStorageByName("Glavno skladište").Result;
                         int orderNmbr = _invDocsService.GetInventoryOrderNumber().Result;
 
-                        var invDoc = new InventoryDocument
+                        var newInvDocument = new InventoryDocument
                         {
                             Id = Guid.NewGuid(),
                             Order = orderNmbr == 0 ? 0 : orderNmbr + 1,
@@ -304,7 +304,7 @@ namespace ImporterPOS.WPF.ViewModels
                             IsActivated = false,
                             IsDeleted = false
                         };
-                        _invDocsService.Create(invDoc);
+                        _invDocsService.Create(newInvDocument);
 
                         for (int i = 0; i < articleList.Count; i++)
                         {
@@ -340,8 +340,8 @@ namespace ImporterPOS.WPF.ViewModels
                                 GoodId = _goodId,
                                 IsDeleted = false,
                                 Discriminator = "InventoryDocumentItem",
-                                InventoryDocumentId = invDoc.Id,
-                                StorageId = invDoc.StorageId,
+                                InventoryDocumentId = newInvDocument.Id,
+                                StorageId = newInvDocument.StorageId,
                                 CurrentQuantity = Helpers.Extensions.GetDecimal(articleList[i].Quantity),
                             };
 

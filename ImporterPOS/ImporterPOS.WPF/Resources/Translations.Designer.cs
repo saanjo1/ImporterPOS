@@ -151,6 +151,15 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Datoteka nije pronađena..
+        /// </summary>
+        internal static string FileNotFound {
+            get {
+                return ResourceManager.GetString("FileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Uspješno ste ažurirali odabranu robu..
         /// </summary>
         internal static string GoodUpdated {
@@ -327,6 +336,15 @@ namespace ImporterPOS.WPF.Resources {
         internal static string Success {
             get {
                 return ResourceManager.GetString("Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to • Unesite odgovarajuće nazive kolona iz Excela u tekstualna polja kako biste uskladili podatke..
+        /// </summary>
+        internal static string TitleDescription {
+            get {
+                return ResourceManager.GetString("TitleDescription", resourceCulture);
             }
         }
         

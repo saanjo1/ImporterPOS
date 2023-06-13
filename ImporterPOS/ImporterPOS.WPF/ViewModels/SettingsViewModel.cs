@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DocumentFormat.OpenXml.Vml;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Services.Articles;
 using ImporterPOS.Domain.Services.Goods;
@@ -49,6 +50,9 @@ namespace ImporterPOS.WPF.ViewModels
         private string articleName;
 
         [ObservableProperty]
+        private string title;
+
+        [ObservableProperty]
         private string articleBarcode;
 
         [ObservableProperty]
@@ -59,6 +63,18 @@ namespace ImporterPOS.WPF.ViewModels
 
         [ObservableProperty]
         private string articlePrice;
+
+        [ObservableProperty]
+        private string goodUnit;
+
+        [ObservableProperty]
+        private string goodPurchasePrice;
+
+        [ObservableProperty]
+        private string goodTotalPrice;
+
+        [ObservableProperty]
+        private string goodQuantity;
 
 
         public SettingsViewModel(Notifier notifier, IExcelService excelService, IArticleService articleService, IGoodService goodService)
@@ -91,11 +107,13 @@ namespace ImporterPOS.WPF.ViewModels
 
         private void LoadArticleParameters()
         {
+
             try
             {
+                Title = Translations.TitleDescription;
                 string folderPath = AppDomain.CurrentDomain.BaseDirectory;
                 string fileName = "articleColumnNames.json";
-                string filePath = Path.Combine(folderPath, fileName);
+                string filePath = System.IO.Path.Combine(folderPath, fileName);
 
                 if (File.Exists(filePath))
                 {
@@ -112,6 +130,14 @@ namespace ImporterPOS.WPF.ViewModels
                         ArticleTaxes = columnNames["ArticleTaxes"];
                     if (columnNames.ContainsKey("ArticlePrice"))
                         ArticlePrice = columnNames["ArticlePrice"];
+                    if (columnNames.ContainsKey("GoodUnit"))
+                        GoodUnit = columnNames["GoodUnit"];
+                    if (columnNames.ContainsKey("GoodPurchasePrice"))
+                        GoodPurchasePrice = columnNames["GoodPurchasePrice"];
+                    if (columnNames.ContainsKey("GoodQuantity"))
+                        GoodQuantity = columnNames["GoodQuantity"];
+                    if (columnNames.ContainsKey("GoodTotalPrice"))
+                        GoodTotalPrice = columnNames["GoodTotalPrice"];
                 }
             }
             catch
@@ -133,14 +159,18 @@ namespace ImporterPOS.WPF.ViewModels
                     ArticleBarcode,
                     ArticleSubCategory,
                     ArticleTaxes,
-                    ArticlePrice
+                    ArticlePrice,
+                    GoodUnit,
+                    GoodTotalPrice,
+                    GoodPurchasePrice,
+                    GoodQuantity
                 };
 
                 string json = JsonSerializer.Serialize(columnNames);
 
                 string folderPath = AppDomain.CurrentDomain.BaseDirectory;
                 string fileName = "articleColumnNames.json";
-                string filePath = Path.Combine(folderPath, fileName);
+                string filePath = System.IO.Path.Combine(folderPath, fileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
                 using (var streamWriter = new StreamWriter(fileStream))
                 {
@@ -156,5 +186,50 @@ namespace ImporterPOS.WPF.ViewModels
             }
         }
 
+        [RelayCommand]
+        public Task ClearArticleParameters()
+        {
+            try
+            {
+                string folderPath = AppDomain.CurrentDomain.BaseDirectory;
+                string fileName = "articleColumnNames.json";
+                string filePath = System.IO.Path.Combine(folderPath, fileName);
+
+                //Check if json file exist
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                    CleanupProperties();
+                    _notifier.ShowSuccess(Translations.Success);
+                }
+                else
+                {
+                    _notifier.ShowInformation(Translations.FileNotFound);
+                }
+
+                return Task.CompletedTask;
+
+            }
+            catch
+            {
+                _notifier.ShowError(Translations.ErrorMessage);
+                return Task.CompletedTask;
+            }
+        }
+
+        private void CleanupProperties()
+        {
+            ArticleName = string.Empty;
+            ArticleBarcode = string.Empty;
+            ArticleSubCategory = string.Empty;
+            ArticleTaxes = string.Empty;
+            ArticlePrice = string.Empty;
+            GoodQuantity = string.Empty;
+            GoodPurchasePrice = string.Empty;
+            GoodQuantity = string.Empty;
+            GoodUnit = string.Empty;
+            GoodTotalPrice = string.Empty;
+        }
     }
 }

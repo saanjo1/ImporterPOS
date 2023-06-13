@@ -147,6 +147,9 @@
   <data name="ExcelFileError" xml:space="preserve">
     <value>Vaš Excel file nije odgovarajućeg formata. Provjerite ga.</value>
   </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>Datoteka nije pronađena.</value>
+  </data>
   <data name="GoodUpdated" xml:space="preserve">
     <value>Uspješno ste ažurirali odabranu robu.</value>
   </data>
@@ -206,6 +209,9 @@
   </data>
   <data name="Success" xml:space="preserve">
     <value>Uspješno izvršeno. </value>
+  </data>
+  <data name="TitleDescription" xml:space="preserve">
+    <value>• Unesite odgovarajuće nazive kolona iz Excela u tekstualna polja kako biste uskladili podatke.</value>
   </data>
   <data name="UpdatedExcelFile" xml:space="preserve">
     <value>Excel file je uspješno izmijenjen.</value>

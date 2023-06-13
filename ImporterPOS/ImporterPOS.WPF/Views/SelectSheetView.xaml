@@ -50,7 +50,7 @@
                 </Button>
             </Border>
 
-            <Label Foreground="White" Content="Izaberite Excel radni list:" FontSize="22"  FontWeight="Light"  Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" Margin="0 50"/>
+            <Label Foreground="White"  Content="Izaberite Excel radni list:" FontSize="22"  FontWeight="Light"  Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" Margin="0 50"/>
             <ComboBox HorizontalAlignment="Center" ItemsSource="{Binding CurrentSheets}" SelectedItem="{Binding SelectedSheet}" x:Name="comboBoxSheets" Grid.Column="1" Grid.Row="1" Width="200" Height="30"/>
 
 

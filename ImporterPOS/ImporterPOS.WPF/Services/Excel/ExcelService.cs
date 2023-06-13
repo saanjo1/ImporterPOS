@@ -14,6 +14,7 @@ using System.Data.OleDb;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -87,45 +88,54 @@ namespace ImporterPOS.WPF.Services.Excel
 
         public async Task<ObservableCollection<ExcelArticlesListViewModel>> ReadColumnsFromExcel(string filePath, string sheetValue, ExcelArticlesListViewModel viewModel)
         {
+            string _connection =
+                @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + filePath + ";" +
+                @"Extended Properties='Excel 8.0;HDR=Yes;'";
 
+            _oleDbConnection = new OleDbConnection(_connection);
 
-            FixedArticleColumns templateViewModel = new FixedArticleColumns();
+            await _oleDbConnection.OpenAsync();
 
-                    string _connection =
-           @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + filePath + ";" +
-           @"Extended Properties='Excel 8.0;HDR=Yes;'";
+            Command = new OleDbCommand();
+            Command.Connection = _oleDbConnection;
+            Command.CommandText = "select * from [" + sheetValue + "]";
 
-                    _oleDbConnection = new OleDbConnection(_connection);
+            System.Data.Common.DbDataReader Reader = await Command.ExecuteReaderAsync();
 
-                    await _oleDbConnection.OpenAsync();
+            // Učitavanje JSON filea
+            string folderPath = AppDomain.CurrentDomain.BaseDirectory;
+            string fileName = "articleColumnNames.json";
+            string jsonFilePath = System.IO.Path.Combine(folderPath, fileName);
 
-                    Command = new OleDbCommand();
-                    Command.Connection = _oleDbConnection;
-                    Command.CommandText = "select * from [" + sheetValue + "]";
+            if (File.Exists(jsonFilePath))
+            {
+                string json = File.ReadAllText(jsonFilePath);
+                var columnNames = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
 
-                    System.Data.Common.DbDataReader Reader = await Command.ExecuteReaderAsync();
-
-                    while (Reader.Read())
+                while (Reader.Read())
+                {
+                    _articleQtycViewModels.Add(new ExcelArticlesListViewModel
                     {
+                        Name = Reader[columnNames["ArticleName"]].ToString(),
+                        BarCode = Reader[columnNames["ArticleBarcode"]].ToString(),
+                        ArticlePrice = Reader[columnNames["ArticlePrice"]].ToString(),
+                        Quantity = Reader[columnNames["GoodQuantity"]].ToString(),
+                        PricePerUnit = Reader[columnNames["GoodPurchasePrice"]].ToString(),
+                        Unit = Reader[columnNames["GoodUnit"]].ToString(),
+                        TotalPrice = Reader[columnNames["GoodTotalPrice"]].ToString(),
+                        Tax = Reader[columnNames["ArticleTaxes"]].ToString()
+                    });
+                }
+            }
+            else
+            {
+                
+            }
 
-                        _articleQtycViewModels.Add(new ExcelArticlesListViewModel
-                        {
-                            Name = Reader["NAME"].ToString(),
-                            BarCode = Reader["CODE"].ToString(),
-                            ArticlePrice = Reader["SO_PRICE"].ToString(),
-                            Quantity = Reader["QTYC"].ToString(),
-                            PricePerUnit = Reader["PRICE"].ToString(),
-                            Unit = Reader["UNIT"].ToString(),
-                            TotalPrice = Reader["TOTAL"].ToString(),
-                            Tax = Reader["TAX"].ToString()
-                        });
-                    }
+            Reader.Close();
+            _oleDbConnection.Close();
 
-                    Reader.Close();
-                    _oleDbConnection.Close();
-
-                    return await Task.FromResult(_articleQtycViewModels);
-
+            return await Task.FromResult(_articleQtycViewModels);
         }
 
         public async Task<List<string>> ListColumnNames(string sheetName)
