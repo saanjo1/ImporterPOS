@@ -9,7 +9,7 @@
              FontFamily="Montserrat"
              FontWeight="ExtraLight"
              FontSize="18"
-             Height="260"
+             Height="360"
              Width="550">
 
     <Border>
@@ -30,6 +30,7 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
 
             <materialDesign:Card x:Name="cardHeader"
@@ -41,21 +42,26 @@
                              Visibility="Visible"
                              Grid.ColumnSpan="2">
                 <StackPanel>
-                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Stretch" FontSize="20" Text="Dodaj novog dobavljača"/>
+                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Stretch" FontSize="18" Text="Dodaj novog dobavljača"/>
                 </StackPanel>
             </materialDesign:Card>
 
             <Border HorizontalAlignment="Right" Grid.Column="2" Width="45" Height="40">
-                <Button Height="47" Style="{StaticResource CloseButton}" Command="{Binding CancelCommand}" Margin="5 0 0 0">
+                <Button Height="47" Style="{StaticResource CloseButton}" Command="{Binding ClosePopUpCommand}" Margin="5 0 0 0">
                     <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Close" Width="20" Height="30"/>
                 </Button>
             </Border>
 
-            <Label Foreground="White"  Content="Naziv dobavljača: " FontSize="22"  FontWeight="Light"  Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" Margin="0 50"/>
+            <Label Grid.Row="1" Content="Naziv dobavljača: " Style="{StaticResource settingsControlLabel}" FontSize="18" Margin="20 50 0 0" />
+            <TextBox Grid.Row="1" Grid.Column="1" Width="240" Height="40" Text="{Binding SupplierName, Mode=TwoWay}" Margin="0 50 0 0" FontSize="24" />
+            <Label Grid.Row="2" Content="VAT broj: " Style="{StaticResource settingsControlLabel}" FontSize="18" Margin="20 0" />
+            <TextBox Grid.Row="2" Grid.Column="1" Width="240" Height="40" Text="{Binding VatNumber, Mode=TwoWay}" Margin="10 0" FontSize="24" />
+            <Label Grid.Row="3" Content="Adresa dobavljača: " Style="{StaticResource settingsControlLabel}" FontSize="18" Margin="20 0" />
+            <TextBox Grid.Row="3" Grid.Column="1" Width="240" Height="40" Text="{Binding Address, Mode=TwoWay}" Margin="10 0" FontSize="24" />
 
 
-            <Button BorderThickness="2" BorderBrush="White" Content="Potvrdi" Padding="15" Width="80" Style="{StaticResource ImportButton}" Margin="0 0 20 0" Command="{Binding SaveCommand}" Grid.Row="2" HorizontalAlignment="Right"/>
-            <Button BorderThickness="2" BorderBrush="White"  Content="Poništi" Padding="15" Style="{StaticResource CancelButton}" Command="{Binding CancelCommand}" Width="80" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"/>
+            <Button BorderThickness="2" BorderBrush="White"  Content="Potvrdi" Padding="15" Width="80" Style="{StaticResource ImportButton}" Margin="0 40 20 0" Command="{Binding SaveCommand}" Grid.Row="4" HorizontalAlignment="Right"/>
+            <Button BorderThickness="2" BorderBrush="White"  Margin="0 40 20 0"  Content="Poništi" Padding="15" Style="{StaticResource CancelButton}" Command="{Binding ClosePopUpCommand}" Width="80" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left"/>
 
         </Grid>
     </Border>

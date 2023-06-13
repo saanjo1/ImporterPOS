@@ -43,6 +43,10 @@
                 <views:SelectSheetView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type modals:AddNewSupplierViewModel}">
+                <views:AddNewSupplierView/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type modals:DiscountSettingsViewModel}">
                 <controls:DiscountOptionsView/>
             </DataTemplate>

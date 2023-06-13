@@ -81,6 +81,12 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         private string goodQuantity;
 
+        [ObservableProperty]
+        private AddNewSupplierViewModel addNewSupplierVM;
+
+        [ObservableProperty]
+        private bool isAddingNewSupplierOpen;
+
 
         [ObservableProperty]
         private List<string> suppliersList;
@@ -152,6 +158,12 @@ namespace ImporterPOS.WPF.ViewModels
             }
         }
 
+        [RelayCommand]
+        public void AddNewSupplier()
+        {
+            IsAddingNewSupplierOpen = true;
+            this.AddNewSupplierVM = new AddNewSupplierViewModel(_supplierService, _notifier, this);
+        }
         public void GetDatabaseInfo()
         {
             string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -359,6 +371,15 @@ namespace ImporterPOS.WPF.ViewModels
             GoodQuantity = string.Empty;
             GoodUnit = string.Empty;
             GoodTotalPrice = string.Empty;
+        }
+
+        [RelayCommand]
+        public void ClosePopUp()
+        {
+            if(IsAddingNewSupplierOpen)
+            {
+                IsAddingNewSupplierOpen = false;
+            }
         }
     }
 }

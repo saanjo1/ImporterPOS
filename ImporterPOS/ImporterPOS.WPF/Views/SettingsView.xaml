@@ -11,42 +11,141 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </UserControl.Resources>
-    <Grid Margin="10 70">
+
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Border Background="#1073B1" CornerRadius="10" Grid.ColumnSpan="1" Grid.RowSpan="2">
-            <TabControl>
-                <TabControl.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1, 0.7">
-                        <GradientStop Color="{StaticResource secondaryBackColor2}" Offset="0"/>
-                        <GradientStop Color="{StaticResource secondaryBackColor1}" Offset="1"/>
-                        <GradientStop Color="{StaticResource InformationColor}" Offset="0.3"/>
-                    </LinearGradientBrush>
-                </TabControl.Background>
-                <TabItem Header="Mapiranje artikala">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                        </Grid.RowDefinitions>
-                        <Label Margin="40 20 0 0" Grid.Row="0" Content="{Binding Title}" Style="{StaticResource settingsControlLabel}"/>
-                        <Grid Margin="40" Grid.Row="1">
+        <modalcontrol:Modal Panel.ZIndex="21" Background="Transparent" IsOpen="{Binding IsAddingNewSupplierOpen}" Height="400" Grid.RowSpan="3" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+            <ContentControl Content="{Binding AddNewSupplierVM}" Background="{StaticResource panelActiveColor}"/>
+        </modalcontrol:Modal>
+        <Grid Margin="10 70" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border Background="#1073B1" CornerRadius="10" Grid.ColumnSpan="1" Grid.RowSpan="2">
+                <TabControl>
+                    <TabControl.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1, 0.7">
+                            <GradientStop Color="{StaticResource secondaryBackColor2}" Offset="0"/>
+                            <GradientStop Color="{StaticResource secondaryBackColor1}" Offset="1"/>
+                            <GradientStop Color="{StaticResource InformationColor}" Offset="0.3"/>
+                        </LinearGradientBrush>
+                    </TabControl.Background>
+                    <TabItem Header="Mapiranje artikala">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Label Margin="40 20 0 0" Grid.Row="0" Content="{Binding Title}" Style="{StaticResource settingsControlLabel}"/>
+                            <Grid Margin="40" Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Label Grid.Row="1" Content="Naziv artikla:" Style="{StaticResource settingsControlLabel}" FontSize="18" Margin="0 0 70 0"/>
+                                <TextBox Grid.Row="1" Grid.Column="1" Width="400" Height="40" Text="{Binding ArticleName, Mode=TwoWay}" FontSize="24" />
+
+                                <Label Grid.Row="2" Content="Bar-kod:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                                <TextBox Grid.Row="2" Grid.Column="1" Width="400" Height="40" Text="{Binding ArticleBarcode, Mode=TwoWay}" FontSize="24" />
+
+                                <Label Grid.Row="3" Content="Podkategorija:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                                <TextBox Grid.Row="3" Grid.Column="1" Width="400" Height="40" Text="{Binding ArticleSubCategory, Mode=TwoWay}" Margin="10 0" FontSize="24" />
+
+                                <Label Grid.Row="5" Content="Porez: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                                <TextBox Grid.Row="5" Grid.Column="1" Width="400" Height="40" Text="{Binding ArticleTaxes, Mode=TwoWay}" FontSize="24" Margin="10 0" />
+
+                                <Label Grid.Row="6" Content="Izlazna cijena: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                                <TextBox Grid.Row="6" Grid.Column="1" Width="400" Height="40" Text="{Binding ArticlePrice, Mode=TwoWay}" FontSize="24" Margin="10 0" />
+
+                                <Label Grid.Row="7" Content="Jedinična nabavna cijena " Style="{StaticResource settingsControlLabel}" FontSize="18" Margin="0 0 70 0"/>
+                                <TextBox Grid.Row="7" Grid.Column="1" Width="400" Height="40" Text="{Binding GoodPurchasePrice, Mode=TwoWay}" FontSize="24" />
+
+                                <Label Grid.Row="8" Content="Mjerna jedinica:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                                <TextBox Grid.Row="8" Grid.Column="1" Width="400" Height="40" Text="{Binding GoodUnit, Mode=TwoWay}" FontSize="24" />
+
+                                <Label Grid.Row="9" Content="Količina: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                                <TextBox Grid.Row="9" Grid.Column="1" Width="400" Height="40" Text="{Binding GoodQuantity, Mode=TwoWay}" Margin="10 0" FontSize="24" />
+
+                                <Label Grid.Row="10" Content="Ukupna nabavna cijena:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                                <TextBox Grid.Row="10" Grid.Column="1" Width="400" Height="40" Text="{Binding GoodTotalPrice, Mode=TwoWay}" FontSize="24" Margin="10 0" />
+
+
+                                <Button Content="Poništi" FontSize="22" Padding="10" Width="120" Style="{StaticResource CancelButton}" Command="{Binding ClearArticleParametersCommand}" Grid.Row="11" Margin="0 50" HorizontalAlignment="Right" Grid.Column="1"/>
+                                <Button Content="Spremi" FontSize="22" Padding="10" Width="120" Style="{StaticResource ImportButton}" Command="{Binding SaveArticleParametersCommand}" Grid.Row="11" Margin="0 50" HorizontalAlignment="Center" Grid.Column="1"/>
+
+                            </Grid>
+
+                        </Grid>
+                    </TabItem>
+
+                    <TabItem Header="Dobavljač i skladište">
+                        <Grid Margin="40">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Row="0" Content="Dobavljač: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                            <ComboBox FontSize="24" Width="400" Height="40" Margin="10 0" ItemsSource="{Binding SuppliersList}" SelectedItem="{Binding SelectedSupplier}" x:Name="comboBox1" Grid.Column="1" Grid.Row="0"/>
+                            <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding AddNewSupplierCommand}"  Height="50" Width="50" HorizontalAlignment="Left" Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="3">
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Add" IconFont="Solid" Width="30" Height="30" />
+                                </StackPanel>
+                            </Button>
+
+
+
+                            <Label Grid.Row="1" Content="Skladište: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                            <ComboBox FontSize="24" Width="400" Height="40" Margin="10 0" ItemsSource="{Binding StorageList}" SelectedItem="{Binding SelectedStorage}" x:Name="comboBox2" Grid.Column="1" Grid.Row="1"/>
+                            <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding AddNewStorageCommand}"  Height="50" Width="50" HorizontalAlignment="Left" Grid.ColumnSpan="4" Grid.Row="1" Grid.Column="3">
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Add" IconFont="Solid" Width="30" Height="30" />
+                                </StackPanel>
+                            </Button>
+
+                            <Button Content="Poništi" FontSize="22" Padding="10" Width="120" Style="{StaticResource CancelButton}" Command="{Binding ClearSupplierAndStorageCommand}" Grid.Row="2" Margin="20 50" HorizontalAlignment="Right" Grid.Column="1"/>
+                            <Button Content="Spremi" FontSize="22" Padding="10" Width="120" Style="{StaticResource ImportButton}" Command="{Binding SaveSupplierAndStorageCommand}" Grid.Row="2" Margin="20 50" HorizontalAlignment="Center" Grid.Column="1"/>
+
+
+
+                        </Grid>
+                    </TabItem>
+
+
+                    <TabItem Header= "Postavke baze podataka">
+                        <Grid Margin="20">
+                            <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -56,105 +155,19 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-
-                            <Label Grid.Row="1" Content="Naziv artikla:" Style="{StaticResource settingsControlLabel}" FontSize="18" Margin="0 0 70 0"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Width="400" Height="40" Text="{Binding ArticleName, Mode=TwoWay}" FontSize="24" />
-
-                            <Label Grid.Row="2" Content="Bar-kod:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
-                            <TextBox Grid.Row="2" Grid.Column="1" Width="400" Height="40" Text="{Binding ArticleBarcode, Mode=TwoWay}" FontSize="24" />
-
-                            <Label Grid.Row="3" Content="Podkategorija:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
-                            <TextBox Grid.Row="3" Grid.Column="1" Width="400" Height="40" Text="{Binding ArticleSubCategory, Mode=TwoWay}" Margin="10 0" FontSize="24" />
-
-                            <Label Grid.Row="5" Content="Porez: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
-                            <TextBox Grid.Row="5" Grid.Column="1" Width="400" Height="40" Text="{Binding ArticleTaxes, Mode=TwoWay}" FontSize="24" Margin="10 0" />
-
-                            <Label Grid.Row="6" Content="Izlazna cijena: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
-                            <TextBox Grid.Row="6" Grid.Column="1" Width="400" Height="40" Text="{Binding ArticlePrice, Mode=TwoWay}" FontSize="24" Margin="10 0" />
-
-                            <Label Grid.Row="7" Content="Jedinična nabavna cijena " Style="{StaticResource settingsControlLabel}" FontSize="18" Margin="0 0 70 0"/>
-                            <TextBox Grid.Row="7" Grid.Column="1" Width="400" Height="40" Text="{Binding GoodPurchasePrice, Mode=TwoWay}" FontSize="24" />
-
-                            <Label Grid.Row="8" Content="Mjerna jedinica:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
-                            <TextBox Grid.Row="8" Grid.Column="1" Width="400" Height="40" Text="{Binding GoodUnit, Mode=TwoWay}" FontSize="24" />
-
-                            <Label Grid.Row="9" Content="Količina: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
-                            <TextBox Grid.Row="9" Grid.Column="1" Width="400" Height="40" Text="{Binding GoodQuantity, Mode=TwoWay}" Margin="10 0" FontSize="24" />
-
-                            <Label Grid.Row="10" Content="Ukupna nabavna cijena:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
-                            <TextBox Grid.Row="10" Grid.Column="1" Width="400" Height="40" Text="{Binding GoodTotalPrice, Mode=TwoWay}" FontSize="24" Margin="10 0" />
-
-
-                            <Button Content="Poništi" FontSize="22" Padding="10" Width="120" Style="{StaticResource CancelButton}" Command="{Binding ClearArticleParametersCommand}" Grid.Row="11" Margin="0 50" HorizontalAlignment="Right" Grid.Column="1"/>
-                            <Button Content="Spremi" FontSize="22" Padding="10" Width="120" Style="{StaticResource ImportButton}" Command="{Binding SaveArticleParametersCommand}" Grid.Row="11" Margin="0 50" HorizontalAlignment="Center" Grid.Column="1"/>
-
+                            <Label Content="Instanca servera:" Style="{StaticResource settingsControlLabel}" />
+                            <TextBox Grid.Column="1" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding ServerInstance, Mode=TwoWay}" />
+                            <Label Grid.Row="1" Content="Baza podataka:" Style="{StaticResource settingsControlLabel}" />
+                            <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding DatabaseConnection, Mode=TwoWay}" />
+                            <Label Grid.Row="2" Content="Port:" Style="{StaticResource settingsControlLabel}" />
+                            <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding Port, Mode=TwoWay}" />
                         </Grid>
+                    </TabItem>
+                </TabControl>
+            </Border>
+        </Grid >
 
-                    </Grid>
-                </TabItem>
-
-                <TabItem Header="Dobavljač i skladište">
-                    <Grid Margin="40">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <Label Grid.Row="0" Content="Dobavljač: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
-                        <ComboBox FontSize="24" Width="400" Height="40" Margin="10 0" ItemsSource="{Binding SuppliersList}" SelectedItem="{Binding SelectedSupplier}" x:Name="comboBox1" Grid.Column="1" Grid.Row="0"/>
-                        <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding AddNewSupplierCommand}"  Height="50" Width="50" HorizontalAlignment="Left" Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="3">
-                            <StackPanel Orientation="Horizontal">
-                                <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Add" IconFont="Solid" Width="30" Height="30" />
-                            </StackPanel>
-                        </Button>
-
-
-
-                        <Label Grid.Row="1" Content="Skladište: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
-                        <ComboBox FontSize="24" Width="400" Height="40" Margin="10 0" ItemsSource="{Binding StorageList}" SelectedItem="{Binding SelectedStorage}" x:Name="comboBox2" Grid.Column="1" Grid.Row="1"/>
-                        <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding AddNewStorageCommand}"  Height="50" Width="50" HorizontalAlignment="Left" Grid.ColumnSpan="4" Grid.Row="1" Grid.Column="3">
-                            <StackPanel Orientation="Horizontal">
-                                <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Add" IconFont="Solid" Width="30" Height="30" />
-                            </StackPanel>
-                        </Button>
-
-                        <Button Content="Poništi" FontSize="22" Padding="10" Width="120" Style="{StaticResource CancelButton}" Command="{Binding ClearSupplierAndStorageCommand}" Grid.Row="2" Margin="20 50" HorizontalAlignment="Right" Grid.Column="1"/>
-                        <Button Content="Spremi" FontSize="22" Padding="10" Width="120" Style="{StaticResource ImportButton}" Command="{Binding SaveSupplierAndStorageCommand}" Grid.Row="2" Margin="20 50" HorizontalAlignment="Center" Grid.Column="1"/>
-                        
-                        
-
-                    </Grid>
-                </TabItem>
-               
-
-                <TabItem Header= "Postavke baze podataka">
-                    <Grid Margin="20">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Label Content="Instanca servera:" Style="{StaticResource settingsControlLabel}" />
-                        <TextBox Grid.Column="1" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding ServerInstance, Mode=TwoWay}" />
-                        <Label Grid.Row="1" Content="Baza podataka:" Style="{StaticResource settingsControlLabel}" />
-                        <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding DatabaseConnection, Mode=TwoWay}" />
-                        <Label Grid.Row="2" Content="Port:" Style="{StaticResource settingsControlLabel}" />
-                        <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True" Width="300" Height="30" FontSize="18" Text="{Binding Port, Mode=TwoWay}" />
-                    </Grid>
-                </TabItem>
-            </TabControl>
-        </Border>
     </Grid>
+
+
 </UserControl>
