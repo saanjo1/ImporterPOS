@@ -69,6 +69,9 @@ namespace ImporterPOS.WPF.ViewModels
 
 
         [ObservableProperty]
+        private bool connectGoodsToArticle;
+
+        [ObservableProperty]
         private ICollectionView articleCollection;
 
         [ObservableProperty]
@@ -317,10 +320,10 @@ namespace ImporterPOS.WPF.ViewModels
                         Guid _storageId = _storageService.GetStorageByName(StorageName).Result;
                         int orderNmbr = _invDocsService.GetInventoryOrderNumber().Result;
 
-                        var newInvDocument = new InventoryDocument
+                    var newInvDocument = new InventoryDocument
                         {
                             Id = Guid.NewGuid(),
-                            Order = orderNmbr == 0 ? 0 : orderNmbr + 1,
+                            Order = orderNmbr,
                             Created = DateTime.Now,
                             SupplierId = _supplierId,
                             StorageId = _storageId,
@@ -378,17 +381,27 @@ namespace ImporterPOS.WPF.ViewModels
                                 Id = Guid.NewGuid(),
                                 Name = articleList[i].Name,
                                 ArticleNumber = _articleService.GetCounter(Guid.Empty).Result,
-                                SubCategoryId = _articleService.FindSubcategoryByName("JELENIĆ"),
+                                SubCategoryId = _articleService.FindSubcategoryByName(articleList[i].Category),
                                 BarCode = articleList[i].BarCode,
                                 Price = Helpers.Extensions.GetDecimal(articleList[i].ArticlePrice),
                             };
 
                             newArticle.Order = _articleService.GetCounter((Guid)newArticle.SubCategoryId).Result;
-                            _articleService.Create(newArticle);
 
-                        //if (_articleId == Guid.Empty)
+                        if (_articleId == Guid.Empty)
+                        {
+                            _articleService.Create(newArticle);
+                        }
+                        else
+                        {
+                            newArticle.Id = _articleId;
+                            newArticle.Order = _articleService.Get(_articleId.ToString()).Result.Order;
+                            newArticle.ArticleNumber = _articleService.Get(_articleId.ToString()).Result.ArticleNumber;
+                            _articleService.Update(_articleId, newArticle);
+                        }
+
+                        //if (!_articleService.CheckForNormative(_articleId).Result)
                         //{
-                        //    _articleService.Create(newArticle);
                         //    ArticleGood newArticleGood = new ArticleGood
                         //    {
                         //        Id = Guid.NewGuid(),
@@ -398,30 +411,8 @@ namespace ImporterPOS.WPF.ViewModels
                         //        ValidFrom = DateTime.Today,
                         //        ValidUntil = DateTime.Today.AddYears(50)
                         //    };
-
                         //    _articleService.SaveArticleGood(newArticleGood);
                         //}
-                        //else
-                        //{
-                        //    newArticle.Id = _articleId;
-                        //    newArticle.Order = _articleService.Get(_articleId.ToString()).Result.Order;
-                        //    newArticle.ArticleNumber = _articleService.Get(_articleId.ToString()).Result.ArticleNumber;
-                        //    _articleService.Update(_articleId, newArticle);
-                        //    if (!_articleService.CheckForNormative(_articleId).Result)
-                        //    {
-                        //        ArticleGood newArticleGood = new ArticleGood
-                        //        {
-                        //            Id = Guid.NewGuid(),
-                        //            ArticleId = newArticle.Id,
-                        //            GoodId = _goodId,
-                        //            Quantity = 1,
-                        //            ValidFrom = DateTime.Today,
-                        //            ValidUntil = DateTime.Today.AddYears(50)
-                        //        };
-                        //        _articleService.SaveArticleGood(newArticleGood);
-                        //    }
-                        //}
-
                     }
                 }
                 _notifier.ShowSuccess(Translations.ImportArticlesSuccess);
@@ -441,6 +432,7 @@ namespace ImporterPOS.WPF.ViewModels
   
 
         public bool CanClick()
+
         {
             if (Count > 0)
                 return true;

@@ -48,7 +48,6 @@ namespace ImporterPOS.WPF
             XmlNode dataSource = doc.SelectSingleNode(Informations.DataSourcePath);
 
 
-
             string json = File.ReadAllText("appsettings.json");
             AppSettings settings = JsonConvert.DeserializeObject<AppSettings>(json);
             settings.ConnectionStrings.sqlstring = dataSource.InnerText + Informations.Encrypt;

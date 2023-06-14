@@ -20,32 +20,32 @@ namespace ImporterPOS.WPF.HostBuilders
         {
             host.ConfigureServices(services =>
             {
-                services.AddSingleton<IExcelService, ExcelService>();
+                services.AddTransient<IExcelService, ExcelService>();
 
 
-                services.AddSingleton<BaseInterface<Article>, ArticleService>();
-                services.AddSingleton<IArticleService, ArticleService>();
+                services.AddTransient<BaseInterface<Article>, ArticleService>();
+                services.AddTransient<IArticleService, ArticleService>();
 
-                services.AddSingleton<BaseInterface<Storage>, StorageService>();
-                services.AddSingleton<IStorageService, StorageService>();
+                services.AddTransient<BaseInterface<Storage>, StorageService>();
+                services.AddTransient<IStorageService, StorageService>();
 
-                services.AddSingleton<BaseInterface<Supplier>, SupplierService>();
-                services.AddSingleton<ISupplierService, SupplierService>();
-
-
-                services.AddSingleton<BaseInterface<InventoryItemBasis>, InventoryItemBasisService>();
-                services.AddSingleton<IInventoryItemBasisService, InventoryItemBasisService>();
+                services.AddTransient<BaseInterface<Supplier>, SupplierService>();
+                services.AddTransient<ISupplierService, SupplierService>();
 
 
-                services.AddSingleton<BaseInterface<Good>, GoodService>();
-                services.AddSingleton<IGoodService, GoodService>();
-
-                services.AddSingleton<BaseInterface<Rule>, RuleService>();
-                services.AddSingleton<IRuleService, RuleService>();
+                services.AddTransient<BaseInterface<InventoryItemBasis>, InventoryItemBasisService>();
+                services.AddTransient<IInventoryItemBasisService, InventoryItemBasisService>();
 
 
-                services.AddSingleton<BaseInterface<InventoryDocument>, InventoryDocumentsService>();
-                services.AddSingleton<IInventoryDocumentsService, InventoryDocumentsService>();
+                services.AddTransient<BaseInterface<Good>, GoodService>();
+                services.AddTransient<IGoodService, GoodService>();
+
+                services.AddTransient<BaseInterface<Rule>, RuleService>();
+                services.AddTransient<IRuleService, RuleService>();
+
+
+                services.AddTransient<BaseInterface<InventoryDocument>, InventoryDocumentsService>();
+                services.AddTransient<IInventoryDocumentsService, InventoryDocumentsService>();
 
 
             });

@@ -14,8 +14,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Resources;
 using System.Text;
 using System.Text.Json;
@@ -84,6 +86,10 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         private AddNewSupplierViewModel addNewSupplierVM;
 
+        [ObservableProperty]
+        private bool isToggleButtonChecked;
+        [ObservableProperty]
+        private Brush toggleButtonColor;
 
         [ObservableProperty]
         private AddNewStorageViewModel addNewStorageVM;
@@ -115,6 +121,8 @@ namespace ImporterPOS.WPF.ViewModels
             _goodService = goodService;
             _supplierService = supplierService;
             _storageService = storageService;
+            ToggleButtonColor = Brushes.Gray; // Početna boja toggle buttona (siva)
+
             LoadArticleParameters();
             LoadDataFromDatabase();
             GetDatabaseInfo();
@@ -376,6 +384,23 @@ namespace ImporterPOS.WPF.ViewModels
         }
 
 
+
+        [RelayCommand]
+        public void ChangeToggleButtonState(object parameter)
+        {
+            bool isChecked = false;
+           if(parameter == "True")
+            {
+                isChecked = true;
+                IsToggleButtonChecked = isChecked;
+            }
+           else
+            {
+                isChecked = false;
+                IsToggleButtonChecked = false;
+            }
+            ToggleButtonColor = isChecked ? Brushes.Green : Brushes.Gray;
+        }
         private void CleanupProperties()
         {
             ArticleName = string.Empty;
