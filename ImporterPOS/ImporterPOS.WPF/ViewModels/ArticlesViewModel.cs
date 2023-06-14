@@ -49,7 +49,7 @@ namespace ImporterPOS.WPF.ViewModels
         private ExcelSheetChooserViewModel excelSheetViewModel;
 
 
-     
+
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ClearAllDataCommand))]
         [NotifyCanExecuteChangedFor(nameof(ImportDataCommand))]
@@ -69,7 +69,10 @@ namespace ImporterPOS.WPF.ViewModels
 
 
         [ObservableProperty]
-        private bool connectGoodsToArticle;
+        private bool isConnectChecked;
+
+        [ObservableProperty]
+        private bool isSettingsPopUpOpened;
 
         [ObservableProperty]
         private ICollectionView articleCollection;
@@ -88,23 +91,24 @@ namespace ImporterPOS.WPF.ViewModels
             _goodService = goodService;
             _inventoryItems = inventoryItems;
             _articleService = articleService;
+            IsConnectChecked = Helpers.Extensions.ReadFromJsonFile("supplierAndStorageData.json").Result;
             LoadSupplierAndStorage();
         }
 
         private void LoadSupplierAndStorage()
         {
             string folderPath = AppDomain.CurrentDomain.BaseDirectory;
-                string fileName = "supplierAndStorageData.json";
-                string filePath = System.IO.Path.Combine(folderPath, fileName);
+            string fileName = "supplierAndStorageData.json";
+            string filePath = System.IO.Path.Combine(folderPath, fileName);
 
-                if (File.Exists(filePath))
-                {
-                    string json = File.ReadAllText(filePath);
-                    var data = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+            if (File.Exists(filePath))
+            {
+                string json = File.ReadAllText(filePath);
+                var data = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
 
-                        SupplierName = data["SelectedSupplier"];
-                        StorageName = data["SelectedStorage"];
-                }
+                SupplierName = data["SelectedSupplier"];
+                StorageName = data["SelectedStorage"];
+            }
         }
 
         private string textToFilter;
@@ -156,7 +160,7 @@ namespace ImporterPOS.WPF.ViewModels
 
         private void UpdateRecordCount()
         {
-            if(articleList != null)
+            if (articleList != null)
             {
                 NumberOfPages = (int)Math.Ceiling((double)articleList.Count / SelectedRecord);
                 NumberOfPages = NumberOfPages == 0 ? 1 : NumberOfPages;
@@ -286,10 +290,10 @@ namespace ImporterPOS.WPF.ViewModels
                 UpdateRecordCount();
                 Count = ArticleList.Count;
 
-                    _notifier.ShowSuccess(Translations.LoadDataSuccess);
+                _notifier.ShowSuccess(Translations.LoadDataSuccess);
 
             }
-            catch 
+            catch
             {
                 _notifier.ShowWarning(Translations.ExcelFileError);
             }
@@ -314,79 +318,79 @@ namespace ImporterPOS.WPF.ViewModels
         {
             try
             {
-                    if (articleList.Any() && SupplierName != null && StorageName != null)
-                    {
-                        Guid _supplierId = _supplierService.GetSupplierByName(SupplierName).Result;
-                        Guid _storageId = _storageService.GetStorageByName(StorageName).Result;
-                        int orderNmbr = _invDocsService.GetInventoryOrderNumber().Result;
+                if (articleList.Any() && SupplierName != null && StorageName != null)
+                {
+                    Guid _supplierId = _supplierService.GetSupplierByName(SupplierName).Result;
+                    Guid _storageId = _storageService.GetStorageByName(StorageName).Result;
+                    int orderNmbr = _invDocsService.GetInventoryOrderNumber().Result;
 
                     var newInvDocument = new InventoryDocument
+                    {
+                        Id = Guid.NewGuid(),
+                        Order = orderNmbr,
+                        Created = DateTime.Now,
+                        SupplierId = _supplierId,
+                        StorageId = _storageId,
+                        Type = 1,
+                        IsActivated = false,
+                        IsDeleted = false
+                    };
+                    _invDocsService.Create(newInvDocument);
+
+                    for (int i = 0; i < articleList.Count; i++)
+                    {
+                        Guid _goodId = _goodService.GetGoodByName(articleList[i].Name, false).Result;
+                        Good newGood = new Good
                         {
                             Id = Guid.NewGuid(),
-                            Order = orderNmbr,
-                            Created = DateTime.Now,
-                            SupplierId = _supplierId,
-                            StorageId = _storageId,
-                            Type = 1,
-                            IsActivated = false,
-                            IsDeleted = false
+                            Name = articleList[i].Name,
+                            UnitId = _goodService.FindUnitByName(articleList[i].Unit),
+                            LatestPrice = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit),
+                            Volumen = 1,
+                            Refuse = 0
                         };
-                        _invDocsService.Create(newInvDocument);
-
-                        for (int i = 0; i < articleList.Count; i++)
+                        if (_goodId == Guid.Empty)
                         {
-                            Guid _goodId = _goodService.GetGoodByName(articleList[i].Name, false).Result;
-                            Good newGood = new Good
-                            {
-                                Id = Guid.NewGuid(),
-                                Name = articleList[i].Name,
-                                UnitId = _goodService.FindUnitByName(articleList[i].Unit),
-                                LatestPrice = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit),
-                                Volumen = 1,
-                                Refuse = 0
-                            };
-                            if (_goodId == Guid.Empty)
-                            {
-                                _goodService.Create(newGood);
-                                _goodId = newGood.Id;
-                            }
-                            else
-                            {
-                                newGood.Id = _goodId;
-                                _goodService.Update(_goodId, newGood);
-                            }
+                            _goodService.Create(newGood);
+                            _goodId = newGood.Id;
+                        }
+                        else
+                        {
+                            newGood.Id = _goodId;
+                            _goodService.Update(_goodId, newGood);
+                        }
 
-                            InventoryItemBasis newInventoryItem = new InventoryItemBasis
-                            {
-                                Id = Guid.NewGuid(),
-                                Created = DateTime.Now,
-                                Price = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit),
-                                Quantity = Helpers.Extensions.GetDecimal(articleList[i].Quantity),
-                                Total = Helpers.Extensions.GetDecimal(articleList[i].TotalPrice),
-                                Tax = 0,
-                                GoodId = _goodId,
-                                IsDeleted = false,
-                                Discriminator = "InventoryDocumentItem",
-                                InventoryDocumentId = newInvDocument.Id,
-                                StorageId = newInvDocument.StorageId,
-                                CurrentQuantity = Helpers.Extensions.GetDecimal(articleList[i].Quantity),
-                            };
+                        InventoryItemBasis newInventoryItem = new InventoryItemBasis
+                        {
+                            Id = Guid.NewGuid(),
+                            Created = DateTime.Now,
+                            Price = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit),
+                            Quantity = Helpers.Extensions.GetDecimal(articleList[i].Quantity),
+                            Total = Helpers.Extensions.GetDecimal(articleList[i].TotalPrice),
+                            Tax = 0,
+                            GoodId = _goodId,
+                            IsDeleted = false,
+                            Discriminator = "InventoryDocumentItem",
+                            InventoryDocumentId = newInvDocument.Id,
+                            StorageId = newInvDocument.StorageId,
+                            CurrentQuantity = Helpers.Extensions.GetDecimal(articleList[i].Quantity),
+                        };
 
-                            _inventoryItems.Create(newInventoryItem);
+                        _inventoryItems.Create(newInventoryItem);
 
 
-                            Guid _articleId = _articleService.GetComparedByBarcode(articleList[i].BarCode).Result;
-                            Article newArticle = new Article
-                            {
-                                Id = Guid.NewGuid(),
-                                Name = articleList[i].Name,
-                                ArticleNumber = _articleService.GetCounter(Guid.Empty).Result,
-                                SubCategoryId = _articleService.FindSubcategoryByName(articleList[i].Category),
-                                BarCode = articleList[i].BarCode,
-                                Price = Helpers.Extensions.GetDecimal(articleList[i].ArticlePrice),
-                            };
+                        Guid _articleId = _articleService.GetComparedByBarcode(articleList[i].BarCode).Result;
+                        Article newArticle = new Article
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = articleList[i].Name,
+                            ArticleNumber = _articleService.GetCounter(Guid.Empty).Result,
+                            SubCategoryId = _articleService.FindSubcategoryByName(articleList[i].Category),
+                            BarCode = articleList[i].BarCode,
+                            Price = Helpers.Extensions.GetDecimal(articleList[i].ArticlePrice),
+                        };
 
-                            newArticle.Order = _articleService.GetCounter((Guid)newArticle.SubCategoryId).Result;
+                        newArticle.Order = _articleService.GetCounter((Guid)newArticle.SubCategoryId).Result;
 
                         if (_articleId == Guid.Empty)
                         {
@@ -400,36 +404,39 @@ namespace ImporterPOS.WPF.ViewModels
                             _articleService.Update(_articleId, newArticle);
                         }
 
-                        //if (!_articleService.CheckForNormative(_articleId).Result)
-                        //{
-                        //    ArticleGood newArticleGood = new ArticleGood
-                        //    {
-                        //        Id = Guid.NewGuid(),
-                        //        ArticleId = newArticle.Id,
-                        //        GoodId = _goodId,
-                        //        Quantity = 1,
-                        //        ValidFrom = DateTime.Today,
-                        //        ValidUntil = DateTime.Today.AddYears(50)
-                        //    };
-                        //    _articleService.SaveArticleGood(newArticleGood);
-                        //}
+                        if (IsConnectChecked)
+                        {
+                            if (!_articleService.CheckForNormative(_articleId).Result)
+                            {
+                                ArticleGood newArticleGood = new ArticleGood
+                                {
+                                    Id = Guid.NewGuid(),
+                                    ArticleId = newArticle.Id,
+                                    GoodId = _goodId,
+                                    Quantity = 1,
+                                    ValidFrom = DateTime.Today,
+                                    ValidUntil = DateTime.Today.AddYears(50)
+                                };
+                                _articleService.SaveArticleGood(newArticleGood);
+                            }
+                        }
                     }
                 }
                 _notifier.ShowSuccess(Translations.ImportArticlesSuccess);
                 articleList.Clear();
                 ArticleCollection = null;
             }
-            catch 
+            catch
             {
                 _notifier.ShowError(Translations.ImportArticlesError);
 
                 throw;
             }
-           
+
 
         }
 
-  
+
 
         public bool CanClick()
 
@@ -442,7 +449,7 @@ namespace ImporterPOS.WPF.ViewModels
         [RelayCommand]
         public void Cancel()
         {
-            if (IsSheetPopupOpened) 
+            if (IsSheetPopupOpened)
                 IsSheetPopupOpened = false;
         }
 
@@ -474,7 +481,7 @@ namespace ImporterPOS.WPF.ViewModels
         {
             try
             {
-                
+
             }
             catch (Exception)
             {
@@ -482,6 +489,12 @@ namespace ImporterPOS.WPF.ViewModels
             }
             return Task.CompletedTask;
 
+        }
+
+        public void CloseSettingsPopUp()
+        {
+            if (IsSettingsPopUpOpened)
+                IsSettingsPopUpOpened = false;
         }
     }
 }

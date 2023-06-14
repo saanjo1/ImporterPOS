@@ -113,6 +113,7 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         private string selectedStorage;
 
+
         public SettingsViewModel(Notifier notifier, IExcelService excelService, IArticleService articleService, IGoodService goodService, ISupplierService supplierService, IStorageService storageService)
         {
             _notifier = notifier;

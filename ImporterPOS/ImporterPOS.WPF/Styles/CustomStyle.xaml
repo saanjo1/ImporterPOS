@@ -902,28 +902,76 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="ConnectWithGoodsStyle" TargetType="ToggleButton">
-        <Setter Property="MaxHeight" Value="30"/>
-            <Setter Property="MaxWidth" Value="60"/>
-            <Setter Property="MinHeight" Value="30"/>
-            <Setter Property="MinWidth" Value="60"/>
+    <Style x:Key="YesNoCheckBoxStyle" TargetType="CheckBox">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <StackPanel>
+                        <Grid>
+                            <Border Width="45" Height="20" Background="LightGray"
+                                CornerRadius="10" Margin="5,0"></Border>
+                            <Border x:Name="button" Height="25" Width="25" CornerRadius="12.5" HorizontalAlignment="Left"></Border>
+                            
+                        </Grid>
+                        <ContentPresenter x:Name="content" Margin="10,0,0,0" Content="{TemplateBinding Content}" VerticalAlignment="Center"></ContentPresenter>
+                    </StackPanel>
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="right">
+                            <ThicknessAnimation Storyboard.TargetProperty="Margin"
+                                                Storyboard.TargetName="button"
+                                                Duration="0:0:0:2"
+                                                From="0,0,0,0"
+                                                To="28,0,0,0">
+                                <ThicknessAnimation.EasingFunction>
+                                    <CircleEase EasingMode="EaseOut">
+                                    </CircleEase>
+                                </ThicknessAnimation.EasingFunction>
+                                 
+                            </ThicknessAnimation>
+                        </Storyboard>
+                        <Storyboard x:Key="left">
+                            <ThicknessAnimation Storyboard.TargetProperty="Margin"
+                                                Storyboard.TargetName="button"
+                                                Duration="0:0:0:2"
+                                                From="28,0,0,0"
+                                                To="0,0,0,0">
+                                <ThicknessAnimation.EasingFunction>
+                                    <CircleEase EasingMode="EaseOut">
+                                    </CircleEase>
+                                </ThicknessAnimation.EasingFunction>
 
-            <Setter Property="Template">
+                            </ThicknessAnimation>
+                        </Storyboard>
+                    </ControlTemplate.Resources>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Trigger.ExitActions>
+                                <RemoveStoryboard BeginStoryboardName="leftt">
+                                    
+                                </RemoveStoryboard>
+                                <BeginStoryboard Storyboard="{StaticResource right }" x:Name="rightt">
+                                    
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                            <Setter TargetName="button" Property="Background" Value="#b2b6b3">
+                                
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Trigger.ExitActions>
+                                <RemoveStoryboard BeginStoryboardName="rightt">
 
+                                </RemoveStoryboard>
+                                <BeginStoryboard Storyboard="{StaticResource left }" x:Name="leftt">
 
-                <Setter.Value>
-                <ControlTemplate TargetType="ToggleButton">
-                        <Border x:Name="bk" Background="#FFD1D1D1" CornerRadius="15">
-                            <Ellipse x:Name="ep" Fill="#FFE6FF4B" HorizontalAlignment="Left" Margin="4" Width="22"></Ellipse>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="true">
-                                <Setter TargetName="ep" Property="HorizontalAlignment" Value="Right"/>
-                                <Setter Property="Background" TargetName="bk" Value="#FF14DE54"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                            <Setter TargetName="button" Property="Background" Value="#008743">
 
-                    </ControlTemplate>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
                 </Setter.Value>
             </Setter>
     </Style>

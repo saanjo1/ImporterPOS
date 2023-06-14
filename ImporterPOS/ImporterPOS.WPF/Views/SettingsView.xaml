@@ -140,11 +140,6 @@
                             <Separator HorizontalAlignment="Center" Height="150" Width="550" Foreground="White" Grid.Row="2" Grid.ColumnSpan="3"/>
 
 
-                            <Label Grid.Row="3" Content="Poveži robu s istoimenim artiklima: " Style="{StaticResource settingsControlLabel}" Grid.ColumnSpan="5" FontSize="18" />
-                            <ToggleButton Grid.Row="3" Style="{Binding ConnectWithGoodsStyle}" IsChecked="{Binding IsToggleButtonChecked, Mode=TwoWay}"
-              Command="{Binding ChangeToggleButtonStateCommand}"/>
-
-
 
                             <Button Content="Poništi" FontSize="22" Padding="10" Width="120" Style="{StaticResource CancelButton}" Command="{Binding ClearSupplierAndStorageCommand}" Grid.Row="4" Margin="20 50" Grid.ColumnSpan="3" HorizontalAlignment="Right" Grid.Column="1"/>
                             <Button Content="Spremi" FontSize="22" Padding="10" Width="120" Style="{StaticResource ImportButton}" Command="{Binding SaveSupplierAndStorageCommand}" Grid.Row="4" Margin="20 50" Grid.ColumnSpan="3"  HorizontalAlignment="Center" Grid.Column="1"/>

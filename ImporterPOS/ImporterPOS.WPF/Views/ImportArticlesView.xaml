@@ -29,12 +29,22 @@
             <ContentControl VerticalAlignment="Top"  Content="{Binding ExcelSheetViewModel}"/>
         </modalcontrol:Modal>
 
+        <modalcontrol:Modal Margin="100 0 0 100" VerticalAlignment="Center" Panel.ZIndex="21" Background="Transparent" IsOpen="{Binding IsSettingsPopUpOpened}" Grid.RowSpan="5" Grid.ColumnSpan="5">
+            <ContentControl VerticalAlignment="Top"  Content="{Binding ArticleSettingsVM}"/>
+        </modalcontrol:Modal>
+
 
         <TextBlock Grid.ColumnSpan="2" Grid.Row="0" HorizontalAlignment="Right" Margin="0 0 100 0" Width="180" VerticalAlignment="Center" Foreground="#B0B9C6" IsHitTestVisible="False"
                            Panel.ZIndex="1"
                            Visibility="{Binding ElementName=textBoxFilter, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}" Text="Pretraži po barkodu" Height="30" FontSize="20" />
 
         <TextBox Grid.ColumnSpan="2" Width="300" Grid.Row="0" HorizontalAlignment="Right" FontSize="18"  Name="textBoxFilter" Style="{StaticResource filterTextBox}" Text="{Binding TextToFilter, UpdateSourceTrigger=PropertyChanged}" Height="40"/>
+        <Button Style="{StaticResource optionsBtn}" x:Name="SettingsButton" Grid.Column="1" HorizontalAlignment="Center" Margin="120 0 0 0" Foreground="White" Command="{Binding OpenArticleSettingsCommand}" Height="50" Width="50">
+            <StackPanel Orientation="Horizontal">
+                <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Gear" Margin="10 0 0 0" Width="30" Height="30"/>
+            </StackPanel>
+        </Button>
+ 
 
 
         <TextBlock Grid.ColumnSpan="2" FontSize="16" Text="{Binding Count}" Foreground="{StaticResource titleColor1}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20 0 0 0"/>

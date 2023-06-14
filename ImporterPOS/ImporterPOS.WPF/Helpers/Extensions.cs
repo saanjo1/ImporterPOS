@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Office2010.Excel;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.WPF.Modals;
+using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.ViewModels;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
@@ -8,9 +9,12 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using ToastNotifications;
 
 namespace ImporterPOS.WPF.Helpers
 {
@@ -121,6 +125,36 @@ namespace ImporterPOS.WPF.Helpers
             pdfDocument.Close();
 
             return pdfDocument;
+        }
+
+        public static Task<bool> ReadFromJsonFile(string v)
+        {
+            try
+            {
+                // Provjeri postojanje datoteke supplierAndStorageData.json
+                string folderPath = AppDomain.CurrentDomain.BaseDirectory;
+                string fileName = v;
+                string filePath = System.IO.Path.Combine(folderPath, fileName);
+
+                if (File.Exists(filePath))
+                {
+                    string json = File.ReadAllText(filePath);
+                    var data = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+
+                    if (data.ContainsKey("ConnectGoodsToArticles") && bool.TryParse(data["ConnectGoodsToArticles"], out bool connectGoodsToArticles))
+                    {
+                        return Task.FromResult(connectGoodsToArticles);
+                    }
+
+                }
+
+                return Task.FromResult(false);
+
+            }
+            catch
+            {
+                return Task.FromResult(false);
+            }
         }
     }
 }
