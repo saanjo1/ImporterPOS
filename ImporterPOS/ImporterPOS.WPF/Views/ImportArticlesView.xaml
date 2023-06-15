@@ -70,7 +70,7 @@
 
         <DataGrid  Grid.ColumnSpan="2" Grid.Row="1" Name="ImportGrid" ItemsSource="{Binding ArticleCollection, Mode=TwoWay}" RowStyle="{DynamicResource DataGridRowStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Style="{DynamicResource DataGridStyle1}">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Naziv artikla" IsReadOnly="false" Width="*">
+                <DataGridTemplateColumn Header="Naziv artikla" IsReadOnly="false" Width="0.8*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

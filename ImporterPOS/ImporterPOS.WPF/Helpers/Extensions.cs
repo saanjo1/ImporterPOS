@@ -131,7 +131,6 @@ namespace ImporterPOS.WPF.Helpers
         {
             try
             {
-                // Provjeri postojanje datoteke supplierAndStorageData.json
                 string folderPath = AppDomain.CurrentDomain.BaseDirectory;
                 string fileName = v;
                 string filePath = System.IO.Path.Combine(folderPath, fileName);
@@ -145,15 +144,14 @@ namespace ImporterPOS.WPF.Helpers
                     {
                         return Task.FromResult(connectGoodsToArticles);
                     }
-
                 }
 
                 return Task.FromResult(false);
-
             }
             catch
             {
                 return Task.FromResult(false);
+
             }
         }
     }

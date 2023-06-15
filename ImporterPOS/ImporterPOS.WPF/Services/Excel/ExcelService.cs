@@ -114,9 +114,23 @@ namespace ImporterPOS.WPF.Services.Excel
 
                 while (Reader.Read())
                 {
+                    string articleName = columnNames["ArticleName"].ToString();
+                    string[] nameParts = articleName.Split(',');
+                    string name = string.Join(" ", nameParts.Select(part => part.Trim()));
+
+                    List<string> columnValues = new List<string>();
+
+                    foreach (string columnName in nameParts)
+                    {
+                        string columnValue = Reader[columnName].ToString();
+                        columnValues.Add(columnValue);
+                    }
+
+                    string joinedColumnValues = string.Join(" ", columnValues);
+
                     _articleQtycViewModels.Add(new ExcelArticlesListViewModel
                     {
-                        Name = Reader[columnNames["ArticleName"]].ToString(),
+                        Name = joinedColumnValues,
                         BarCode = Reader[columnNames["ArticleBarcode"]].ToString(),
                         ArticlePrice = Reader[columnNames["ArticlePrice"]].ToString(),
                         Quantity = Reader[columnNames["GoodQuantity"]].ToString(),

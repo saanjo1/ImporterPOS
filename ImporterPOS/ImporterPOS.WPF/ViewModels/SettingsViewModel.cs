@@ -84,6 +84,21 @@ namespace ImporterPOS.WPF.ViewModels
         private string goodQuantity;
 
         [ObservableProperty]
+        private string discountBarcode;
+
+        [ObservableProperty]
+        private string discountValue;
+
+        [ObservableProperty]
+        private string priceWithDiscount;
+
+        [ObservableProperty]
+        private string priceWithoutDiscount;
+
+
+
+
+        [ObservableProperty]
         private AddNewSupplierViewModel addNewSupplierVM;
 
         [ObservableProperty]
@@ -125,6 +140,7 @@ namespace ImporterPOS.WPF.ViewModels
             ToggleButtonColor = Brushes.Gray; // Početna boja toggle buttona (siva)
 
             LoadArticleParameters();
+            LoadDiscountParameters();
             LoadDataFromDatabase();
             GetDatabaseInfo();
 
@@ -163,10 +179,10 @@ namespace ImporterPOS.WPF.ViewModels
                     var data = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
 
                     // Postavi vrijednosti u SelectedSupplier i SelectedStorage
-                    if (SuppliersList.Contains(data["SelectedSupplier"]))
+                    if (SuppliersList.Contains("SelectedSupplier"))
                         SelectedSupplier = data["SelectedSupplier"];
 
-                    if (StorageList.Contains(data["SelectedStorage"]))
+                    if (StorageList.Contains("SelectedStorage"))
                         SelectedStorage = data["SelectedStorage"];
                 }
             }
@@ -250,6 +266,39 @@ namespace ImporterPOS.WPF.ViewModels
             }
         }
 
+        private void LoadDiscountParameters()
+        {
+            try
+            {
+                Title = Translations.TitleDescription;
+                string folderPath = AppDomain.CurrentDomain.BaseDirectory;
+                string fileName = "discountColumnNames.json";
+                string filePath = System.IO.Path.Combine(folderPath, fileName);
+
+
+                if (File.Exists(filePath))
+                {
+                    string json = File.ReadAllText(filePath);
+                    Dictionary<string, string>? columnNames = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+
+                    if (columnNames.ContainsKey("DiscountBarcode"))
+                        DiscountBarcode = columnNames["DiscountBarcode"];
+                    if (columnNames.ContainsKey("DiscountValue"))
+                        DiscountValue = columnNames["DiscountValue"];
+                    if (columnNames.ContainsKey("PriceWithDiscount"))
+                        PriceWithDiscount = columnNames["PriceWithDiscount"];
+                    if (columnNames.ContainsKey("PriceWithoutDiscount"))
+                        PriceWithoutDiscount = columnNames["PriceWithoutDiscount"];
+
+                }
+            }
+            catch
+            {
+                _notifier.ShowError(Translations.ErrorMessage);
+                throw;
+            }
+        }
+
 
         [RelayCommand]
         public Task SaveArticleParameters()
@@ -273,6 +322,39 @@ namespace ImporterPOS.WPF.ViewModels
 
                 string folderPath = AppDomain.CurrentDomain.BaseDirectory;
                 string fileName = "articleColumnNames.json";
+                string filePath = System.IO.Path.Combine(folderPath, fileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                using (var streamWriter = new StreamWriter(fileStream))
+                {
+                    streamWriter.Write(json);
+                }
+                _notifier.ShowSuccess(Translations.Success);
+                return Task.CompletedTask;
+            }
+            catch
+            {
+                _notifier.ShowError(Translations.ErrorMessage);
+                return Task.CompletedTask;
+            }
+        }
+
+        [RelayCommand]
+        public Task SaveDiscountParameters()
+        {
+            try
+            {
+                var columnNames = new
+                {
+                    DiscountBarcode,
+                    DiscountValue,
+                    PriceWithDiscount,
+                    PriceWithoutDiscount
+                };
+
+                string json = JsonSerializer.Serialize(columnNames);
+
+                string folderPath = AppDomain.CurrentDomain.BaseDirectory;
+                string fileName = "discountColumnNames.json";
                 string filePath = System.IO.Path.Combine(folderPath, fileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
                 using (var streamWriter = new StreamWriter(fileStream))
@@ -321,6 +403,38 @@ namespace ImporterPOS.WPF.ViewModels
             }
         }
 
+
+        [RelayCommand]
+        public Task ClearDiscountParameters()
+        {
+            try
+            {
+                string folderPath = AppDomain.CurrentDomain.BaseDirectory;
+                string fileName = "discountColumnNames.json";
+                string filePath = System.IO.Path.Combine(folderPath, fileName);
+
+                //Check if json file exist
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                    CleanupProperties();
+                    _notifier.ShowSuccess(Translations.Success);
+                }
+                else
+                {
+                    _notifier.ShowInformation(Translations.FileNotFound);
+                }
+
+                return Task.CompletedTask;
+
+            }
+            catch
+            {
+                _notifier.ShowError(Translations.ErrorMessage);
+                return Task.CompletedTask;
+            }
+        }
         [RelayCommand]
         public async Task SaveSupplierAndStorage()
         {

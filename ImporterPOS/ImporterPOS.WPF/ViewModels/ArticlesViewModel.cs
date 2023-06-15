@@ -11,9 +11,7 @@ using ImporterPOS.Domain.Services.Suppliers;
 using ImporterPOS.WPF.Modals;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.Services.Excel;
-using ImporterPOS.WPF.ViewModels;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -22,7 +20,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Data;
-using System.Windows.Shell;
 using ToastNotifications;
 using ToastNotifications.Messages;
 
@@ -47,6 +44,9 @@ namespace ImporterPOS.WPF.ViewModels
 
         [ObservableProperty]
         private ExcelSheetChooserViewModel excelSheetViewModel;
+
+        [ObservableProperty]
+        private ImportArticleSettingsViewModel articleSettingsVM;
 
 
 
@@ -106,8 +106,12 @@ namespace ImporterPOS.WPF.ViewModels
                 string json = File.ReadAllText(filePath);
                 var data = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
 
-                SupplierName = data["SelectedSupplier"];
+                if (data.ContainsKey("SelectedSupplier"))
+                     SupplierName = data["SelectedSupplier"];
+
+                if (data.ContainsKey("SelectedStorage"))
                 StorageName = data["SelectedStorage"];
+
             }
         }
 
@@ -265,6 +269,16 @@ namespace ImporterPOS.WPF.ViewModels
             }
         }
 
+
+        [RelayCommand]
+        public void OpenArticleSettings()
+        {
+            IsSettingsPopUpOpened = true;
+            this.ArticleSettingsVM = new ImportArticleSettingsViewModel(_notifier, this);
+        }
+
+
+
         private async Task InitializeAndLoadData(string filePath)
         {
             IsSheetPopupOpened = true;
@@ -399,14 +413,14 @@ namespace ImporterPOS.WPF.ViewModels
                         else
                         {
                             newArticle.Id = _articleId;
-                            newArticle.Order = _articleService.Get(_articleId.ToString()).Result.Order;
-                            newArticle.ArticleNumber = _articleService.Get(_articleId.ToString()).Result.ArticleNumber;
+                            newArticle.Order = (await _articleService.Get(_articleId.ToString())).Order;
+                            newArticle.ArticleNumber = (await _articleService.Get(_articleId.ToString())).ArticleNumber;
                             _articleService.Update(_articleId, newArticle);
                         }
 
                         if (IsConnectChecked)
                         {
-                            if (!_articleService.CheckForNormative(_articleId).Result)
+                            if (!(_articleService.CheckForNormative(_articleId).Result))
                             {
                                 ArticleGood newArticleGood = new ArticleGood
                                 {

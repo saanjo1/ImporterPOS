@@ -423,7 +423,7 @@ namespace ImporterPOS.Domain.Services.Articles
                     SubCategory newSubcategory = new SubCategory
                     {
                         Id = Guid.NewGuid(),
-                        CategoryId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
+                        CategoryId = new Guid("76680057-400C-494B-B725-7ADBCEC7FE46"),
                         StorageId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
                         Name = subcategory,
                         Deleted = false,

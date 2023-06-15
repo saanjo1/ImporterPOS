@@ -29,10 +29,10 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="1.5" />
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            <Border Background="#1073B1" CornerRadius="10" Grid.ColumnSpan="1" Grid.RowSpan="2">
+            <Border Background="#1073B1" CornerRadius="10" Grid.ColumnSpan="2" Grid.RowSpan="2">
                 <TabControl>
                     <TabControl.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1, 0.7">
@@ -61,8 +61,8 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -97,8 +97,57 @@
                                 <TextBox Grid.Row="10" Grid.Column="1" Width="400" Height="40" Text="{Binding GoodTotalPrice, Mode=TwoWay}" FontSize="24" Margin="10 0" />
 
 
-                                <Button Content="Poništi" FontSize="22" Padding="10" Width="120" Style="{StaticResource CancelButton}" Command="{Binding ClearArticleParametersCommand}" Grid.Row="11" Margin="0 50" HorizontalAlignment="Right" Grid.Column="1"/>
-                                <Button Content="Spremi" FontSize="22" Padding="10" Width="120" Style="{StaticResource ImportButton}" Command="{Binding SaveArticleParametersCommand}" Grid.Row="11" Margin="0 50" HorizontalAlignment="Center" Grid.Column="1"/>
+                                <Button Content="Poništi" FontSize="22" Padding="10" Width="120" Style="{StaticResource CancelButton}" Command="{Binding ClearArticleParametersCommand}" Grid.Row="11" HorizontalAlignment="Center" Margin="0 280 -270 0" VerticalAlignment="Bottom" Grid.Column="1"/>
+                                <Button Content="Spremi" FontSize="22" Padding="10" Width="120" Style="{StaticResource ImportButton}" Command="{Binding SaveArticleParametersCommand}" Grid.Row="11" HorizontalAlignment="Center"  Grid.Column="1" VerticalAlignment="Bottom" />
+
+                            </Grid>
+
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Mapiranje popusta">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Label Margin="40 20 0 0" Grid.Row="0" Content="{Binding Title}" Style="{StaticResource settingsControlLabel}"/>
+                            <Grid Margin="40" Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+
+                                <Label Grid.Row="1" Content="Bar-kod:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                                <TextBox Grid.Row="1" Grid.Column="1" Width="400" Height="40" Text="{Binding DiscountBarcode, Mode=TwoWay}" FontSize="24" />
+
+                                <Label Grid.Row="2" Content="Cijena bez popusta:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                                <TextBox Grid.Row="2" Grid.Column="1" Width="400" Height="40" Text="{Binding PriceWithDiscount, Mode=TwoWay}" Margin="10 0" FontSize="24" />
+
+                                <Label Grid.Row="3" Content="Popust: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                                <TextBox Grid.Row="3" Grid.Column="1" Width="400" Height="40" Text="{Binding DiscountValue, Mode=TwoWay}" FontSize="24" Margin="10 0" />
+
+                                <Label Grid.Row="4" Content="Cijena sa popustom: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                                <TextBox Grid.Row="4" Grid.Column="1" Width="400" Height="40" Text="{Binding PriceWithoutDiscount, Mode=TwoWay}" FontSize="24" Margin="10 0" />
+
+
+                                <Button Content="Poništi" FontSize="22" Padding="10" Width="120" Style="{StaticResource CancelButton}" Command="{Binding ClearDiscountParametersCommand}" Grid.Row="11" HorizontalAlignment="Center" Margin="0 280 -270 0" VerticalAlignment="Bottom" Grid.Column="1"/>
+                                <Button Content="Spremi" FontSize="22" Padding="10" Width="120" Style="{StaticResource ImportButton}" Command="{Binding SaveDiscountParametersCommand}" Grid.Row="11" HorizontalAlignment="Center"  Grid.Column="1" VerticalAlignment="Bottom" />
 
                             </Grid>
 
@@ -111,8 +160,7 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -140,9 +188,8 @@
                             <Separator HorizontalAlignment="Center" Height="150" Width="550" Foreground="White" Grid.Row="2" Grid.ColumnSpan="3"/>
 
 
-
-                            <Button Content="Poništi" FontSize="22" Padding="10" Width="120" Style="{StaticResource CancelButton}" Command="{Binding ClearSupplierAndStorageCommand}" Grid.Row="4" Margin="20 50" Grid.ColumnSpan="3" HorizontalAlignment="Right" Grid.Column="1"/>
-                            <Button Content="Spremi" FontSize="22" Padding="10" Width="120" Style="{StaticResource ImportButton}" Command="{Binding SaveSupplierAndStorageCommand}" Grid.Row="4" Margin="20 50" Grid.ColumnSpan="3"  HorizontalAlignment="Center" Grid.Column="1"/>
+                            <Button Content="Poništi" FontSize="22" Padding="10" Width="120" Style="{StaticResource CancelButton}" Command="{Binding ClearSupplierAndStorageCommand}" Grid.Row="4" HorizontalAlignment="Right" Margin="0 0 -130 0" VerticalAlignment="Bottom" Grid.Column="1"/>
+                            <Button Content="Spremi" FontSize="22" Padding="10" Width="120" Style="{StaticResource ImportButton}" Command="{Binding SaveSupplierAndStorageCommand}" Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Grid.Column="1"/>
 
 
 
