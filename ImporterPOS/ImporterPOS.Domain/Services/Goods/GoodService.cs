@@ -85,113 +85,39 @@ namespace ImporterPOS.Domain.Services.Goods
             }
         }
 
-        public Task<Guid> GetGoodByName(string name, bool stockCorrection = false)
+        public Task<Guid> GetGoodByName(string name)
         {
             using (DatabaseContext context = _factory.CreateDbContext())
             {
-                Good good = new Good();
-                if (stockCorrection)
-                {
-                    good = context.Goods.Where(x => x.Name == name).FirstOrDefault();
-                }
-                else
-                {
-                    good = context.Goods.Where(x => x.Name.Contains(name)).FirstOrDefault();
-                }
+                var good = context.Goods.Where(x => x.Name == name).FirstOrDefault();
+
                 if (good == null)
                     return Task.FromResult(Guid.Empty);
                 return Task.FromResult(good.Id);
             }
         }
 
-        public async Task<decimal> SumQuantityOfGoodsById(Guid goodId, Guid storageId)
+        public async Task<decimal> CalculateTotalQuantityOfGoods(Guid goodId, Guid storageId)
         {
-            decimal sumQuantities = 0;
+            decimal totalQuantity = 0;
 
             using (DatabaseContext context = _factory.CreateDbContext())
             {
-                sumQuantities = context.InventoryItemBases.
-                   Where(x => x.GoodId == goodId && x.StorageId == storageId).Sum(x => x.Quantity);
-
+                totalQuantity = context.InventoryItemBases
+                   .Where(x => x.GoodId == goodId && x.StorageId == storageId)
+                   .Sum(x => x.Quantity);
             }
 
-            return await Task.FromResult(sumQuantities);
+            return await Task.FromResult(totalQuantity);
         }
 
-        public async Task SetMainStockToZero()
-        {
-            decimal quantity = 0;
-            DateTime _date = new DateTime(2023, 04, 03, 06, 30, 00);
-
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                InventoryDocument inventoryDocument = new InventoryDocument()
-                {
-                    Id = Guid.NewGuid(),
-                    Created = _date,
-                    Order = context.InventoryDocuments.Count() + 1,
-                    IsActivated = true,
-                    IsDeleted = false,
-                    StorageId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
-                    Type = 2
-                };
-
-                context.InventoryDocuments.Add(inventoryDocument);
-                foreach (Good goodEntity in context.Goods)
-                {
-                    if(goodEntity.Id == new Guid("2BA8AD29-7AFB-43FC-BC6F-8B2DBA622693"))
-                    {
-                        var x = 0;
-                    }
-
-                    bool goodExists = await context.InventoryItemBases
-                        .AnyAsync(g => g.GoodId == goodEntity.Id && g.Created < _date);
-
-                    if (goodExists)
-                    {
-                        var temp = context.InventoryItemBases
-                            .Where(x => x.GoodId == goodEntity.Id && x.Created < _date)
-                            .Sum(x => x.Quantity);
-
-                        if (temp != 0)
-                            quantity = -temp;
-                        else
-                            quantity = 0;
-                    }
-
-                   
-                    InventoryItemBasis inventoryItemBasis = new InventoryItemBasis
-                    {
-                        Id = Guid.NewGuid(),
-                        StorageId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
-                        Created = _date,
-                        Quantity = quantity,
-                        CurrentQuantity = quantity,
-                        Tax = 0,
-                        Discriminator = "InventoryDocumentItem",
-                        InventoryDocumentId = inventoryDocument.Id,
-                        GoodId = goodEntity.Id,
-                        Price = goodEntity.LatestPrice,
-                        Total = quantity * goodEntity.LatestPrice,
-                        IsDeleted = false,
-                        Refuse = 0
-                    };
-
-                    context.InventoryItemBases.Add(inventoryItemBasis);
-                    quantity = 0;
-                }
-
-
-                await context.SaveChangesAsync();
-            }
-        }
 
         public Guid? FindUnitByName(string unit)
         {
             using (DatabaseContext context = _factory.CreateDbContext())
             {
                 var _unit = context.MeasureUnits.FirstOrDefault(x => x.Name.ToLower() == unit.ToLower());
-                    return _unit.Id;
+                return _unit?.Id;
             }
         }
     }

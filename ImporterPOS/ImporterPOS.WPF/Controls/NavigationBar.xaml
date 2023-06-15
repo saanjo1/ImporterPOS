@@ -27,29 +27,8 @@
                         <TextBlock Text="Početna stranica" Style="{StaticResource radioButtonText}"/>
                     </StackPanel>
                 </RadioButton>
-                <RadioButton Style="{StaticResource radioButton1}"
-                     Tag="{StaticResource color2}"
-                     Command="{Binding EditCurrentViewModelCommand}" 
-                     CommandParameter="{x:Static nav:ViewType.Articles}">
 
-                    <StackPanel Orientation="Horizontal">
-                        <fa:IconImage Icon="TableList" Style="{StaticResource radioButtonIcon}" Foreground="{StaticResource color3}"/>
-                        <TextBlock Text="Skladišta" Style="{StaticResource radioButtonText}"/>
-                    </StackPanel>
-                </RadioButton>
-
-
-                <RadioButton Style="{StaticResource radioButton1}"
-                     Tag="{StaticResource color2}"
-                     Command="{Binding EditCurrentViewModelCommand}" 
-                     CommandParameter="{x:Static nav:ViewType.Discounts}">
-
-                    <StackPanel Orientation="Horizontal">
-                        <fa:IconImage Icon="Percentage" Style="{StaticResource radioButtonIcon}"  Foreground="{StaticResource color4}"/>
-                        <TextBlock Text="Popusti" Style="{StaticResource radioButtonText}"/>
-                    </StackPanel>
-                </RadioButton>
-
+            
                 <RadioButton Style="{StaticResource radioButton1}"
                      Tag="{StaticResource color2}"
                      Command="{Binding EditCurrentViewModelCommand}" 
@@ -60,6 +39,18 @@
                         <TextBlock Text="Artikli" Style="{StaticResource radioButtonText}"/>
                     </StackPanel>
                 </RadioButton>
+
+                <RadioButton Style="{StaticResource radioButton1}"
+                     Tag="{StaticResource color2}"
+                     Command="{Binding EditCurrentViewModelCommand}" 
+                     CommandParameter="{x:Static nav:ViewType.Discounts}">
+
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Icon="Percentage" Style="{StaticResource radioButtonIcon}"  Foreground="{StaticResource color4}"/>
+                        <TextBlock Text="Popusti" FontFamily="Roboto" Style="{StaticResource radioButtonText}"/>
+                    </StackPanel>
+                </RadioButton>
+
 
                 <RadioButton Style="{StaticResource radioButton1}"
                      Tag="{StaticResource color2}"

@@ -37,8 +37,6 @@ namespace ImporterPOS.WPF.States
         [ObservableProperty]
         private List<string> currentStorages;
 
-        [ObservableProperty]
-        private ObservableCollection<WriteOffViewModel> writeOffVM;
 
         [ObservableProperty]
         private string selectedStorage;
@@ -72,87 +70,6 @@ namespace ImporterPOS.WPF.States
         }
 
 
-        [RelayCommand]
-        public async void WriteOffFromExcel()
-        {
-            try
-            {
-                ExcelFile = _excelService.OpenDialog().Result;
-                Guid _storageId = _storageDataService.GetStorageByName("Glavno skladište").Result;
-
-                if (ExcelFile != null)
-                {
-                    IsLoading = true;
-                    await Task.Run(() =>
-                    {
-                        List<string> listOfSheets = _excelService.GetListOfSheets(ExcelFile).Result;
-                        if (listOfSheets.Count > 0)
-                            SelectedSheet = listOfSheets[0];
-
-                        WriteOffViewModel vm = new WriteOffViewModel();
-
-                        WriteOffVM = _excelService.ReadFromWriteOff(ExcelFile, SelectedSheet).Result;
-                        InventoryDocument invDocument = new InventoryDocument
-                        {
-                            Id = Guid.NewGuid(),
-                            Created = DateTime.Now,
-                            IsActivated = true,
-                            IsDeleted = false,
-                            StorageId = _storageId,
-                            SupplierId = null,
-                            Type = 2
-                        };
-
-                        foreach (var item in WriteOffVM)
-                        {
-                            _inventoryService.Create(invDocument);
-
-                            string name = item.Item + " " + item.Color_number + " " + item.Item_size;
-                          
-                            Good? _good = _articleService.GetGoodFromArticleByName(name).Result;
-
-                            if (_good.Id != Guid.Empty)
-                            {
-                                InventoryItemBasis inventoryItemBasis = new InventoryItemBasis
-                                {
-                                    Id = Guid.NewGuid(),
-                                    StorageId = _storageId,
-                                    Created = DateTime.Now,
-                                    Quantity = 0 - Helpers.Extensions.GetDecimal(item.Quantity),
-                                    CurrentQuantity = 0 - Helpers.Extensions.GetDecimal(item.Quantity),
-                                    Tax = 0,
-                                    Discriminator = "InventoryDocumentItem",
-                                    InventoryDocumentId = invDocument.Id,
-                                    GoodId = _good.Id,
-                                    Price = _good.LatestPrice,
-                                    Total = Helpers.Extensions.GetDecimal(item.Quantity) * _good.LatestPrice,
-                                    IsDeleted = false,
-                                    Refuse = 0
-                                };
-
-                                _invItemService.Create(inventoryItemBasis);
-                                countedGoods++;
-                            }
-
-                        }
-                    });
-                    IsLoading = false;
-                    _notifier.ShowInformation("Successfully updated " + CountedGoods + " goods.");
-                }
-                else
-                {
-                    _notifier.ShowWarning("Please provide Excel file first.");
-                }
-
-
-            }
-            catch
-            {
-                _notifier.ShowError(Translations.ErrorMessage);
-            }
-
-
-        }
     }
 }
 

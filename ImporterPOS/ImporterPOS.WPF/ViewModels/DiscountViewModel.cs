@@ -290,7 +290,7 @@ namespace ImporterPOS.WPF.ViewModels
                     {
                         for (int i = 0; i < articleList.Count; i++)
                         {
-                            var articleID = _articleDataService.GetComparedByBarcode(articleList[i].BarCode).Result;
+                            Guid articleID = await _articleDataService.GetArticleIdByBarcode(articleList[i].BarCode);
                             if (articleID != Guid.Empty)
                             {
                                 var article = await _articleDataService.Get(articleID.ToString());

@@ -217,7 +217,7 @@ namespace ImporterPOS.WPF.ViewModels
             ICollection<GoodsArticlesViewModel> tempList = new List<GoodsArticlesViewModel>();
             foreach (var item in goods)
             {
-                decimal quantity = _goodService.SumQuantityOfGoodsById(item.Id, storage).Result;
+                decimal quantity = _goodService.CalculateTotalQuantityOfGoods(item.Id, storage).Result;
                 decimal _totalPurchasePrice = Math.Round((item.LatestPrice * quantity), 2);
                 decimal _soldPrice = _articleService.GetPriceByGood(item.Id).Result.Price * quantity;
                 decimal _totalTaxes = Math.Round(_soldPrice * 0.25m, 2);
@@ -229,7 +229,7 @@ namespace ImporterPOS.WPF.ViewModels
                     {
                         Id = Guid.NewGuid(),
                         Name = item.Name,
-                        GoodId = _goodService.GetGoodByName(item.Name, false).Result,
+                        GoodId = _goodService.GetGoodByName(item.Name).Result,
                         Quantity = quantity,
                         Storage = storage,
                         TotalPurchasePrice = _totalPurchasePrice,

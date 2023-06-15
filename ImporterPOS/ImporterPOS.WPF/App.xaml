@@ -64,14 +64,6 @@
             </DataTemplate>
 
 
-            <DataTemplate DataType="{x:Type modals:StorageItemsViewModel}">
-                <controls:EditStorageView/>
-            </DataTemplate>
-
-
-
-
-
         </ResourceDictionary>
     </Application.Resources>
 </Application>

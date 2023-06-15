@@ -80,7 +80,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="NewFolder\" />
+    <Folder Include="Fonts\" />
   </ItemGroup>
 
 </Project>

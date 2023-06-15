@@ -44,7 +44,7 @@
             </Ellipse>
 
             <StackPanel Orientation="Vertical" Margin="5">
-                <TextBlock Text="Welcome to POS Sector Importer"
+                <TextBlock Text="POS Sector Importer"
                                Foreground="{StaticResource titleColor2}"
                                FontSize="20"
                                FontFamily="Montserrat"
@@ -65,9 +65,9 @@
 
 
 
-        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal"
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" 
             Visibility="{Binding IsLoading, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVis}}"
-                Margin="30 0" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="5" Panel.ZIndex="3" Background="Transparent">
+                Margin="30 0" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.ColumnSpan="5" Panel.ZIndex="3" Background="Transparent">
 
 
             <custom:LoadingSpinner Color="{StaticResource titleColor2}" Diameter="60" Thickness="4" IsLoading="{Binding IsLoading, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="100" Grid.Row="0" Grid.Column="1"/>

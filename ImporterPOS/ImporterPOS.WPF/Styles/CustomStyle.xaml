@@ -24,22 +24,22 @@
     <SolidColorBrush x:Key="color10" Color="#FBA1AA"/>
     <SolidColorBrush x:Key="color11" Color="#1073B1"/>
     <SolidColorBrush x:Key="color12" Color="#003D64"/>
-    <SolidColorBrush x:Key="color13" Color="#C30606"/>
-    <SolidColorBrush x:Key="color14" Color="#F70000"/>
-    <SolidColorBrush x:Key="color15" Color="#486b20"/>
-    <SolidColorBrush x:Key="color16" Color="#6d9045"/>
+    <SolidColorBrush x:Key="color13" Color="#db1f07"/>
+    <SolidColorBrush x:Key="color14" Color="#C30606"/>
+    <SolidColorBrush x:Key="color15" Color="#026302"/>
+    <SolidColorBrush x:Key="color16" Color="#3e8e41"/>
     <SolidColorBrush x:Key="color17" Color="#9A6B04"/>
 
 
 
 
     <!--Button colors -->
-    <Color x:Key="primarybuttonGreen">#486b20</Color>
-    <Color x:Key="secondarybuttonGreen">#6d9045</Color>
+    <Color x:Key="primarybuttonGreen">#026302</Color>
+    <Color x:Key="secondarybuttonGreen">#3e8e41</Color>
     <Color x:Key="saveButtonColor1">#003D64</Color>
     <Color x:Key="saveButtonColor2">#1073B1</Color>
-    <Color x:Key="cancelButtonColor1">#C30606</Color>
-    <Color x:Key="cancelButtonColor2">#F70000</Color>
+    <Color x:Key="cancelButtonColor1">#db1f07</Color>
+    <Color x:Key="cancelButtonColor2">#C30606</Color>
     <Color x:Key="optionsColorPrimary1">#9A6B04</Color>
     <Color x:Key="optionsColorSecondary1">#C58805</Color>
 
@@ -90,6 +90,8 @@
         <Setter Property="Width" Value="9"/>
         <Setter Property="Height" Value="9"/>
     </Style>
+
+
 
     <!--Menu button text-->
     <Style x:Key="menuButtonText" TargetType="TextBlock">
@@ -287,14 +289,14 @@
                 <Trigger.EnterActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource cancelButtonColor2}" Duration="0:0:0.01"/>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource cancelButtonColor1}" Duration="0:0:0.01"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </Trigger.EnterActions>
                 <Trigger.ExitActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource cancelButtonColor1}" Duration="0:0:0.01"/>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource cancelButtonColor2}" Duration="0:0:0.01"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </Trigger.ExitActions>

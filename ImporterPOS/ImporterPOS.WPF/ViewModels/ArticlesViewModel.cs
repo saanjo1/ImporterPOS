@@ -353,7 +353,7 @@ namespace ImporterPOS.WPF.ViewModels
 
                     for (int i = 0; i < articleList.Count; i++)
                     {
-                        Guid _goodId = _goodService.GetGoodByName(articleList[i].Name, false).Result;
+                        Guid _goodId = _goodService.GetGoodByName(articleList[i].Name).Result;
                         Good newGood = new Good
                         {
                             Id = Guid.NewGuid(),
@@ -393,7 +393,7 @@ namespace ImporterPOS.WPF.ViewModels
                         _inventoryItems.Create(newInventoryItem);
 
 
-                        Guid _articleId = _articleService.GetComparedByBarcode(articleList[i].BarCode).Result;
+                        Guid _articleId = _articleService.GetArticleIdByBarcode(articleList[i].BarCode).Result;
                         Article newArticle = new Article
                         {
                             Id = Guid.NewGuid(),

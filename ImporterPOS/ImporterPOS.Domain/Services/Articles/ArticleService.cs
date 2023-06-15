@@ -76,16 +76,17 @@ namespace ImporterPOS.Domain.Services.Articles
             }
         }
 
-        public Task<Guid> GetComparedByBarcode(string barcode)
+        public Task<Guid> GetArticleIdByBarcode(string barcode)
         {
             using (DatabaseContext context = _factory.CreateDbContext())
             {
-                Article x = context.Articles.Where(x => x.BarCode == barcode).FirstOrDefault();
-                if (x != null)
-                    return Task.FromResult(x.Id);
+                Article article = context.Articles.FirstOrDefault(x => x.BarCode == barcode);
+                if (article != null)
+                    return Task.FromResult(article.Id);
                 return Task.FromResult(Guid.Empty);
             }
         }
+
 
         public Task<int> GetCounter(Guid _subCategoryId)
         {
@@ -96,38 +97,6 @@ namespace ImporterPOS.Domain.Services.Articles
                     return Task.FromResult(context.Articles.Where(x => x.SubCategoryId == _subCategoryId).Count() + 1);
                 }
                 return Task.FromResult(context.Articles.Count() + 1);
-            }
-        }
-
-        public Task<Guid> ManageSubcategories(string? category, string? storage)
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                SubCategory? _subCategory = context.SubCategories.Where(x => x.Name == category).FirstOrDefault();
-                Guid _storageId = context.Storages.Where(x => x.Name.Contains("Glavno")).FirstOrDefault().Id;
-                Guid _categoryId = this.ManageCategories(category, _storageId.ToString()).Result;
-
-                if (_subCategory == null)
-                {
-                    SubCategory subCategory = new SubCategory()
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = category,
-                        Deleted = false,
-                        StorageId = _storageId,
-                        CategoryId = _categoryId,
-                        Order = context.SubCategories.Count() + 1,
-                    };
-
-                    var id = subCategory.Id;
-                    context.SubCategories.Add(subCategory);
-                    context.SaveChanges();
-                    return Task.FromResult(id);
-                }
-                else
-                {
-                    return Task.FromResult(_subCategory.Id);
-                }
             }
         }
 
@@ -227,52 +196,6 @@ namespace ImporterPOS.Domain.Services.Articles
             }
         }
 
-        public Task<string> ConnectArticlesToGoods()
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                try
-                {
-                    int articlesCount = context.Articles.Count();
-                    int goodsCount = context.Goods.Count();
-
-                    int successCounter = 0;
-                    if (goodsCount > 0 && articlesCount > 0)
-                    {
-                        foreach (var good in context.Goods)
-                        {
-                            foreach (var article in context.Articles)
-                            {
-                                if (good.Name.Contains(article.BarCode))
-                                {
-                                    ArticleGood newArticleGood = new ArticleGood
-                                    {
-                                        ArticleId = article.Id,
-                                        GoodId = good.Id,
-                                        ValidFrom = DateTime.Now,
-                                        ValidUntil = DateTime.Now.AddYears(50),
-                                        Quantity = 1,
-                                        Id = Guid.NewGuid()
-                                    };
-
-                                    context.Add(newArticleGood);
-                                    successCounter++;
-                                }
-                            }
-                        }
-                    }
-
-                    string result = successCounter + "/" + articlesCount + " articles connected.";
-
-                    return Task.FromResult(result);
-                }
-                catch
-                {
-                    return Task.FromResult("An error occurred while connecting articles to goods.");
-                }
-
-            }
-        }
 
         public Task<decimal> GetTotalSellingPrice(InventoryDocument inventoryDocument)
         {
@@ -369,44 +292,6 @@ namespace ImporterPOS.Domain.Services.Articles
             }
         }
 
-        public async Task CreateGoodsBasedOnArticleName()
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                foreach (Article item in context.Articles)
-                {
-                    // Provjeri je li istoimeni "good" već prisutan u tablici "goods"
-                    bool goodExists = await context.Goods.AnyAsync(g => g.Name == item.Name);
-
-                    if (!goodExists)
-                    {
-                        // Stvori novi "good" na temelju "artikla"
-                        Good newGood = new Good
-                        {
-                            Id = Guid.NewGuid(),
-                            Name = item.Name,
-                            UnitId = new Guid("5C6BACE6-1640-4606-969D-000B25F422C6"),
-                            LatestPrice = 0,
-                            Volumen = 1,
-                            Refuse = 0
-                        };
-
-                        ArticleGood articleGood = new ArticleGood()
-                        {
-                            Id = Guid.NewGuid(),
-                            ArticleId = item.Id,
-                            GoodId = newGood.Id,
-                            ValidFrom = DateTime.Now,
-                            ValidUntil = DateTime.Now.AddYears(30)
-                        };
-                        context.ArticleGoods.Add(articleGood);
-                        context.Goods.Add(newGood);
-                    }
-                }
-
-                await context.SaveChangesAsync();
-            }
-        }
 
         public Guid? FindSubcategoryByName(string subcategory)
         {
