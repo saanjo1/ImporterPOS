@@ -30,6 +30,9 @@ namespace ImporterPOS.WPF.ViewModels
         private string? barCode;
 
         [ObservableProperty]
+        private string? subCategoryName;
+
+        [ObservableProperty]
         private string? articlePrice;
 
         [ObservableProperty]

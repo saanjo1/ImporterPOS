@@ -67,6 +67,19 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         private string storageName;
 
+        [ObservableProperty]
+        private string subCategoryName;
+
+        [ObservableProperty]
+        private string unitName;
+
+        [ObservableProperty]
+        private string taxName;
+
+        [ObservableProperty]
+        private Dictionary<string, object>? data;
+
+
 
         [ObservableProperty]
         private bool isConnectChecked;
@@ -104,13 +117,26 @@ namespace ImporterPOS.WPF.ViewModels
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);
-                var data = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+                data = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
 
-                if (data.ContainsKey("SelectedSupplier"))
-                     SupplierName = data["SelectedSupplier"];
 
-                if (data.ContainsKey("SelectedStorage"))
-                StorageName = data["SelectedStorage"];
+                if (data.ContainsKey("SelectedStorage") && data.ContainsKey("IsStorageEnabled") && bool.TryParse(data["IsStorageEnabled"].ToString(), out bool stEnabled) && stEnabled)
+                    StorageName = data["SelectedStorage"].ToString();
+
+                if (data.ContainsKey("SelectedSubcategory") && data.ContainsKey("IsSubCategoryEnabled") && bool.TryParse(data["IsSubCategoryEnabled"].ToString(), out bool catEnabled) && catEnabled)
+                    SubCategoryName = data["SelectedSubcategory"].ToString();
+
+
+                if (data.ContainsKey("SelectedSupplier") && data.ContainsKey("IsSupplierEnabled") && bool.TryParse(data["IsSupplierEnabled"].ToString(), out bool supEnabled) && supEnabled)
+                    SupplierName = data["SelectedSupplier"].ToString();
+
+                if (data.ContainsKey("SelectedUnit") && data.ContainsKey("IsUnitEnabled") && bool.TryParse(data["IsSupplierEnabled"].ToString(), out bool unitEnabled) && unitEnabled)
+                    UnitName = data["SelectedUnit"].ToString();
+
+
+                if (data.ContainsKey("SelectedTax") && data.ContainsKey("IsTaxEnabled") && bool.TryParse(data["IsSupplierEnabled"].ToString(), out bool taxEnabled) && taxEnabled)
+                    TaxName = data["SelectedTax"].ToString();
+
 
             }
         }
@@ -257,7 +283,7 @@ namespace ImporterPOS.WPF.ViewModels
                 filePath = await _excelService.OpenDialog();
                 if (filePath != null)
                 {
-                    await InitializeAndLoadData(filePath);
+                    InitializeAndLoadData(filePath);
                     articleList = await _excelService.ReadColumnsFromExcel(filePath, ExcelSheetViewModel.SelectedSheet, tempVm);
                     LoadData(filePath);
                 }
@@ -279,7 +305,7 @@ namespace ImporterPOS.WPF.ViewModels
 
 
 
-        private async Task InitializeAndLoadData(string filePath)
+        private void InitializeAndLoadData(string filePath)
         {
             IsSheetPopupOpened = true;
             this.ExcelSheetViewModel = new ExcelSheetChooserViewModel(_excelService, this, _notifier, filePath);
@@ -358,7 +384,7 @@ namespace ImporterPOS.WPF.ViewModels
                         {
                             Id = Guid.NewGuid(),
                             Name = articleList[i].Name,
-                            UnitId = _goodService.FindUnitByName(articleList[i].Unit),
+                            UnitId = articleList[i].Unit != null ? _goodService.FindUnitByName(articleList[i].Unit) : _goodService.FindUnitByName(UnitName),
                             LatestPrice = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit),
                             Volumen = 1,
                             Refuse = 0
@@ -399,7 +425,7 @@ namespace ImporterPOS.WPF.ViewModels
                             Id = Guid.NewGuid(),
                             Name = articleList[i].Name,
                             ArticleNumber = _articleService.GetCounter(Guid.Empty).Result,
-                            SubCategoryId = _articleService.FindSubcategoryByName(articleList[i].Category),
+                            SubCategoryId = articleList[i].SubCategoryName != null ? _articleService.FindSubcategoryByName(articleList[i].SubCategoryName) : _articleService.FindSubcategoryByName(SubCategoryName),
                             BarCode = articleList[i].BarCode,
                             Price = Helpers.Extensions.GetDecimal(articleList[i].ArticlePrice),
                         };
@@ -417,6 +443,17 @@ namespace ImporterPOS.WPF.ViewModels
                             newArticle.ArticleNumber = (await _articleService.Get(_articleId.ToString())).ArticleNumber;
                             _articleService.Update(_articleId, newArticle);
                         }
+
+                        if (TaxName == null)
+                            TaxName = articleList[i].Tax;
+
+                        var newTax = new TaxArticle
+                        {
+                            ArticleId = _articleId,
+                            TaxId = _articleService.GetTaxIdByValue(TaxName).Result
+                        };
+
+                            _articleService.CreateTaxArticle(newTax);
 
                         if (IsConnectChecked)
                         {

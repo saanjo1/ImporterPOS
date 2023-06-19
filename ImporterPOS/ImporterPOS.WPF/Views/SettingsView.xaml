@@ -42,6 +42,7 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -49,35 +50,41 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <Label Grid.Row="1" Content="Naziv artikla:" Style="{StaticResource settingsControlLabel}" FontSize="18" Margin="0 0 70 0"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Width="600" Height="40" Text="{Binding ArticleName, Mode=TwoWay}" FontSize="24" />
+                            <Label Grid.Row="1" Content="Dobavljač:" Style="{StaticResource settingsControlLabel}" FontSize="18" Margin="0 0 70 0"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Width="600" Height="40" Text="{Binding ArticleSupplier, Mode=TwoWay}" FontSize="24" />
 
-                            <Label Grid.Row="2" Content="Bar-kod:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
-                            <TextBox Grid.Row="2" Grid.Column="1" Width="600" Height="40" Text="{Binding ArticleBarcode, Mode=TwoWay}" FontSize="24" />
+                            <Label Grid.Row="2" Content="Skladište:" Style="{StaticResource settingsControlLabel}" FontSize="18" Margin="0 0 70 0"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Width="600" Height="40" Text="{Binding ArticleStorage, Mode=TwoWay}" FontSize="24" />
 
-                            <Label Grid.Row="3" Content="Podkategorija:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
-                            <TextBox Grid.Row="3" Grid.Column="1" Width="600" Height="40" Text="{Binding ArticleSubCategory, Mode=TwoWay}" Margin="10 0" FontSize="24" />
+                            <Label Grid.Row="3" Content="Naziv artikla:" Style="{StaticResource settingsControlLabel}" FontSize="18" Margin="0 0 70 0"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Width="600" Height="40" Text="{Binding ArticleName, Mode=TwoWay}" FontSize="24" />
 
-                            <Label Grid.Row="5" Content="Porez: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
-                            <TextBox Grid.Row="5" Grid.Column="1" Width="600" Height="40" Text="{Binding ArticleTaxes, Mode=TwoWay}" FontSize="24" Margin="10 0" />
+                            <Label Grid.Row="4" Content="Bar-kod:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                            <TextBox Grid.Row="4" Grid.Column="1" Width="600" Height="40" Text="{Binding ArticleBarcode, Mode=TwoWay}" FontSize="24" />
 
-                            <Label Grid.Row="6" Content="Izlazna cijena: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
-                            <TextBox Grid.Row="6" Grid.Column="1" Width="600" Height="40" Text="{Binding ArticlePrice, Mode=TwoWay}" FontSize="24" Margin="10 0" />
+                            <Label Grid.Row="5" Content="Podkategorija:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                            <TextBox Grid.Row="5" Grid.Column="1" Width="600" Height="40" Text="{Binding ArticleSubCategory, Mode=TwoWay}" Margin="10 0" FontSize="24" />
 
-                            <Label Grid.Row="7" Content="Jedinična nabavna cijena " Style="{StaticResource settingsControlLabel}" FontSize="18" Margin="0 0 70 0"/>
-                            <TextBox Grid.Row="7" Grid.Column="1" Width="600" Height="40" Text="{Binding GoodPurchasePrice, Mode=TwoWay}" FontSize="24" />
+                            <Label Grid.Row="6" Content="Porez: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                            <TextBox Grid.Row="6" Grid.Column="1" Width="600" Height="40" Text="{Binding ArticleTaxes, Mode=TwoWay}" FontSize="24" Margin="10 0" />
 
-                            <Label Grid.Row="8" Content="Mjerna jedinica:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
-                            <TextBox Grid.Row="8" Grid.Column="1" Width="600" Height="40" Text="{Binding GoodUnit, Mode=TwoWay}" FontSize="24" />
+                            <Label Grid.Row="7" Content="Izlazna cijena: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                            <TextBox Grid.Row="7" Grid.Column="1" Width="600" Height="40" Text="{Binding ArticlePrice, Mode=TwoWay}" FontSize="24" Margin="10 0" />
 
-                            <Label Grid.Row="9" Content="Količina: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
-                            <TextBox Grid.Row="9" Grid.Column="1" Width="600" Height="40" Text="{Binding GoodQuantity, Mode=TwoWay}" Margin="10 0" FontSize="24" />
+                            <Label Grid.Row="8" Content="Jedinična nabavna cijena " Style="{StaticResource settingsControlLabel}" FontSize="18" Margin="0 0 70 0"/>
+                            <TextBox Grid.Row="8" Grid.Column="1" Width="600" Height="40" Text="{Binding GoodPurchasePrice, Mode=TwoWay}" FontSize="24" />
 
-                            <Label Grid.Row="10" Content="Ukupna nabavna cijena:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
-                            <TextBox Grid.Row="10" Grid.Column="1" Width="600" Height="40" Text="{Binding GoodTotalPrice, Mode=TwoWay}" FontSize="24" Margin="10 0" />
+                            <Label Grid.Row="9" Content="Mjerna jedinica:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                            <TextBox Grid.Row="9" Grid.Column="1" Width="600" Height="40" Text="{Binding GoodUnit, Mode=TwoWay}" FontSize="24" />
+
+                            <Label Grid.Row="10" Content="Količina: " Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                            <TextBox Grid.Row="10" Grid.Column="1" Width="600" Height="40" Text="{Binding GoodQuantity, Mode=TwoWay}" Margin="10 0" FontSize="24" />
+
+                            <Label Grid.Row="11" Content="Ukupna nabavna cijena:" Style="{StaticResource settingsControlLabel}" FontSize="18" />
+                            <TextBox Grid.Row="11" Grid.Column="1" Width="600" Height="40" Text="{Binding GoodTotalPrice, Mode=TwoWay}" FontSize="24" />
 
 
-                            <StackPanel Grid.Row="11" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Bottom" Grid.Column="1" Margin="0 5">
+                            <StackPanel Grid.Row="12" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Bottom" Grid.Column="1" Margin="0 5">
                                 <Button Content="Spremi" FontSize="22" Padding="10" Width="120" Style="{StaticResource ImportButton}" Command="{Binding SaveArticleParametersCommand}"   />
                                 <Button Content="Poništi" FontSize="22" Padding="10" Width="120" Style="{StaticResource CancelButton}" Command="{Binding ClearArticleParametersCommand}" Margin="15 0"/>
                             </StackPanel>
@@ -139,37 +146,76 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" Margin="0 100">
-                            <Label Style="{StaticResource settingsTitleLabel}" Content="Koristi postojeće zapise iz baze podataka " HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        </StackPanel>
-
                         <Label Grid.Row="1" Content="Dobavljač: " Style="{StaticResource settingsControlLabel}" FontSize="18" VerticalAlignment="Center" />
-                        <ComboBox FontSize="24" Width="600" Height="40" Margin="10 0" ItemsSource="{Binding SuppliersList}" SelectedItem="{Binding SelectedSupplier}" x:Name="comboBox1" Grid.Column="1" Grid.Row="1"/>
+                        <ComboBox Style="{StaticResource MaterialDesignComboBox}" FontSize="24" Width="600" Height="40" Margin="10 0" ItemsSource="{Binding SuppliersList}" SelectedItem="{Binding SelectedSupplier}" x:Name="comboBox1" Grid.Column="1" Grid.Row="1">
+                            <ComboBox.Resources>
+                                <SolidColorBrush x:Key="MaterialDesignPaper" Color="{StaticResource primaryBackColor1}"/>
+                            </ComboBox.Resources>
+                        </ComboBox>
                         <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding AddNewSupplierCommand}"  Height="40" Width="40" HorizontalAlignment="Left" Grid.ColumnSpan="4" Grid.Row="1" Grid.Column="3">
                             <StackPanel Orientation="Horizontal">
                                 <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Add" IconFont="Solid" Width="20" Height="20"  />
                             </StackPanel>
                         </Button>
-                        <ToggleButton x:Name="toggleButton1" IsChecked="{Binding IsUsingExistingDataAllowed}" Height="50" Width="50" Margin="50 0" Grid.ColumnSpan="4" Grid.Row="1" Grid.Column="3" />
+                        <ToggleButton x:Name="toggleButton1" IsChecked="{Binding IsSupplierEnabled}" Height="50" Width="50" Margin="50 0" Grid.ColumnSpan="4" Grid.Row="1" Grid.Column="3" />
 
 
                         <Label Grid.Row="2" Content="Skladište: " Style="{StaticResource settingsControlLabel}" FontSize="18" VerticalAlignment="Center" />
-                        <ComboBox FontSize="24" Width="600" Height="40" Margin="10 0" ItemsSource="{Binding StorageList}" SelectedItem="{Binding SelectedStorage}" x:Name="comboBox2" Grid.Column="1" Grid.Row="2"/>
+                        <ComboBox FontSize="24" Width="600" Height="40" Margin="10 0" ItemsSource="{Binding StorageList}" SelectedItem="{Binding SelectedStorage}" x:Name="comboBox2" Grid.Column="1" Grid.Row="2">
+                            <ComboBox.Resources>
+                                <SolidColorBrush x:Key="MaterialDesignPaper" Color="{StaticResource primaryBackColor1}"/>
+                            </ComboBox.Resources>
+                        </ComboBox>
                         <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding AddNewStorageCommand}"  Height="40" Width="40" HorizontalAlignment="Left" Grid.ColumnSpan="4" Grid.Row="2" Grid.Column="3">
                             <StackPanel Orientation="Horizontal">
                                 <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Add" IconFont="Solid" Width="20" Height="20" />
                             </StackPanel>
                         </Button>
+                        <ToggleButton x:Name="toggleButton2" IsChecked="{Binding IsStorageEnabled}" Height="50" Width="50" Margin="50 0" Grid.ColumnSpan="4" Grid.Row="2" Grid.Column="3" />
+
 
                         <Label Grid.Row="3" Content="Podkategorija: " Style="{StaticResource settingsControlLabel}" FontSize="18" VerticalAlignment="Center" />
-                        <ComboBox FontSize="24" Width="600" Height="40" Margin="10 0" ItemsSource="{Binding StorageList}" SelectedItem="{Binding SelectedStorage}" Grid.Column="1" Grid.Row="3"/>
+                        <ComboBox FontSize="24" Width="600" Height="40" Margin="10 0" ItemsSource="{Binding SubcategoryList}" SelectedItem="{Binding SelectedSubcategory}" Grid.Column="1" Grid.Row="3">
+                            <ComboBox.Resources>
+                                <SolidColorBrush x:Key="MaterialDesignPaper" Color="{StaticResource primaryBackColor1}"/>
+                            </ComboBox.Resources>
+                        </ComboBox>
                         <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding AddNewStorageCommand}"  Height="40" Width="40" HorizontalAlignment="Left" Grid.ColumnSpan="4" Grid.Row="3" Grid.Column="3">
                             <StackPanel Orientation="Horizontal">
                                 <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Add" IconFont="Solid" Width="20" Height="20" />
                             </StackPanel>
                         </Button>
+                        <ToggleButton x:Name="toggleButton3" IsChecked="{Binding IsSubCategoryEnabled}" Height="50" Width="50" Margin="50 0" Grid.ColumnSpan="4" Grid.Row="3" Grid.Column="3" />
 
-                        <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.ColumnSpan="4" Margin="-120 5">
+                        <Label Grid.Row="4" Content="Porez: " Style="{StaticResource settingsControlLabel}" FontSize="18" VerticalAlignment="Center" />
+                        <ComboBox FontSize="24" Width="600" Height="40" Margin="10 0" ItemsSource="{Binding TaxList}" SelectedItem="{Binding SelectedTax}" Grid.Column="1" Grid.Row="4">
+                            <ComboBox.Resources>
+                                <SolidColorBrush x:Key="MaterialDesignPaper" Color="{StaticResource primaryBackColor1}"/>
+                            </ComboBox.Resources>
+                        </ComboBox>
+                        <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding AddNewStorageCommand}"  Height="40" Width="40" HorizontalAlignment="Left" Grid.ColumnSpan="4" Grid.Row="4" Grid.Column="3">
+                            <StackPanel Orientation="Horizontal">
+                                <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Add" IconFont="Solid" Width="20" Height="20" />
+                            </StackPanel>
+                        </Button>
+                        <ToggleButton x:Name="toggleButton4" IsChecked="{Binding IsTaxEnabled}" Height="50" Width="50" Margin="50 0" Grid.ColumnSpan="4" Grid.Row="4" Grid.Column="3" />
+
+                        <Label Grid.Row="5" Content="Mjerna jedinica: " Style="{StaticResource settingsControlLabel}" FontSize="18" VerticalAlignment="Center" />
+                        <ComboBox FontSize="24" Width="600" Height="40" Margin="10 0" ItemsSource="{Binding UnitsList}" SelectedItem="{Binding SelectedUnit}" Grid.Column="1" Grid.Row="5">
+                            <ComboBox.Resources>
+                                <SolidColorBrush x:Key="MaterialDesignPaper" Color="{StaticResource primaryBackColor1}"/>
+                            </ComboBox.Resources>
+                        </ComboBox>
+                        <Button Style="{StaticResource ImportButton}" Foreground="White" Command="{Binding AddNewStorageCommand}"  Height="40" Width="40" HorizontalAlignment="Left" Grid.ColumnSpan="4" Grid.Row="5" Grid.Column="3">
+                            <StackPanel Orientation="Horizontal">
+                                <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Add" IconFont="Solid" Width="20" Height="20" />
+                            </StackPanel>
+                        </Button>
+                        <ToggleButton x:Name="toggleButton5" IsChecked="{Binding IsUnitEnabled}" Height="50" Width="50" Margin="50 0" Grid.ColumnSpan="4" Grid.Row="5" Grid.Column="3" />
+
+
+
+                        <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.ColumnSpan="4" Margin="-00 5">
                             <Button Content="Spremi" FontSize="22" Padding="10" Width="120" Style="{StaticResource ImportButton}" Command="{Binding SaveSupplierAndStorageCommand}" Margin="15 0"/>
                             <Button Content="Poništi" FontSize="22" Padding="10" Width="120" Style="{StaticResource CancelButton}" Command="{Binding ClearSupplierAndStorageCommand}" />
 

@@ -23,6 +23,12 @@ namespace ImporterPOS.Domain.Services.Articles
         Task<Article> GetPriceByGood(Guid? goodId);
 
         Guid? FindSubcategoryByName(string subcategory);
+
+        Task<ICollection<SubCategory>> GetAllSubcategories();
+        Task<ICollection<MeasureUnit>> GetAllMeasureUnits();
+        Task<ICollection<Taxis>> GetAllTaxes();
+        Task<Guid> GetTaxIdByValue(string taxName);
+        void CreateTaxArticle(TaxArticle newTax);
     }
 
 

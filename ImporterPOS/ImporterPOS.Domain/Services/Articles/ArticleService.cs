@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using ImporterPOS.Domain.Models1;
+using System.Xml.Linq;
 
 namespace ImporterPOS.Domain.Services.Articles
 {
@@ -86,6 +87,8 @@ namespace ImporterPOS.Domain.Services.Articles
                 return Task.FromResult(Guid.Empty);
             }
         }
+
+
 
 
         public Task<int> GetCounter(Guid _subCategoryId)
@@ -252,7 +255,7 @@ namespace ImporterPOS.Domain.Services.Articles
                             .Select(x => x.ArticleId)
                             .FirstOrDefault();
 
-                        if(articleId != null)
+                        if (articleId != null)
                         {
                             InventoryItemBasis inventoryItemBase = context.InventoryItemBases
                            .Where(x => x.InventoryDocumentId == inventoryDocument.Id && x.GoodId == goodID)
@@ -284,9 +287,9 @@ namespace ImporterPOS.Domain.Services.Articles
 
         public Task<Article> GetPriceByGood(Guid? goodId)
         {
-            using (DatabaseContext context  = _factory.CreateDbContext())
+            using (DatabaseContext context = _factory.CreateDbContext())
             {
-                Guid? articleId = context.ArticleGoods.Where(x=>x.GoodId == goodId).Select(x=>x.ArticleId).FirstOrDefault();
+                Guid? articleId = context.ArticleGoods.Where(x => x.GoodId == goodId).Select(x => x.ArticleId).FirstOrDefault();
                 var article = context.Articles.Where(x => x.Id == articleId).FirstOrDefault();
                 return Task.FromResult(article);
             }
@@ -297,9 +300,9 @@ namespace ImporterPOS.Domain.Services.Articles
         {
             using (DatabaseContext context = _factory.CreateDbContext())
             {
-                SubCategory? subCategory = context.SubCategories.FirstOrDefault(g => g.Name == subcategory); 
-                
-                if(subCategory != null)
+                SubCategory? subCategory = context.SubCategories.FirstOrDefault(g => g.Name == subcategory);
+
+                if (subCategory != null)
                 {
                     return subCategory.Id;
                 }
@@ -317,8 +320,49 @@ namespace ImporterPOS.Domain.Services.Articles
                     context.Add(newSubcategory);
                     context.SaveChanges();
 
-                    return newSubcategory.Id;  
+                    return newSubcategory.Id;
                 }
+            }
+        }
+
+        public async Task<ICollection<SubCategory>> GetAllSubcategories()
+        {
+            using DatabaseContext context = _factory.CreateDbContext();
+            ICollection<SubCategory> entities = await context.SubCategories.ToListAsync();
+            return await Task.FromResult(entities);
+        }
+
+        public async Task<ICollection<MeasureUnit>> GetAllMeasureUnits()
+        {
+            using DatabaseContext context = _factory.CreateDbContext();
+            ICollection<MeasureUnit> entities = await context.MeasureUnits.ToListAsync();
+            return await Task.FromResult(entities);
+        }
+
+        public async Task<ICollection<Taxis>> GetAllTaxes()
+        {
+            using DatabaseContext context = _factory.CreateDbContext();
+            ICollection<Taxis> entities = await context.Taxes.ToListAsync();
+            return await Task.FromResult(entities);
+        }
+
+        public Task<Guid> GetTaxIdByValue(string taxName)
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                Taxis tax = context.Taxes.FirstOrDefault(x => x.Value.ToString() == taxName);
+                if (tax != null)
+                    return Task.FromResult(tax.Id);
+                return Task.FromResult(Guid.Empty);
+            }
+        }
+
+        public void CreateTaxArticle(TaxArticle newTax)
+        {
+            using (DatabaseContext context = _factory.CreateDbContext())
+            {
+                context.Add(newTax);
+                context.SaveChanges();
             }
         }
     }

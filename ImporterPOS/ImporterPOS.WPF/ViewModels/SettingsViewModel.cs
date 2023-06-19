@@ -1,8 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DocumentFormat.OpenXml.Vml;
 using ImporterPOS.Domain.Models;
-using ImporterPOS.Domain.Models1;
 using ImporterPOS.Domain.Services.Articles;
 using ImporterPOS.Domain.Services.Goods;
 using ImporterPOS.Domain.Services.Storages;
@@ -11,18 +9,12 @@ using ImporterPOS.WPF.Modals;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.Services.Excel;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
-using System.Resources;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Xml;
 using ToastNotifications;
 using ToastNotifications.Messages;
@@ -63,6 +55,12 @@ namespace ImporterPOS.WPF.ViewModels
         private string articleBarcode;
 
         [ObservableProperty]
+        private string articleStorage;
+
+        [ObservableProperty]
+        private string articleSupplier;
+
+        [ObservableProperty]
         private string articleSubCategory;
 
         [ObservableProperty]
@@ -96,6 +94,21 @@ namespace ImporterPOS.WPF.ViewModels
         private string priceWithoutDiscount;
 
 
+        [ObservableProperty]
+        private bool isSubCategoryEnabled;
+
+        [ObservableProperty]
+        private bool isStorageEnabled;
+
+        [ObservableProperty]
+        private bool isUnitEnabled;
+
+        [ObservableProperty]
+        private bool isTaxEnabled;
+
+        [ObservableProperty]
+        private bool isSupplierEnabled;
+
 
 
         [ObservableProperty]
@@ -121,6 +134,24 @@ namespace ImporterPOS.WPF.ViewModels
 
         [ObservableProperty]
         private string selectedSupplier;
+
+        [ObservableProperty]
+        private List<string> subcategoryList;
+
+        [ObservableProperty]
+        private string selectedSubcategory;
+
+        [ObservableProperty]
+        private List<string> unitsList;
+
+        [ObservableProperty]
+        private string selectedUnit;
+
+        [ObservableProperty]
+        private List<string> taxList;
+
+        [ObservableProperty]
+        private string selectedTax;
 
         [ObservableProperty]
         private List<string> storageList;
@@ -170,6 +201,27 @@ namespace ImporterPOS.WPF.ViewModels
                     StorageList = storages.Select(storage => storage.Name).ToList();
                 }
 
+                // Učitaj kategorije iz baze
+                if ((SubcategoryList == null || SubcategoryList.Count == 0) || flag)
+                {
+                    var subcategories = await _articleService.GetAllSubcategories();
+                    SubcategoryList = subcategories.Select(storage => storage.Name).ToList();
+                }
+
+                // Učitaj mj. jedinice iz baze
+                if ((UnitsList == null || UnitsList.Count == 0) || flag)
+                {
+                    var units = await _articleService.GetAllMeasureUnits();
+                    UnitsList = units.Select(storage => storage.Name).ToList();
+                }
+
+                // Učitaj porez iz baze
+                if ((TaxList == null || TaxList.Count == 0) || flag)
+                {
+                    var taxlist = await _articleService.GetAllTaxes();
+                    TaxList = taxlist.Select(storage => storage.Value.ToString()).ToList();
+                }
+
 
                 // Provjeri postojanje datoteke supplierAndStorageData.json
                 string folderPath = AppDomain.CurrentDomain.BaseDirectory;
@@ -180,14 +232,38 @@ namespace ImporterPOS.WPF.ViewModels
                 {
                     // Učitaj vrijednosti iz datoteke
                     string json = File.ReadAllText(filePath);
-                    var data = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+                    var data = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
 
-                    // Postavi vrijednosti u SelectedSupplier i SelectedStorage
+                    // Postavi vrijednosti 
                     if (data.ContainsKey("SelectedSupplier"))
-                        SelectedSupplier = data["SelectedSupplier"];
+                        SelectedSupplier = data["SelectedSupplier"].ToString();
 
                     if (data.ContainsKey("SelectedStorage"))
-                        SelectedStorage = data["SelectedStorage"];
+                        SelectedStorage = data["SelectedStorage"].ToString();
+
+                    if (data.ContainsKey("SelectedSubcategory"))
+                        SelectedSubcategory = data["SelectedSubcategory"].ToString();
+
+                    if (data.ContainsKey("SelectedUnit"))
+                        SelectedUnit = data["SelectedUnit"].ToString();
+
+                    if (data.ContainsKey("SelectedTax"))
+                        SelectedTax = data["SelectedTax"].ToString();
+
+                    if (data.ContainsKey("IsTaxEnabled") && bool.TryParse(data["IsTaxEnabled"].ToString(), out bool tax))
+                        IsTaxEnabled = tax;
+
+                    if (data.ContainsKey("IsStorageEnabled") && bool.TryParse(data["IsStorageEnabled"].ToString(), out bool storg))
+                        IsStorageEnabled = storg;
+
+                    if (data.ContainsKey("IsSubCategoryEnabled") && bool.TryParse(data["IsSubCategoryEnabled"].ToString(), out bool cat))
+                        IsSubCategoryEnabled = cat;
+
+                    if (data.ContainsKey("IsUnitEnabled") && bool.TryParse(data["IsUnitEnabled"].ToString(), out bool unit))
+                        IsUnitEnabled = unit;
+
+                    if (data.ContainsKey("IsSupplierEnabled") && bool.TryParse(data["IsSupplierEnabled"].ToString(), out bool supp))
+                        IsSupplierEnabled = supp;
                 }
             }
             catch
@@ -247,6 +323,10 @@ namespace ImporterPOS.WPF.ViewModels
                         ArticleName = columnNames["ArticleName"];
                     if (columnNames.ContainsKey("ArticleBarcode"))
                         ArticleBarcode = columnNames["ArticleBarcode"];
+                    if (columnNames.ContainsKey("ArticleStorage"))
+                        ArticleStorage = columnNames["ArticleStorage"];
+                    if (columnNames.ContainsKey("ArticleSupplier"))
+                        ArticleSupplier = columnNames["ArticleSupplier"];
                     if (columnNames.ContainsKey("ArticleSubCategory"))
                         ArticleSubCategory = columnNames["ArticleSubCategory"];
                     if (columnNames.ContainsKey("ArticleTaxes"))
@@ -319,7 +399,9 @@ namespace ImporterPOS.WPF.ViewModels
                     GoodUnit,
                     GoodTotalPrice,
                     GoodPurchasePrice,
-                    GoodQuantity
+                    GoodQuantity,
+                    ArticleStorage,
+                    ArticleSupplier
                 };
 
                 string json = JsonSerializer.Serialize(columnNames);
@@ -447,7 +529,16 @@ namespace ImporterPOS.WPF.ViewModels
                 var data = new
                 {
                     SelectedSupplier,
-                    SelectedStorage
+                    SelectedStorage,
+                    SelectedUnit,
+                    SelectedTax,
+                    SelectedSubcategory,
+                    IsSubCategoryEnabled,
+                    IsSupplierEnabled,
+                    IsUnitEnabled,
+                    IsTaxEnabled,
+                    IsStorageEnabled,
+
                 };
 
                 string json = JsonSerializer.Serialize(data);
