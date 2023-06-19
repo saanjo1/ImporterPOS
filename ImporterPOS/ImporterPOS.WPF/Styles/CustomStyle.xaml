@@ -1,12 +1,14 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                  xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+                                 xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
                     xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp" xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
     <!--Background Colors-->
     <Color x:Key="primaryBackColor1">#003D64</Color>
     <Color x:Key="primaryBackColor2">#1073B1</Color>
     <Color x:Key="secondaryBackColor1">#003D64</Color>
     <Color x:Key="secondaryBackColor2">#1073B1</Color>
+    <Color x:Key="buttonColor2">#2196f3</Color>
     <!--Window Border Colors-->
     <Color x:Key="winBorderColor1">#6D2FFF</Color>
     <Color x:Key="winBorderColor2">#537cfb</Color>
@@ -29,6 +31,7 @@
     <SolidColorBrush x:Key="color15" Color="#026302"/>
     <SolidColorBrush x:Key="color16" Color="#3e8e41"/>
     <SolidColorBrush x:Key="color17" Color="#9A6B04"/>
+    <SolidColorBrush x:Key="color18" Color="#2196f3"/>
 
 
 
@@ -196,6 +199,17 @@
     </Style>
 
 
+
+    <!--Settings title label-->
+    <Style x:Key="settingsTitleLabel" TargetType="Label">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Padding" Value="15"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontFamily" Value="Monserrat"/>
+        <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="FontSize" Value="18"/>
+    </Style>
+
     <!--Settings click button-->
     <Style x:Key="settingsClickButton" TargetType="Button">
         <Setter Property="Foreground" Value="White"/>
@@ -306,21 +320,21 @@
 
     <Style x:Key="ImportButton" TargetType="Button" BasedOn="{StaticResource SaveButton}">
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Background" Value="{StaticResource color15}"/>
+        <Setter Property="Background" Value="{StaticResource color12}"/>
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Trigger.EnterActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource secondarybuttonGreen}" Duration="0:0:0.01"/>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource buttonColor2}" Duration="0:0:0.01"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </Trigger.EnterActions>
                 <Trigger.ExitActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource primarybuttonGreen}" Duration="0:0:0.01"/>
+                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" To="{StaticResource primaryBackColor1}" Duration="0:0:0.01"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </Trigger.ExitActions>
@@ -913,7 +927,7 @@
                             <Border Width="45" Height="20" Background="LightGray"
                                 CornerRadius="10" Margin="5,0"></Border>
                             <Border x:Name="button" Height="25" Width="25" CornerRadius="12.5" HorizontalAlignment="Left"></Border>
-                            
+
                         </Grid>
                         <ContentPresenter x:Name="content" Margin="10,0,0,0" Content="{TemplateBinding Content}" VerticalAlignment="Center"></ContentPresenter>
                     </StackPanel>
@@ -921,20 +935,20 @@
                         <Storyboard x:Key="right">
                             <ThicknessAnimation Storyboard.TargetProperty="Margin"
                                                 Storyboard.TargetName="button"
-                                                Duration="0:0:0:2"
+                                                Duration="0:0:0:0.2"
                                                 From="0,0,0,0"
                                                 To="28,0,0,0">
                                 <ThicknessAnimation.EasingFunction>
                                     <CircleEase EasingMode="EaseOut">
                                     </CircleEase>
                                 </ThicknessAnimation.EasingFunction>
-                                 
+
                             </ThicknessAnimation>
                         </Storyboard>
                         <Storyboard x:Key="left">
                             <ThicknessAnimation Storyboard.TargetProperty="Margin"
                                                 Storyboard.TargetName="button"
-                                                Duration="0:0:0:2"
+                                                Duration="0:0:0:0.2"
                                                 From="28,0,0,0"
                                                 To="0,0,0,0">
                                 <ThicknessAnimation.EasingFunction>
@@ -949,14 +963,14 @@
                         <Trigger Property="IsChecked" Value="False">
                             <Trigger.ExitActions>
                                 <RemoveStoryboard BeginStoryboardName="leftt">
-                                    
+
                                 </RemoveStoryboard>
                                 <BeginStoryboard Storyboard="{StaticResource right }" x:Name="rightt">
-                                    
+
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
                             <Setter TargetName="button" Property="Background" Value="#b2b6b3">
-                                
+
                             </Setter>
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
@@ -968,27 +982,30 @@
 
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
-                            <Setter TargetName="button" Property="Background" Value="#008743">
-
+                            <Setter TargetName="button" Property="Background" Value="#003D64">
                             </Setter>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+            </Setter.Value>
+        </Setter>
     </Style>
 
+
+
+
+
     <Style x:Key="DateTimePickerStyle" TargetType="xctk:DateTimePicker">
-        <Setter Property="Foreground" Value="White" />
-        <Setter Property="Background" Value="{x:Null}" />
-        <Setter Property="BorderBrush" Value="White" />
+        <Setter Property="Foreground" Value="{StaticResource color12}" />
+        <Setter Property="BorderBrush" Value="{StaticResource color11}" />
         <Setter Property="FontSize" Value="18" />
-        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Padding" Value="5" />
         <Setter Property="xctk:DateTimePicker.Format" Value="Custom" />
         <Setter Property="xctk:DateTimePicker.FormatString" Value="dd/MM/yyyy HH:mm" />
         <Setter Property="xctk:DateTimePicker.ShowButtonSpinner" Value="False" />
+        <Setter Property="xctk:DateTimePicker.ShowDropDownButton" Value="False" />
         <Setter Property="xctk:DateTimePicker.TimePickerVisibility" Value="Hidden" />
         <Setter Property="xctk:DateTimePicker.Watermark" Value="Odaberite datum i vrijeme" />
     </Style>
@@ -1000,7 +1017,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">
-                    <Border Name="Border"  CornerRadius="4,4,0,0" Margin="2,0">
+                    <Border Name="Border" CornerRadius="4,4,0,0" Margin="2,0">
                         <ContentPresenter x:Name="ContentSite"
                                         VerticalAlignment="Center"
                                         HorizontalAlignment="Center"

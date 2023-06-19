@@ -128,6 +128,9 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         private string selectedStorage;
 
+        [ObservableProperty]
+        private string mappingTitle;
+
 
         public SettingsViewModel(Notifier notifier, IExcelService excelService, IArticleService articleService, IGoodService goodService, ISupplierService supplierService, IStorageService storageService)
         {
@@ -138,6 +141,7 @@ namespace ImporterPOS.WPF.ViewModels
             _supplierService = supplierService;
             _storageService = storageService;
             ToggleButtonColor = Brushes.Gray; // Početna boja toggle buttona (siva)
+            MappingTitle = Translations.MappingTitle;
 
             LoadArticleParameters();
             LoadDiscountParameters();
@@ -179,10 +183,10 @@ namespace ImporterPOS.WPF.ViewModels
                     var data = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
 
                     // Postavi vrijednosti u SelectedSupplier i SelectedStorage
-                    if (SuppliersList.Contains("SelectedSupplier"))
+                    if (data.ContainsKey("SelectedSupplier"))
                         SelectedSupplier = data["SelectedSupplier"];
 
-                    if (StorageList.Contains("SelectedStorage"))
+                    if (data.ContainsKey("SelectedStorage"))
                         SelectedStorage = data["SelectedStorage"];
                 }
             }
@@ -228,7 +232,7 @@ namespace ImporterPOS.WPF.ViewModels
 
             try
             {
-                Title = Translations.TitleDescription;
+                Title = Translations.MappingTitle;
                 string folderPath = AppDomain.CurrentDomain.BaseDirectory;
                 string fileName = "articleColumnNames.json";
                 string filePath = System.IO.Path.Combine(folderPath, fileName);
@@ -270,7 +274,7 @@ namespace ImporterPOS.WPF.ViewModels
         {
             try
             {
-                Title = Translations.TitleDescription;
+                Title = Translations.MappingTitle;
                 string folderPath = AppDomain.CurrentDomain.BaseDirectory;
                 string fileName = "discountColumnNames.json";
                 string filePath = System.IO.Path.Combine(folderPath, fileName);

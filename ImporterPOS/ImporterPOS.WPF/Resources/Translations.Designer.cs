@@ -214,6 +214,15 @@ namespace ImporterPOS.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to U tekstualna polja unesite odgovarajuće nazive kolona iz Excela kako biste uskladili podatke..
+        /// </summary>
+        internal static string MappingTitle {
+            get {
+                return ResourceManager.GetString("MappingTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Odaberite Excel file.
         /// </summary>
         internal static string OpenDialogTitle {
@@ -354,15 +363,6 @@ namespace ImporterPOS.WPF.Resources {
         internal static string SupplierNameRequired {
             get {
                 return ResourceManager.GetString("SupplierNameRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to • Unesite odgovarajuće nazive kolona iz Excela u tekstualna polja kako biste uskladili podatke..
-        /// </summary>
-        internal static string TitleDescription {
-            get {
-                return ResourceManager.GetString("TitleDescription", resourceCulture);
             }
         }
         

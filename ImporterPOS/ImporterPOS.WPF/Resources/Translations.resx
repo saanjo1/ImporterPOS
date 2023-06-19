@@ -168,6 +168,9 @@
   <data name="LoadDataSuccess" xml:space="preserve">
     <value>Artikli su uspješno učitani i pripremljeni za integraciju u softver.</value>
   </data>
+  <data name="MappingTitle" xml:space="preserve">
+    <value>U tekstualna polja unesite odgovarajuće nazive kolona iz Excela kako biste uskladili podatke.</value>
+  </data>
   <data name="OpenDialogTitle" xml:space="preserve">
     <value>Odaberite Excel file</value>
   </data>
@@ -215,9 +218,6 @@
   </data>
   <data name="SupplierNameRequired" xml:space="preserve">
     <value>Ime dobavljača je obavezno polje.</value>
-  </data>
-  <data name="TitleDescription" xml:space="preserve">
-    <value>• Unesite odgovarajuće nazive kolona iz Excela u tekstualna polja kako biste uskladili podatke.</value>
   </data>
   <data name="UpdatedExcelFile" xml:space="preserve">
     <value>Excel file je uspješno izmijenjen.</value>

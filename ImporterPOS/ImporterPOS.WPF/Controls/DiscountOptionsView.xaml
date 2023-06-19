@@ -72,16 +72,16 @@
                     </StackPanel>
 
                     <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
-                        <xctk:DateTimePicker Style="{StaticResource DateTimePickerStyle}" Value="{Binding ValidFrom, Mode=TwoWay}" Margin="5 25 0 0"/>
-                        <xctk:DateTimePicker Style="{StaticResource DateTimePickerStyle}" Value="{Binding ValidTo, Mode=TwoWay}" Margin="5 25 0 0" />
-                        <CheckBox HorizontalAlignment="Left" Style="{StaticResource YesNoCheckBoxStyle}" IsChecked="{Binding ActivateDiscount}" Margin="0 20" />
+                        <xctk:DateTimePicker Style="{StaticResource DateTimePickerStyle}" Value="{Binding ValidFrom, Mode=TwoWay}" Margin="5 25 0 0" Width="300"/>
+                        <xctk:DateTimePicker Style="{StaticResource DateTimePickerStyle}" Value="{Binding ValidTo, Mode=TwoWay}" Margin="5 25 0 0" Width="300" />
+                        <CheckBox HorizontalAlignment="Left" Style="{StaticResource YesNoCheckBoxStyle}" IsChecked="{Binding ActivateDiscount}" Margin="15 35" />
                     </StackPanel>
 
 
 
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Margin="20" Width="180" Grid.ColumnSpan="2">
-                        <Button BorderThickness="2" Content="Potvrdi" Padding="10" Width="80" Height="42" Style="{StaticResource ImportButton}" Margin="0 0 20 0" Command="{Binding SaveCommand}"/>
-                        <Button BorderBrush="Black" Content="Poništi" Style="{StaticResource CancelButton}" Command="{Binding CancelCommand}" Width="80"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Margin="20" Width="240" Grid.ColumnSpan="3">
+                        <Button BorderThickness="2" Content="Potvrdi" Padding="10" Width="100" Height="42" Style="{StaticResource ImportButton}" Margin="0 0 20 0" Command="{Binding SaveCommand}"/>
+                        <Button BorderBrush="Black" Content="Poništi" Style="{StaticResource CancelButton}" Command="{Binding CancelCommand}" Width="100"/>
                     </StackPanel>
 
                 </Grid>
