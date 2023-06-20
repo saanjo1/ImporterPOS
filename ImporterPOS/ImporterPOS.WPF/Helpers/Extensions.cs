@@ -133,14 +133,15 @@ namespace ImporterPOS.WPF.Helpers
             {
                 string folderPath = AppDomain.CurrentDomain.BaseDirectory;
                 string fileName = v;
+
                 string filePath = System.IO.Path.Combine(folderPath, fileName);
 
                 if (File.Exists(filePath))
                 {
                     string json = File.ReadAllText(filePath);
-                    var data = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+                    var data = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
 
-                    if (data.ContainsKey("ConnectGoodsToArticles") && bool.TryParse(data["ConnectGoodsToArticles"], out bool connectGoodsToArticles))
+                    if (data.ContainsKey("ConnectGoodsToArticles") && bool.TryParse(data["ConnectGoodsToArticles"].ToString(), out bool connectGoodsToArticles))
                     {
                         return Task.FromResult(connectGoodsToArticles);
                     }

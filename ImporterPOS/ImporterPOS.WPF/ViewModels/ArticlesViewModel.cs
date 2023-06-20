@@ -104,7 +104,6 @@ namespace ImporterPOS.WPF.ViewModels
             _goodService = goodService;
             _inventoryItems = inventoryItems;
             _articleService = articleService;
-            IsConnectChecked = Helpers.Extensions.ReadFromJsonFile("supplierAndStorageData.json").Result;
             LoadSupplierAndStorage();
         }
 
@@ -356,6 +355,7 @@ namespace ImporterPOS.WPF.ViewModels
         [RelayCommand(CanExecute = nameof(CanClick))]
         public async void ImportData()
         {
+            IsConnectChecked = Helpers.Extensions.ReadFromJsonFile("supplierAndStorageData.json").Result;
             try
             {
                 if (articleList.Any() && SupplierName != null && StorageName != null)

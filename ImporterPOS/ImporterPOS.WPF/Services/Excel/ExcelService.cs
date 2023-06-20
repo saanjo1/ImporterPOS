@@ -131,15 +131,11 @@ namespace ImporterPOS.WPF.Services.Excel
                     _articleQtycViewModels.Add(new ExcelArticlesListViewModel
                     {
                         Name = joinedColumnValues,
-                        SubCategoryName = Reader[columnNames["ArticleSubCategory"]].ToString() != null ? Reader[columnNames["ArticleSubCategory"]].ToString() : null,
-                        Storage = Reader[columnNames["ArticleStorage"]].ToString() != null ? Reader[columnNames["ArticleStorage"]].ToString() : null,
                         BarCode = Reader[columnNames["ArticleBarcode"]].ToString(),
                         ArticlePrice = Reader[columnNames["ArticlePrice"]].ToString(),
                         Quantity = Reader[columnNames["GoodQuantity"]].ToString(),
                         PricePerUnit = Reader[columnNames["GoodPurchasePrice"]].ToString(),
-                        Unit = Reader[columnNames["GoodUnit"]].ToString() != null ? Reader[columnNames["GoodUnit"]].ToString() : null,
                         TotalPrice = Reader[columnNames["GoodTotalPrice"]].ToString(),
-                        Tax = Reader[columnNames["ArticleTaxes"]].ToString() != null ? Reader[columnNames["ArticleTaxes"]].ToString() : null
                     });
                 }
             }

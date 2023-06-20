@@ -350,7 +350,8 @@ namespace ImporterPOS.Domain.Services.Articles
         {
             using (DatabaseContext context = _factory.CreateDbContext())
             {
-                Taxis tax = context.Taxes.FirstOrDefault(x => x.Value.ToString() == taxName);
+                decimal taxValue = decimal.Parse(taxName); // Pretvorba stringa u decimalni broj
+                Taxis tax = context.Taxes.FirstOrDefault(x => x.Value == taxValue);
                 if (tax != null)
                     return Task.FromResult(tax.Id);
                 return Task.FromResult(Guid.Empty);
@@ -361,8 +362,12 @@ namespace ImporterPOS.Domain.Services.Articles
         {
             using (DatabaseContext context = _factory.CreateDbContext())
             {
-                context.Add(newTax);
-                context.SaveChanges();
+                bool taxArticleExists = context.TaxArticles.Any(x => x.TaxId == newTax.TaxId && x.ArticleId == newTax.ArticleId);
+                if (!taxArticleExists)
+                {
+                    context.TaxArticles.Add(newTax);
+                    context.SaveChanges();
+                }
             }
         }
     }
