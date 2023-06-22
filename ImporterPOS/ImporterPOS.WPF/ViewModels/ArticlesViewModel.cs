@@ -356,10 +356,12 @@ namespace ImporterPOS.WPF.ViewModels
         [RelayCommand(CanExecute = nameof(CanClick))]
         public async void ImportData()
         {
+
             try
             {
                 if (articleList.Any() && SupplierName != null && StorageName != null)
                 {
+                    IsLoading = true;
                     Guid _supplierId = _supplierService.GetSupplierByName(SupplierName).Result;
                     Guid _storageId = _storageService.GetStorageByName(StorageName).Result;
                     int orderNmbr = _invDocsService.GetInventoryOrderNumber().Result;
@@ -453,7 +455,7 @@ namespace ImporterPOS.WPF.ViewModels
                             TaxId = _articleService.GetTaxIdByValue(TaxName).Result
                         };
 
-                            _articleService.CreateTaxArticle(newTax);
+                        _articleService.CreateTaxArticle(newTax);
 
                         if (IsConnectChecked)
                         {
@@ -474,20 +476,18 @@ namespace ImporterPOS.WPF.ViewModels
                     }
                 }
                 _notifier.ShowSuccess(Translations.ImportArticlesSuccess);
+                IsLoading = false;
                 articleList.Clear();
                 ArticleCollection = null;
             }
             catch
             {
                 _notifier.ShowError(Translations.ImportArticlesError);
-
-                throw;
+                IsLoading = false;
             }
 
 
         }
-
-
 
         public bool CanClick()
 
