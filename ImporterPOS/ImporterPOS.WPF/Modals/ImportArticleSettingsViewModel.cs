@@ -46,9 +46,9 @@ namespace ImporterPOS.WPF.Modals
                 if (File.Exists(filePath))
                 {
                     string json = File.ReadAllText(filePath);
-                    var data = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+                    var data = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
 
-                    if (data.ContainsKey("ConnectGoodsToArticles") && bool.TryParse(data["ConnectGoodsToArticles"], out bool connectGoodsToArticles))
+                    if (data.ContainsKey("ConnectGoodsToArticles") && bool.TryParse(data["ConnectGoodsToArticles"].ToString(), out bool connectGoodsToArticles))
                     {
                         IsConnectChecked = connectGoodsToArticles;
                     }
@@ -79,16 +79,16 @@ namespace ImporterPOS.WPF.Modals
                 string fileName = "supplierAndStorageData.json";
                 string filePath = System.IO.Path.Combine(folderPath, fileName);
 
-                Dictionary<string, string> data;
+                Dictionary<string, object> data;
 
                 if (File.Exists(filePath))
                 {
                     string json = await File.ReadAllTextAsync(filePath);
-                    data = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+                    data = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
                 }
                 else
                 {
-                    data = new Dictionary<string, string>();
+                    data = new Dictionary<string, object>();
                 }
 
                 // Ažurirajte ili dodajte vrijednost za "ConnectGoodsToArticles"

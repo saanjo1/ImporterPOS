@@ -27,10 +27,8 @@ namespace ImporterPOS.WPF.Helpers
                 decimalValue = decimal.Parse("0");
             else
                 decimalValue = decimal.Parse(value);
-
-
-            var result = Math.Round(decimalValue + (decimal)0.005, 2);
-            return result;
+           
+            return decimalValue;
         }
 
         public static string SetOleDbConnection(string excelfile)
@@ -138,9 +136,9 @@ namespace ImporterPOS.WPF.Helpers
                 if (File.Exists(filePath))
                 {
                     string json = File.ReadAllText(filePath);
-                    var data = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+                    var data = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
 
-                    if (data.ContainsKey("ConnectGoodsToArticles") && bool.TryParse(data["ConnectGoodsToArticles"], out bool connectGoodsToArticles))
+                    if (data.ContainsKey("ConnectGoodsToArticles") && bool.TryParse(data["ConnectGoodsToArticles"].ToString(), out bool connectGoodsToArticles))
                     {
                         return Task.FromResult(connectGoodsToArticles);
                     }

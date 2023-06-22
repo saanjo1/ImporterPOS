@@ -131,15 +131,11 @@ namespace ImporterPOS.WPF.Services.Excel
                     _articleQtycViewModels.Add(new ExcelArticlesListViewModel
                     {
                         Name = joinedColumnValues,
-                        SubCategoryName = Reader[columnNames["ArticleSubCategory"]].ToString() != null ? Reader[columnNames["ArticleSubCategory"]].ToString() : null,
-                        Storage = Reader[columnNames["ArticleStorage"]].ToString() != null ? Reader[columnNames["ArticleStorage"]].ToString() : null,
                         BarCode = Reader[columnNames["ArticleBarcode"]].ToString(),
                         ArticlePrice = Reader[columnNames["ArticlePrice"]].ToString(),
                         Quantity = Reader[columnNames["GoodQuantity"]].ToString(),
                         PricePerUnit = Reader[columnNames["GoodPurchasePrice"]].ToString(),
-                        Unit = Reader[columnNames["GoodUnit"]].ToString() != null ? Reader[columnNames["GoodUnit"]].ToString() : null,
                         TotalPrice = Reader[columnNames["GoodTotalPrice"]].ToString(),
-                        Tax = Reader[columnNames["ArticleTaxes"]].ToString() != null ? Reader[columnNames["ArticleTaxes"]].ToString() : null
                     });
                 }
             }
@@ -225,9 +221,9 @@ namespace ImporterPOS.WPF.Services.Excel
                     Name = Reader[templateViewModel.BarCode].ToString() + " " + Reader[templateViewModel.Item].ToString() + " " + Reader[templateViewModel.Description].ToString() + " " + Reader[templateViewModel.ColorDescription].ToString() + " " + Reader[templateViewModel.ItemSize].ToString(),
                     Category = Reader[templateViewModel.Category].ToString(),
                     BarCode = Reader[templateViewModel.BarCode].ToString(),
-                    Price = Reader[templateViewModel.FullPrice].ToString(),
+                    Price = Reader["Retail price"].ToString(),
                     Discount = Helpers.Extensions.DisplayDiscountInPercentage(Reader[templateViewModel.Discount].ToString()),
-                    NewPrice = Math.Round(Helpers.Extensions.GetDecimal(Reader[templateViewModel.DiscountedPrice].ToString()), 2),
+                    NewPrice = Helpers.Extensions.GetDecimal(Reader[templateViewModel.DiscountedPrice].ToString()),
                     Storage = Translations.Articles
                 });
             }

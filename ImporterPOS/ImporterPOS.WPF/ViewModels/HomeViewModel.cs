@@ -88,31 +88,37 @@ namespace ImporterPOS.WPF.ViewModels
             await Task.Run(() =>
             {
 
-                ICollection<InventoryDocument> inventoryDocuments = _invService.GetAll().Result;
-
-                ListOfInventories = new ObservableCollection<InventoryDocumentsViewModel>();
-
-                foreach (var inventoryDocument in inventoryDocuments.OrderBy(x => x.Created))
+                try
                 {
-                    var soldPrice = _articleService.GetTotalSellingPrice(inventoryDocument).Result;
-                    var basePrice = _articleService.GetTotalBasePrices(inventoryDocument).Result;
-                    var purchasePrice = (decimal)GetTotalIncome(inventoryDocument);
-                    var taxes = soldPrice - basePrice;
+                    ICollection<InventoryDocument> inventoryDocuments = _invService.GetAll().Result;
 
-                    ListOfInventories.Add(new InventoryDocumentsViewModel
+                    ListOfInventories = new ObservableCollection<InventoryDocumentsViewModel>();
+
+                    foreach (var inventoryDocument in inventoryDocuments.OrderBy(x => x.Created))
                     {
-                        DateCreated = inventoryDocument.Created.ToString("dd.MM.yyyy hh:mm"),
-                        Name = _supplierDataService.Get(inventoryDocument.SupplierId.ToString()).Result != null ? _supplierDataService.Get(inventoryDocument.SupplierId.ToString()).Result.Name : "Korekcija stanja skladista",
-                        PurchasePrice = purchasePrice.ToString() + " EUR",
-                        SoldPrice = soldPrice.ToString() + " EUR",
-                        BasePrice = basePrice.ToString() + " EUR",
-                        Taxes = taxes.ToString() + " EUR",
-                        Id = inventoryDocument.Id.ToString(),
-                        Ruc = (basePrice - purchasePrice).ToString() + " EUR"
-                    });
-                }
+                        var soldPrice = _articleService.GetTotalSellingPrice(inventoryDocument).Result;
+                        var basePrice = _articleService.GetTotalBasePrices(inventoryDocument).Result;
+                        var purchasePrice = (decimal)GetTotalIncome(inventoryDocument);
+                        var taxes = soldPrice - basePrice;
 
-                InventoryCollection = CollectionViewSource.GetDefaultView(ListOfInventories);
+                        ListOfInventories.Add(new InventoryDocumentsViewModel
+                        {
+                            DateCreated = inventoryDocument.Created.ToString("dd.MM.yyyy hh:mm"),
+                            Name = _supplierDataService.Get(inventoryDocument.SupplierId.ToString()).Result != null ? _supplierDataService.Get(inventoryDocument.SupplierId.ToString()).Result.Name : "Korekcija stanja skladista",
+                            PurchasePrice = purchasePrice.ToString() + " EUR",
+                            SoldPrice = soldPrice.ToString() + " EUR",
+                            BasePrice = basePrice.ToString() + " EUR",
+                            Taxes = taxes.ToString() + " EUR",
+                            Id = inventoryDocument.Id.ToString(),
+                            Ruc = (basePrice - purchasePrice).ToString() + " EUR"
+                        });
+                    }
+
+                    InventoryCollection = CollectionViewSource.GetDefaultView(ListOfInventories);
+                }
+                catch
+                {
+                }
             });
 
             IsLoading = false;

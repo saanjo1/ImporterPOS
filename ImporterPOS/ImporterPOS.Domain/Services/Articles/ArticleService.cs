@@ -361,8 +361,12 @@ namespace ImporterPOS.Domain.Services.Articles
         {
             using (DatabaseContext context = _factory.CreateDbContext())
             {
-                context.Add(newTax);
-                context.SaveChanges();
+                bool taxArticleExists = context.TaxArticles.Any(x => x.TaxId == newTax.TaxId && x.ArticleId == newTax.ArticleId);
+                if (!taxArticleExists)
+                {
+                    context.TaxArticles.Add(newTax);
+                    context.SaveChanges();
+                }
             }
         }
     }
