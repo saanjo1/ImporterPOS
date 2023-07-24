@@ -2,12 +2,16 @@
 using CommunityToolkit.Mvvm.Input;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Models1;
+using ImporterPOS.Domain.SearchObjects;
 using ImporterPOS.Domain.Services.Articles;
+using ImporterPOS.Domain.Services.Categories;
 using ImporterPOS.Domain.Services.Goods;
 using ImporterPOS.Domain.Services.InventoryDocuments;
 using ImporterPOS.Domain.Services.InventoryItems;
 using ImporterPOS.Domain.Services.Storages;
 using ImporterPOS.Domain.Services.Suppliers;
+using ImporterPOS.Domain.Services.Taxes;
+using ImporterPOS.Domain.Services.Units;
 using ImporterPOS.WPF.Modals;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.Services.Excel;
@@ -34,9 +38,33 @@ namespace ImporterPOS.WPF.ViewModels
         private readonly IGoodService _goodService;
         private readonly IStorageService _storageService;
         private readonly IArticleService _articleService;
+        private readonly ISubCategoryService _subCategoryService;
         private readonly IInventoryItemBasisService _inventoryItems;
+        private readonly ITaxService _taxesService;
+        private readonly IUnitService _unitService;
         private readonly Notifier _notifier;
         private string filePath;
+
+        [ObservableProperty]
+        private Supplier supplierEntity;
+
+        [ObservableProperty]
+        private Storage storageEntity;
+
+        [ObservableProperty]
+        private SubCategory subCategoryEntity;
+
+        [ObservableProperty]
+        private Taxis taxEntity;
+
+        [ObservableProperty]
+        private MeasureUnit unitEntity;
+
+        [ObservableProperty]
+        private Good? goodEntity;
+
+        [ObservableProperty]
+        private Article? articleEntity;
 
 
         [ObservableProperty]
@@ -91,9 +119,9 @@ namespace ImporterPOS.WPF.ViewModels
         private ICollectionView articleCollection;
 
         [ObservableProperty]
-        ObservableCollection<ExcelArticlesListViewModel>? articleList;
+        ObservableCollection<ExcelArticlesListViewModel> articleList;
 
-        public ArticlesViewModel(IExcelService excelService, ISupplierService supplierService, Notifier notifier, IInventoryDocumentsService invDocsService, IStorageService storageService, IGoodService goodService, IInventoryItemBasisService inventoryItems, IArticleService articleService)
+        public ArticlesViewModel(IExcelService excelService, ISupplierService supplierService, Notifier notifier, IInventoryDocumentsService invDocsService, IStorageService storageService, IGoodService goodService, IInventoryItemBasisService inventoryItems, IArticleService articleService, ISubCategoryService subCategoryService, IUnitService unitService, ITaxService taxService)
         {
             _excelService = excelService;
             _supplierService = supplierService;
@@ -102,8 +130,11 @@ namespace ImporterPOS.WPF.ViewModels
             articlesCollection = new ObservableCollection<ExcelArticlesListViewModel>();
             _storageService = storageService;
             _goodService = goodService;
+            _taxesService = taxService;
+            _unitService = unitService;
             _inventoryItems = inventoryItems;
             _articleService = articleService;
+            _subCategoryService = subCategoryService;
             LoadSupplierAndStorage();
         }
 
@@ -355,22 +386,39 @@ namespace ImporterPOS.WPF.ViewModels
         [RelayCommand(CanExecute = nameof(CanClick))]
         public async void ImportData()
         {
+          
             IsConnectChecked = Helpers.Extensions.ReadFromJsonFile("supplierAndStorageData.json").Result;
+
             try
             {
-                if (articleList.Any() && SupplierName != null && StorageName != null)
-                {
-                    Guid _supplierId = _supplierService.GetSupplierByName(SupplierName).Result;
-                    Guid _storageId = _storageService.GetStorageByName(StorageName).Result;
-                    int orderNmbr = _invDocsService.GetInventoryOrderNumber().Result;
+                ICollection<Supplier> _supplier = _supplierService.Get(new SupplierSearchObject { Name = SupplierName });
+                ICollection<Storage> _storage = _storageService.Get(new StorageSearchObject { Name = StorageName });
+                ICollection<SubCategory> _subcategory = _subCategoryService.Get(new SubCategorySearchObject { Name = SubCategoryName });
+                ICollection<Taxis> _tax = _taxesService.Get(new TaxSearchObject { Value = Helpers.Extensions.GetDecimal(TaxName) });
+                ICollection<MeasureUnit> _unit = _unitService.Get(new MeasureUnitSearchObject { Name = UnitName });
 
-                    var newInvDocument = new InventoryDocument
+                SupplierEntity = _supplier.First();
+                StorageEntity = _storage.First();
+                SubCategoryEntity = _subcategory.First();
+                TaxEntity = _tax.First();
+                UnitEntity = _unit.First();
+            }
+            catch
+            {
+                _notifier.ShowError(Translations.SettingsError);
+            }
+
+            if (TaxEntity != null && StorageEntity != null && SupplierEntity != null && SubCategoryEntity != null)
+            {
+                try
+                {
+                    InventoryDocument newInvDocument = new InventoryDocument
                     {
                         Id = Guid.NewGuid(),
-                        Order = orderNmbr,
+                        Order = _invDocsService.GetInventoryOrderNumber().Result,
                         Created = DateTime.Now,
-                        SupplierId = _supplierId,
-                        StorageId = _storageId,
+                        SupplierId = SupplierEntity.Id,
+                        StorageId = StorageEntity.Id,
                         Type = 1,
                         IsActivated = false,
                         IsDeleted = false
@@ -379,26 +427,52 @@ namespace ImporterPOS.WPF.ViewModels
 
                     for (int i = 0; i < articleList.Count; i++)
                     {
-                        Guid _goodId = _goodService.GetGoodByName(articleList[i].Name).Result;
+
+                        ICollection<Good> _good = _goodService.Get(new GoodSearchObject { Name = articleList[i].Name });
+                        ICollection<Article> _article = _articleService.Get(new ArticleSearchObject { BarCode = articleList[i].BarCode });
+
+                        ArticleEntity = _article.FirstOrDefault();
+                        GoodEntity = _good.FirstOrDefault();
+
                         Good newGood = new Good
                         {
                             Id = Guid.NewGuid(),
                             Name = articleList[i].Name,
-                            UnitId = articleList[i].Unit != null ? _goodService.FindUnitByName(articleList[i].Unit) : _goodService.FindUnitByName(UnitName),
+                            UnitId = UnitEntity.Id,
                             LatestPrice = Helpers.Extensions.GetDecimal(articleList[i].PricePerUnit),
                             Volumen = 1,
                             Refuse = 0
                         };
-                        if (_goodId == Guid.Empty)
+
+                        Article newArticle = new Article
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = articleList[i].Name,
+                            Order = _articleService.GetCounter(SubCategoryEntity.Id).Result,
+                            ArticleNumber = _articleService.GetCounter(Guid.Empty).Result,
+                            SubCategoryId = SubCategoryEntity?.Id,
+                            BarCode = articleList[i].BarCode,
+                            Price = Helpers.Extensions.GetDecimal(articleList[i].ArticlePrice),
+                        };
+
+                        if (GoodEntity == null)
                         {
                             _goodService.Create(newGood);
-                            _goodId = newGood.Id;
                         }
                         else
+                            _goodService.Update(GoodEntity.Id, newGood);
+
+                        if (ArticleEntity == null)
                         {
-                            newGood.Id = _goodId;
-                            _goodService.Update(_goodId, newGood);
+                           
+                            _articleService.Create(newArticle);
                         }
+                        else
+                            _articleService.Update(ArticleEntity.Id, newArticle);
+
+
+
+                        bool articleGoodExist = _articleService.CheckForNormative(ArticleEntity != null ? ArticleEntity.Id : newArticle.Id).Result;
 
                         InventoryItemBasis newInventoryItem = new InventoryItemBasis
                         {
@@ -408,7 +482,7 @@ namespace ImporterPOS.WPF.ViewModels
                             Quantity = Helpers.Extensions.GetDecimal(articleList[i].Quantity),
                             Total = Helpers.Extensions.GetDecimal(articleList[i].TotalPrice),
                             Tax = 0,
-                            GoodId = _goodId,
+                            GoodId = GoodEntity != null ? GoodEntity.Id : newGood.Id,
                             IsDeleted = false,
                             Discriminator = "InventoryDocumentItem",
                             InventoryDocumentId = newInvDocument.Id,
@@ -418,77 +492,67 @@ namespace ImporterPOS.WPF.ViewModels
 
                         _inventoryItems.Create(newInventoryItem);
 
-
-                        Guid _articleId = _articleService.GetArticleIdByBarcode(articleList[i].BarCode).Result;
-                        Article newArticle = new Article
+                        TaxArticle newTax = new TaxArticle
                         {
-                            Id = Guid.NewGuid(),
-                            Name = articleList[i].Name,
-                            ArticleNumber = _articleService.GetCounter(Guid.Empty).Result,
-                            SubCategoryId = articleList[i].SubCategoryName != null ? _articleService.FindSubcategoryByName(articleList[i].SubCategoryName) : _articleService.FindSubcategoryByName(SubCategoryName),
-                            BarCode = articleList[i].BarCode,
-                            Price = Helpers.Extensions.GetDecimal(articleList[i].ArticlePrice),
+                            ArticleId = ArticleEntity != null ? ArticleEntity.Id : newArticle.Id,
+                            TaxId = TaxEntity.Id
                         };
 
-                        newArticle.Order = _articleService.GetCounter((Guid)newArticle.SubCategoryId).Result;
+                        _taxesService.CreateTaxArticle(newTax);
 
-                        if (_articleId == Guid.Empty)
+                        if (IsConnectChecked && !articleGoodExist)
                         {
-                            _articleService.Create(newArticle);
-                        }
-                        else
-                        {
-                            newArticle.Id = _articleId;
-                            newArticle.Order = (await _articleService.Get(_articleId.ToString())).Order;
-                            newArticle.ArticleNumber = (await _articleService.Get(_articleId.ToString())).ArticleNumber;
-                            _articleService.Update(_articleId, newArticle);
-                        }
-
-                        if (TaxName == null)
-                            TaxName = articleList[i].Tax;
-
-                        var newTax = new TaxArticle
-                        {
-                            ArticleId = _articleId,
-                            TaxId = _articleService.GetTaxIdByValue(TaxName).Result
-                        };
-
-                            _articleService.CreateTaxArticle(newTax);
-
-                        if (IsConnectChecked)
-                        {
-                            if (!(_articleService.CheckForNormative(_articleId).Result))
+                            ArticleGood newArticleGood = new ArticleGood
                             {
-                                ArticleGood newArticleGood = new ArticleGood
-                                {
-                                    Id = Guid.NewGuid(),
-                                    ArticleId = newArticle.Id,
-                                    GoodId = _goodId,
-                                    Quantity = 1,
-                                    ValidFrom = DateTime.Today,
-                                    ValidUntil = DateTime.Today.AddYears(50)
-                                };
-                                _articleService.SaveArticleGood(newArticleGood);
-                            }
+                                Id = Guid.NewGuid(),
+                                ArticleId = newArticle.Id,
+                                GoodId = GoodEntity != null ? GoodEntity.Id : newGood.Id,
+                                Quantity = 1,
+                                ValidFrom = DateTime.Today,
+                                ValidUntil = DateTime.Today.AddYears(50)
+                            };
+                            _articleService.SaveArticleGood(newArticleGood);
                         }
+
                     }
                 }
-                _notifier.ShowSuccess(Translations.ImportArticlesSuccess);
-                articleList.Clear();
-                ArticleCollection = null;
-            }
-            catch
-            {
-                _notifier.ShowError(Translations.ImportArticlesError);
+                catch
+                {
+                    _notifier.ShowError(Translations.ImportArticlesError);
+                }
 
-                throw;
             }
 
-
+            _notifier.ShowSuccess(Translations.ImportArticlesSuccess);
         }
 
 
+        [RelayCommand]
+        public async void ChangePriceOption()
+        {
+            try
+            {
+                var _filePath = await _excelService.OpenDialog();
 
+                if (_filePath != null)
+                {
+                    ObservableCollection<Article> articles = _excelService.ChangePriceOnArticles(_filePath).Result;
+                    //var chng = _articleService.ChangePrices(articles);
+                    bool result = _articleService.ChangePrices(articles);
+
+                    if (result)
+                        _notifier.ShowSuccess(Translations.Success);
+                    else
+                        _notifier.ShowError(Translations.ErrorMessage);
+                }
+
+            }
+            catch
+            {
+                _notifier.ShowError(Translations.ErrorMessage);
+                throw;
+            }
+        }
         public bool CanClick()
 
         {

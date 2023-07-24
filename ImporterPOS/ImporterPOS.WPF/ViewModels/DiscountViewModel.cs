@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DocumentFormat.OpenXml.Drawing;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Models1;
 using ImporterPOS.Domain.Services.Articles;
@@ -8,6 +9,7 @@ using ImporterPOS.WPF.Modals;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.Services.Excel;
 using System;
+using System.IO;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,6 +20,8 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using ToastNotifications;
 using ToastNotifications.Messages;
+using ImporterPOS.Domain.SearchObjects;
+using ImporterPOS.Domain.Services.RuleItems;
 
 namespace ImporterPOS.WPF.ViewModels
 {
@@ -30,7 +34,8 @@ namespace ImporterPOS.WPF.ViewModels
 
         private readonly IExcelService _excelDataService;
         private readonly IArticleService _articleDataService;
-        private readonly IRuleService _discountDataService;
+        private readonly IRuleService _ruleService;
+        private readonly IRuleItemsService _ruleItemservice;
         private readonly Notifier _notifier;
         private readonly ConcurrentDictionary<string, string> _myDictionary;
 
@@ -190,14 +195,14 @@ namespace ImporterPOS.WPF.ViewModels
             }
         }
 
-        public DiscountViewModel(IExcelService excelDataService, Notifier notifier, ConcurrentDictionary<string, string> myDictionary, IArticleService articleDataService, IRuleService discountDataService)
+        public DiscountViewModel(IExcelService excelDataService, Notifier notifier, ConcurrentDictionary<string, string> myDictionary, IArticleService articleDataService, IRuleService discountDataService, IRuleItemsService ruleItemservice)
         {
             _excelDataService = excelDataService;
             _notifier = notifier;
             _myDictionary = myDictionary;
             _articleDataService = articleDataService;
-            _discountDataService = discountDataService;
-
+            _ruleService = discountDataService;
+            _ruleItemservice = ruleItemservice;
         }
 
         [RelayCommand]
@@ -250,7 +255,7 @@ namespace ImporterPOS.WPF.ViewModels
             }
             else
             {
-                _notifier.ShowError("Can not clear empty list.");
+                _notifier.ShowError("Lista je prazna.");
             }
         }
 
@@ -284,47 +289,47 @@ namespace ImporterPOS.WPF.ViewModels
 
                 if (ArticleList != null)
                 {
-                    Rule newRule;
+                    Rule? newRule = null;
 
                     try
                     {
+                        // Provjeri postoji li Rule s odgovarajućim imenom
+                        Rule? disc = _ruleService.Get(new Domain.SearchObjects.RuleSearchObject { Name = articleList[0].Discount }).FirstOrDefault();
+                        if (disc != null && CheckDates(disc))
+                        {
+                            newRule = disc;
+                        }
+                        else
+                        {
+                            newRule = new Rule()
+                            {
+                                Id = Guid.NewGuid(),
+                                Name = articleList[0].Discount + DateTime.Now.ToString("dd.MM.yyyy hh:MM"),
+                                ValidFrom = DiscountOptionsModel.ValidFrom,
+                                ValidTo = DiscountOptionsModel.ValidTo,
+                                Type = "Period",
+                                Active = DiscountOptionsModel.ActivateDiscount,
+                                IsExecuted = false
+                            };
+
+                            _ruleService.Create(newRule);
+                        }
+
+                        // Koristi isti Rule za sve artikle
                         for (int i = 0; i < articleList.Count; i++)
                         {
-                            Guid articleID = await _articleDataService.GetArticleIdByBarcode(articleList[i].BarCode);
-                            if (articleID != Guid.Empty)
+                            Article? _article = _articleDataService.Get(new ArticleSearchObject { BarCode = articleList[i].BarCode }).FirstOrDefault();
+                            if (_article != null)
                             {
-                                var article = await _articleDataService.Get(articleID.ToString());
-
-                                Rule disc = _discountDataService.GetRuleByName(articleList[i].Discount).Result;
-                                if (disc != null && disc.Name == articleList[i].Discount && CheckDates(disc))
-                                {
-                                    newRule = await _discountDataService.Get(disc.Id.ToString());
-                                }
-                                else
-                                {
-                                    newRule = new Rule()
-                                    {
-                                        Id = Guid.NewGuid(),
-                                        Name = articleList[i].Discount,
-                                        ValidFrom = DiscountOptionsModel.ValidFrom,
-                                        ValidTo = DiscountOptionsModel.ValidTo,
-                                        Type = "Period",
-                                        Active = DiscountOptionsModel.ActivateDiscount,
-                                        IsExecuted = false
-                                    };
-
-                                    _discountDataService.Create(newRule);
-                                }
-
                                 RuleItem newRuleItem = new RuleItem()
                                 {
                                     Id = Guid.NewGuid(),
-                                    ArticleId = article.Id,
+                                    ArticleId = _article.Id,
                                     RuleId = newRule.Id,
                                     NewPrice = Helpers.Extensions.GetDecimal(articleList[i].NewPrice.ToString())
                                 };
 
-                                _discountDataService.CreateRuleItem(newRuleItem);
+                                _ruleItemservice.Create(newRuleItem);
                                 importCounter++;
                             }
                             else
@@ -332,15 +337,14 @@ namespace ImporterPOS.WPF.ViewModels
                                 notImported++;
                             }
                         }
+
                         _notifier.ShowSuccess(Translations.CountDiscountArticles + importCounter);
                         IsLoading = false;
                         ClearAllData();
                     }
-                    catch (Exception)
+                    catch
                     {
-
-                        _notifier.ShowError(Translations.ImportArticlesError);
-                        IsLoading = false;
+                        // Handleanje grešaka
                     }
                 }
             }

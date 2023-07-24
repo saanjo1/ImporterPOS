@@ -1,6 +1,9 @@
-﻿using ImporterPOS.Domain.EF;
+﻿using AutoMapper;
+using ImporterPOS.Domain.EF;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Models1;
+using ImporterPOS.Domain.SearchObjects;
+using ImporterPOS.Domain.Services.Generic;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,31 +13,28 @@ using System.Threading.Tasks;
 
 namespace ImporterPOS.Domain.Services.Rules
 {
-    public class RuleService : IRuleService
+    public class RuleService : BaseCRUDService<Rule, RuleSearchObject>, IRuleService
     {
-        private readonly DatabaseContextFactory _factory;
-
-        public RuleService(DatabaseContextFactory factory)
+        public RuleService(DatabaseContextFactory factory) : base(factory)
         {
-            _factory = factory;
         }
 
-        public async Task<bool> Create(Rule entity)
+        public override ICollection<Rule> Get(RuleSearchObject search = null)
         {
-            using (DatabaseContext context = _factory.CreateDbContext())
+            using (DatabaseContext Context = _factory.CreateDbContext())
             {
-                try
+                var entity = Context.Set<Rule>().AsQueryable();
+
+                if(!string.IsNullOrWhiteSpace(search?.Name))
                 {
-                    context.Add(entity);
-                    await context.SaveChangesAsync();
-                    return true;
+                    entity = entity.Where(x=>x.Name == search.Name);
                 }
-                catch (Exception)
-                {
-                    return false;
-                }
+
+                return entity.ToList();
             }
         }
+
+
 
         public Task<bool> CreateRuleItem(RuleItem _ruleItem)
         {
@@ -53,37 +53,6 @@ namespace ImporterPOS.Domain.Services.Rules
             }
         }
 
-        public async Task<ICollection<Rule>> Delete(Guid id)
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                Rule? entity = await context.Rules.FirstOrDefaultAsync(x => x.Id == id);
-                if (entity != null)
-                    context.Remove(entity);
-
-                context.SaveChangesAsync();
-                ICollection<Rule> entities = context.Rules.ToList();
-                return entities;
-            }
-        }
-
-        public async Task<Rule> Get(string id)
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                Rule? entity = await context.Rules.FirstOrDefaultAsync(x => x.Id.ToString() == id);
-                return entity;
-            }
-        }
-
-        public async Task<ICollection<Rule>> GetAll()
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                var entities = await context.Rules.ToListAsync();
-                return entities;
-            }
-        }
 
         public Task<Rule> GetRuleByName(string name)
         {
@@ -94,16 +63,5 @@ namespace ImporterPOS.Domain.Services.Rules
             }
         }
 
-        public async Task<Rule> Update(Guid id, Rule entity)
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                entity.Id = id;
-                context.Rules.Update(entity);
-                await context.SaveChangesAsync();
-
-                return entity;
-            }
-        }
     }
 }

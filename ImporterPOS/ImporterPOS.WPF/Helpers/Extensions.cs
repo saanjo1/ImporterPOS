@@ -28,9 +28,7 @@ namespace ImporterPOS.WPF.Helpers
             else
                 decimalValue = decimal.Parse(value);
 
-
-            var result = Math.Round(decimalValue + (decimal)0.005, 2);
-            return result;
+            return decimalValue;
         }
 
         public static string SetOleDbConnection(string excelfile)

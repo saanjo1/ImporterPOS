@@ -6,10 +6,15 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <ApplicationIcon>Webalys-Kameleon.pics-Checklist.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Images\p2.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Webalys-Kameleon.pics-Checklist.ico" />
   </ItemGroup>
 
   <ItemGroup>

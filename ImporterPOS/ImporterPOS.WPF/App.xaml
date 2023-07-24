@@ -89,9 +89,6 @@
                 <controls:ImportArticleSettingsControl/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewmodels:InventoryDocumentsDetails}">
-                <views:InventoryDocumentDetailsView/>
-            </DataTemplate>
 
 
         </ResourceDictionary>

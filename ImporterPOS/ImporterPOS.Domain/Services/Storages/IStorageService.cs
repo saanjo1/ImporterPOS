@@ -1,5 +1,6 @@
 ﻿using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Models1;
+using ImporterPOS.Domain.SearchObjects;
 using ImporterPOS.Domain.Services.Generic;
 using System;
 using System.Collections.Generic;
@@ -9,8 +10,7 @@ using System.Threading.Tasks;
 
 namespace ImporterPOS.Domain.Services.Storages
 {
-    public interface IStorageService : BaseInterface<Storage>
+    public interface IStorageService : ICRUDService<Storage, StorageSearchObject>
     {
-        Task<Guid> GetStorageByName(string name);
     }
 }

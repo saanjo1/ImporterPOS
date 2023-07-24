@@ -1,6 +1,8 @@
-﻿using ImporterPOS.Domain.EF;
+﻿using AutoMapper;
+using ImporterPOS.Domain.EF;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Models1;
+using ImporterPOS.Domain.SearchObjects;
 using ImporterPOS.Domain.Services.Generic;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,61 +13,27 @@ using System.Threading.Tasks;
 
 namespace ImporterPOS.Domain.Services.InventoryItems
 {
-    public class InventoryItemBasisService : IInventoryItemBasisService
+    public class InventoryItemBasisService : BaseCRUDService<InventoryItemBasis, InventoryItemBasesSearchObject>, IInventoryItemBasisService
     {
-        private readonly DatabaseContextFactory _factory;
-
-        public InventoryItemBasisService(DatabaseContextFactory factory)
+        public InventoryItemBasisService(DatabaseContextFactory factory) : base(factory)
         {
-            _factory = factory;
+            
         }
 
-        public async Task<bool> Create(InventoryItemBasis entity)
+        public override ICollection<InventoryItemBasis> Get(InventoryItemBasesSearchObject search = null)
         {
-            using (DatabaseContext context = _factory.CreateDbContext())
+            using(DatabaseContext Context = _factory.CreateDbContext())
             {
-                try
+                var entity = Context.Set<InventoryItemBasis>().AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(search?.InventoryId))
                 {
-                    context.Add(entity);
-                    await context.SaveChangesAsync();
-                    return true;
+                    entity = entity.Where(x => x.Id.ToString() == search.InventoryId);
                 }
-                catch (Exception)
-                {
-                    return false;
-                }
-            }
-        }
 
-        public async Task<ICollection<InventoryItemBasis>> Delete(Guid id)
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                InventoryItemBasis? entity = await context.InventoryItemBases.FirstOrDefaultAsync(x => x.Id == id);
-                if (entity != null)
-                    context.Remove(entity);
+                var list = entity.ToList();
 
-                context.SaveChangesAsync();
-                ICollection<InventoryItemBasis> entities = context.InventoryItemBases.ToList();
-                return entities;
-            }
-        }
-
-        public async Task<InventoryItemBasis> Get(string id)
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                InventoryItemBasis? entity = await context.InventoryItemBases.FirstOrDefaultAsync(x => x.Id.ToString() == id);
-                return entity;
-            }
-        }
-
-        public async Task<ICollection<InventoryItemBasis>> GetAll()
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                ICollection<InventoryItemBasis> entities = await context.InventoryItemBases.ToListAsync();
-                return entities;
+                return entity.ToList();
             }
         }
 
@@ -78,17 +46,7 @@ namespace ImporterPOS.Domain.Services.InventoryItems
             }
         }
 
-        public async Task<InventoryItemBasis> Update(Guid id, InventoryItemBasis entity)
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                entity.Id = id;
-                context.InventoryItemBases.Update(entity);
-                await context.SaveChangesAsync();
 
-                return entity;
-            }
-        }
     }
 }
 

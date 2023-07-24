@@ -1,12 +1,16 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ImporterPOS.Domain.Services.Articles;
+using ImporterPOS.Domain.Services.Categories;
 using ImporterPOS.Domain.Services.Goods;
 using ImporterPOS.Domain.Services.InventoryDocuments;
 using ImporterPOS.Domain.Services.InventoryItems;
+using ImporterPOS.Domain.Services.RuleItems;
 using ImporterPOS.Domain.Services.Rules;
 using ImporterPOS.Domain.Services.Storages;
 using ImporterPOS.Domain.Services.Suppliers;
+using ImporterPOS.Domain.Services.Taxes;
+using ImporterPOS.Domain.Services.Units;
 using ImporterPOS.WPF.Services.Excel;
 using ImporterPOS.WPF.States;
 using System;
@@ -41,11 +45,10 @@ namespace ImporterPOS.WPF.ViewModels
         });
 
 
-        public MainViewModel(IExcelService excelService, ISupplierService supplierService, IInventoryDocumentsService invDocsService, IStorageService _storageService, IGoodService _goodService, IInventoryItemBasisService _itemsService, IArticleService articleService, IRuleService ruleService)
+        public MainViewModel(IExcelService excelService, ISupplierService supplierService, IInventoryDocumentsService invDocsService, IStorageService _storageService, IGoodService _goodService, IInventoryItemBasisService _itemsService, IArticleService articleService, IRuleService ruleService, IUnitService unitService, ISubCategoryService subCategoryService, ITaxService taxService, IRuleItemsService ruleItemsService)
         {
             myDictionary = new ConcurrentDictionary<string, string>();
-            Navigator = new Navigator(notifier, supplierService, excelService, myDictionary, invDocsService, _storageService, _goodService, _itemsService, articleService, ruleService);
-
+            Navigator = new Navigator(notifier, supplierService, excelService, myDictionary, invDocsService, _storageService, _goodService, _itemsService, articleService, ruleService, unitService, subCategoryService, ruleItemsService, taxService);
         }
 
         [RelayCommand]

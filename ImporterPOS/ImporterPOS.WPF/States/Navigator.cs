@@ -14,6 +14,10 @@ using ImporterPOS.Domain.Services.Goods;
 using ImporterPOS.Domain.Services.InventoryItems;
 using ImporterPOS.Domain.Services.Articles;
 using ImporterPOS.Domain.Services.Rules;
+using ImporterPOS.Domain.Services.Units;
+using ImporterPOS.Domain.Services.Categories;
+using ImporterPOS.Domain.Services.Taxes;
+using ImporterPOS.Domain.Services.RuleItems;
 
 namespace ImporterPOS.WPF.States
 {
@@ -36,25 +40,33 @@ namespace ImporterPOS.WPF.States
         private IInventoryDocumentsService _invDocsService;
         private IInventoryItemBasisService _invitemsService;
         private IStorageService _storageService;
+        private ISubCategoryService _subCategoryService;
         private IArticleService _articleService;
         private IGoodService _goodService;
         private IRuleService _ruleService;
+        private IRuleItemsService _ruleItemsService;
+        private ITaxService _taxService;
+        private IUnitService _unitService;
         private Notifier _notifier;
 
         public Navigator(Notifier notifier, ISupplierService supplierService, IExcelService excelService,
-            ConcurrentDictionary<string, string> myDictionary, IInventoryDocumentsService invDocsService, IStorageService storageService, IGoodService goodService, IInventoryItemBasisService invitemsService, IArticleService articleService, IRuleService ruleService)
+            ConcurrentDictionary<string, string> myDictionary, IInventoryDocumentsService invDocsService, IStorageService storageService, IGoodService goodService, IInventoryItemBasisService invitemsService, IArticleService articleService, IRuleService ruleService, IUnitService unitService, ISubCategoryService subCategoryService, IRuleItemsService ruleItemsService, ITaxService taxService)
         {
             _notifier = notifier;
             _excelService = excelService;
             _supplierService = supplierService;
             _myDictionary = myDictionary;
             _invDocsService = invDocsService;
+            _unitService = unitService;
             _storageService = storageService;
             _goodService = goodService;
+            _ruleService = ruleService;
+            _subCategoryService = subCategoryService;
             _invitemsService = invitemsService;
             _articleService = articleService;
+            _ruleItemsService = ruleItemsService;
+            _taxService = taxService;
             DefaultLoad();
-            _ruleService = ruleService;
         }
 
 
@@ -67,27 +79,22 @@ namespace ImporterPOS.WPF.States
                 switch (viewType)
                 {
                     case ViewType.Home:
-                        this.CurrentViewModel = new HomeViewModel(_invDocsService, _supplierService, _articleService, _invitemsService, _excelService, _goodService, _notifier);
+                        this.CurrentViewModel = new HomeViewModel();
                         Caption = Translations.Dashboard;
                         this.Icon = IconChar.Home;
                         break;
                     case ViewType.Discounts:
-                        this.CurrentViewModel = new DiscountViewModel(_excelService, _notifier, _myDictionary, _articleService, _ruleService);
+                        this.CurrentViewModel = new DiscountViewModel(_excelService, _notifier, _myDictionary, _articleService, _ruleService, _ruleItemsService);
                         Caption = Translations.Discounts;
                         this.Icon = IconChar.Percentage;
                         break;
-                    case ViewType.Articles:
-                        this.CurrentViewModel = new ArticleStorageViewModel(_articleService, _storageService, _notifier, _invDocsService, _goodService, _invitemsService);
-                        Caption = Translations.Storages;
-                        this.Icon = IconChar.TableList;
-                        break;
                     case ViewType.ImportArticles:
-                        this.CurrentViewModel = new ArticlesViewModel(_excelService, _supplierService, _notifier, _invDocsService, _storageService, _goodService, _invitemsService, _articleService);
+                        this.CurrentViewModel = new ArticlesViewModel(_excelService, _supplierService, _notifier, _invDocsService, _storageService, _goodService, _invitemsService, _articleService, _subCategoryService, _unitService, _taxService);
                         Caption = Translations.Articles;
                         this.Icon = IconChar.FileExcel;
                         break;
                     case ViewType.Settings:
-                        this.CurrentViewModel = new SettingsViewModel(_notifier, _excelService, _articleService, _goodService, _supplierService, _storageService);
+                        this.CurrentViewModel = new SettingsViewModel(_notifier, _excelService, _articleService, _goodService, _supplierService, _storageService, _subCategoryService, _unitService, _taxService);
                         Caption = Translations.Settings;
                         this.Icon = IconChar.Gear;
                         break;
@@ -99,7 +106,7 @@ namespace ImporterPOS.WPF.States
 
         public void DefaultLoad()
         {
-            this.CurrentViewModel = new HomeViewModel(_invDocsService, _supplierService, _articleService, _invitemsService, _excelService, _goodService, _notifier);
+            this.CurrentViewModel = new HomeViewModel();
             Caption = Translations.Dashboard;
             this.Icon = IconChar.Home;
         }

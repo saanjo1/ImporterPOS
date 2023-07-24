@@ -21,11 +21,6 @@ namespace ImporterPOS.WPF.Modals
         [ObservableProperty]
         private string? name;
 
-        [ObservableProperty]
-        private string? category;
-
-        [ObservableProperty]
-        private string? storage;
 
         [ObservableProperty]
         private string? barCode;
@@ -78,7 +73,7 @@ namespace ImporterPOS.WPF.Modals
         public void Submit()
         {
             try
-            {
+            {   
                 ObservableCollection<ArticleDiscountViewModel>? excelDataList;
                 excelDataList = _excelDataService.ReadDiscountColumns(null, this).Result;
                 _discountViewModel.LoadData(excelDataList);

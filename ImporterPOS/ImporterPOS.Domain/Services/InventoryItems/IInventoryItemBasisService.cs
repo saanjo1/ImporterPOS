@@ -1,5 +1,6 @@
 ﻿using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Models1;
+using ImporterPOS.Domain.SearchObjects;
 using ImporterPOS.Domain.Services.Generic;
 using System;
 using System.Collections.Generic;
@@ -9,8 +10,7 @@ using System.Threading.Tasks;
 
 namespace ImporterPOS.Domain.Services.InventoryItems
 {
-    public interface IInventoryItemBasisService : BaseInterface<InventoryItemBasis>
+    public interface IInventoryItemBasisService : ICRUDService<InventoryItemBasis, InventoryItemBasesSearchObject>
     { 
-        Task<ICollection<InventoryItemBasis>> GetItemsByInventoryId(string inventoryId);
     }
 }

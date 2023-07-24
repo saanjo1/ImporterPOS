@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
+using ImporterPOS.Domain.Models1;
 using ImporterPOS.WPF.Helpers;
 using ImporterPOS.WPF.Modals;
 using ImporterPOS.WPF.Resources;
@@ -6,6 +7,7 @@ using ImporterPOS.WPF.ViewModels;
 using Microsoft.Identity.Client;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,7 +36,7 @@ namespace ImporterPOS.WPF.Services.Excel
 
         public ExcelService()
         {
-            
+
         }
 
         public async Task<List<string>> GetListOfSheets(string excelFile)
@@ -74,7 +76,7 @@ namespace ImporterPOS.WPF.Services.Excel
         public async Task<string> OpenDialog()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = @"C:";
+            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             openFileDialog.Title = Translations.OpenDialogTitle;
             openFileDialog.Filter = Informations.OpenDialogFilter;
 
@@ -141,7 +143,7 @@ namespace ImporterPOS.WPF.Services.Excel
             }
             else
             {
-                
+
             }
 
 
@@ -212,20 +214,46 @@ namespace ImporterPOS.WPF.Services.Excel
             Command.CommandText = "select * from [Sheet1$]";
 
             System.Data.Common.DbDataReader Reader = await Command.ExecuteReaderAsync();
+            // Učitavanje JSON filea
+            string folderPath = AppDomain.CurrentDomain.BaseDirectory;
+            string fileName = "discountColumnNames.json";
+            string jsonFilePath = System.IO.Path.Combine(folderPath, fileName);
 
-            while (Reader.Read())
+            if (File.Exists(jsonFilePath))
+            {
+                string json = File.ReadAllText(jsonFilePath);
+                var columnNames = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+
+
+                while (Reader.Read())
+                {
+                    string articleName = columnNames["ArticleName"].ToString();
+                    string[] nameParts = articleName.Split(',');
+                    string name = string.Join(" ", nameParts.Select(part => part.Trim()));
+
+                    List<string> columnValues = new List<string>();
+
+                    foreach (string columnName in nameParts)
+                    {
+                        string columnValue = Reader[columnName].ToString();
+                        columnValues.Add(columnValue);
+                    }
+
+                    string joinedColumnValues = string.Join(" ", columnValues);
+
+                    _discountViewModels.Add(new ArticleDiscountViewModel
+                    {
+                        Name = joinedColumnValues,
+                        BarCode = Reader[columnNames["DiscountBarcode"]].ToString(),
+                        Price = Reader[columnNames["PriceWithoutDiscount"]].ToString(),
+                        Discount = Helpers.Extensions.DisplayDiscountInPercentage(columnNames["DiscountValue"].ToString()),
+                        NewPrice = Math.Round(Helpers.Extensions.GetDecimal(columnNames["PriceWithDiscount"]), 2),
+                    });
+                }
+            }
+            else
             {
 
-                _discountViewModels.Add(new ArticleDiscountViewModel
-                {
-                    Name = Reader[templateViewModel.BarCode].ToString() + " " + Reader[templateViewModel.Item].ToString() + " " + Reader[templateViewModel.Description].ToString() + " " + Reader[templateViewModel.ColorDescription].ToString() + " " + Reader[templateViewModel.ItemSize].ToString(),
-                    Category = Reader[templateViewModel.Category].ToString(),
-                    BarCode = Reader[templateViewModel.BarCode].ToString(),
-                    Price = Reader[templateViewModel.FullPrice].ToString(),
-                    Discount = Helpers.Extensions.DisplayDiscountInPercentage(Reader[templateViewModel.Discount].ToString()),
-                    NewPrice = Math.Round(Helpers.Extensions.GetDecimal(Reader[templateViewModel.DiscountedPrice].ToString()), 2),
-                    Storage = Translations.Articles
-                });
             }
 
             Reader.Close();
@@ -234,5 +262,42 @@ namespace ImporterPOS.WPF.Services.Excel
             return await Task.FromResult(_discountViewModels);
 
         }
+        public async Task<ObservableCollection<Article>> ChangePriceOnArticles(string filePath)
+        {
+            string _connection =
+ @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + filePath + ";" +
+ @"Extended Properties='Excel 8.0;HDR=Yes;'";
+
+            ObservableCollection<Article> articles = new ObservableCollection<Article>();
+
+            _oleDbConnection = new OleDbConnection(_connection);
+
+            await _oleDbConnection.OpenAsync();
+
+            Command = new OleDbCommand();
+            Command.Connection = _oleDbConnection;
+            Command.CommandText = "select * from [Sheet1$]";
+
+            System.Data.Common.DbDataReader Reader = await Command.ExecuteReaderAsync();
+
+            while (Reader.Read())
+            {
+
+                var article = new Article()
+                {
+                    Id = new Guid(),
+                    BarCode = Reader["Barcode"].ToString(),
+                    Price = Helpers.Extensions.GetDecimal(Reader["New retail price"].ToString())
+                };
+
+                articles.Add(article);
+            }
+
+            Reader.Close();
+            _oleDbConnection.Close();
+
+            return await Task.FromResult(articles);
+        }
+
     }
 }

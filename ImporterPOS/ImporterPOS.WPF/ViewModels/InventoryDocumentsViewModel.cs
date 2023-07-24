@@ -19,7 +19,7 @@ namespace ImporterPOS.WPF.ViewModels
         private string dateCreated;
 
         [ObservableProperty]
-        public string name;
+        public string? name;
 
         [ObservableProperty]
         public string purchasePrice;

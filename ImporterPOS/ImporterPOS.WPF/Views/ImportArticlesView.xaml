@@ -44,7 +44,11 @@
                 <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Gear" Margin="10 0 0 0" Width="30" Height="30"/>
             </StackPanel>
         </Button>
- 
+        <Button Style="{StaticResource chngPrice}" x:Name="ChangePriceButton" Grid.Column="1" HorizontalAlignment="Center"  Foreground="White" Command="{Binding ChangePriceOptionCommand}" Height="50" Width="50">
+            <StackPanel Orientation="Horizontal">
+                <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Euro" Margin="8 0 0 0" Width="30" Height="30"/>
+            </StackPanel>
+        </Button>
 
 
         <TextBlock Grid.ColumnSpan="2" FontSize="16" Text="{Binding Count}" Foreground="{StaticResource titleColor1}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20 0 0 0"/>

@@ -1,6 +1,8 @@
-﻿using ImporterPOS.Domain.EF;
+﻿using AutoMapper;
+using ImporterPOS.Domain.EF;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Models1;
+using ImporterPOS.Domain.SearchObjects;
 using ImporterPOS.Domain.Services.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client.Extensions.Msal;
@@ -15,71 +17,39 @@ using System.Threading.Tasks;
 
 namespace ImporterPOS.Domain.Services.Goods
 {
-    public class GoodService : IGoodService
+    public class GoodService : BaseCRUDService<Good, GoodSearchObject>, IGoodService
     {
-        private readonly DatabaseContextFactory _factory;
-
-        public GoodService(DatabaseContextFactory factory)
+        public GoodService(DatabaseContextFactory factory) : base(factory)
         {
-            _factory = factory;
         }
 
-        public async Task<bool> Create(Good entity)
+        public override ICollection<Good> Get(GoodSearchObject search = null)
         {
-            using (DatabaseContext context = _factory.CreateDbContext())
+           using (DatabaseContext Context = _factory.CreateDbContext())
             {
-                try
+                var entity = Context.Set<Good>().AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(search?.Name))
                 {
-                    context.Add(entity);
-                    await context.SaveChangesAsync();
-                    return true;
+                    entity = entity.Where(x => x.Name == search.Name);
                 }
-                catch (Exception)
-                {
-                    return false;
-                }
+
+                return entity.ToList();
             }
         }
 
-        public async Task<ICollection<Good>> Delete(Guid id)
+        public override Good Update(Guid id, Good request)
         {
-            using (DatabaseContext context = _factory.CreateDbContext())
+            using (DatabaseContext Context = _factory.CreateDbContext())
             {
-                Good? entity = await context.Goods.FirstOrDefaultAsync(x => x.Id == id);
-                if (entity != null)
-                    context.Remove(entity);
+                var set = Context.Set<Good>();
 
-                context.SaveChangesAsync();
-                ICollection<Good> entities = context.Goods.ToList();
-                return entities;
-            }
-        }
+                Good? entity = set.Find(id);
 
-        public async Task<Good> Get(string id)
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                Good? entity = await context.Goods.FirstOrDefaultAsync(x => x.Id.ToString() == id);
-                return entity;
-            }
-        }
-
-        public async Task<ICollection<Good>> GetAll()
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                ICollection<Good> entities = await context.Goods.ToListAsync();
-                return entities;
-            }
-        }
-
-        public async Task<Good> Update(Guid id, Good entity)
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                entity.Id = id;
-                context.Goods.Update(entity);
-                await context.SaveChangesAsync();
+                entity.Name = request.Name;
+                entity.LatestPrice = request.LatestPrice;
+                entity.UnitId = request.UnitId;
+                entity.Volumen = request.Volumen;
 
                 return entity;
             }

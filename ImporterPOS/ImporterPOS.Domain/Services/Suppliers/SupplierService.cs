@@ -1,105 +1,52 @@
-﻿using ImporterPOS.Domain.EF;
+﻿using AutoMapper;
+using ImporterPOS.Domain.EF;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Models1;
+using ImporterPOS.Domain.SearchObjects;
 using ImporterPOS.Domain.Services.Generic;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ImporterPOS.Domain.Services.Suppliers
 {
-    public class SupplierService : ISupplierService
+    public class SupplierService : BaseCRUDService<Supplier, SupplierSearchObject>, ISupplierService
     {
         private readonly DatabaseContextFactory _factory;
 
-        public SupplierService(DatabaseContextFactory factory)
+        public SupplierService(DatabaseContextFactory factory) : base(factory)
         {
             _factory = factory;
         }
 
-        public async Task<bool> Create(Supplier entity)
+        public override ICollection<Supplier> Get(SupplierSearchObject search = null)
         {
-            using (DatabaseContext context = _factory.CreateDbContext())
+            using (DatabaseContext Context = _factory.CreateDbContext())
             {
-                try
+                IQueryable<Supplier> entity = Context.Set<Supplier>().AsQueryable();
+
+                if (search != null)
                 {
-                    context.Add(entity);
-                    await context.SaveChangesAsync();
-                    return true;
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-            }
-        }
-
-        public async Task<ICollection<Supplier>> Delete(Guid id)
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                Supplier? entity = await context.Suppliers.FirstOrDefaultAsync(x => x.Id == id);
-                if (entity != null)
-                    context.Remove(entity);
-
-                context.SaveChangesAsync();
-                ICollection<Supplier> entities = context.Suppliers.ToList();
-                return entities;
-            }
-        }
-
-        public async Task<Supplier> Get(string id)
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                Supplier entity = await context.Suppliers.FirstOrDefaultAsync(x => x.Id.ToString() == id);
-                return entity;
-            }
-        }
-
-        public async Task<ICollection<Supplier>> GetAll()
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                ICollection<Supplier> entities = await context.Suppliers.ToListAsync();
-                return entities;
-            }
-        }
-
-        public async Task<Supplier> Update(Guid id, Supplier entity)
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                entity.Id = id;
-                context.Suppliers.Update(entity);
-                await context.SaveChangesAsync();
-
-                return entity;
-            }
-        }
-
-        public Task<Guid> GetSupplierByName(string name)
-        {
-            using (DatabaseContext context = _factory.CreateDbContext())
-            {
-                Supplier supplier = context.Suppliers.Where(x => x.Name == name).FirstOrDefault();
-                if (supplier == null)
-                {
-                    Supplier s = new Supplier
+                    if (!string.IsNullOrWhiteSpace(search?.Name))
                     {
-                        Id = Guid.NewGuid(),
-                        Name = name,
-                    };
-                    context.Suppliers.Add(s);
-                    context.SaveChanges();
-                    return Task.FromResult(s.Id);
+                        entity = entity.Where(x => x.Name == search.Name);
+                    }
+                    if (!string.IsNullOrWhiteSpace(search?.Id))
+                    {
+                        Guid? id = Guid.Parse(search?.Id);
+                        entity = entity.Where(x => x.Id == id);
+                    }
                 }
-                return Task.FromResult(supplier.Id);
+
+                return entity.ToList();
             }
         }
+
+
 
     }
 }

@@ -1,10 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ImporterPOS.Domain.Models;
+using ImporterPOS.Domain.Models1;
 using ImporterPOS.Domain.Services.Articles;
+using ImporterPOS.Domain.Services.Categories;
 using ImporterPOS.Domain.Services.Goods;
 using ImporterPOS.Domain.Services.Storages;
 using ImporterPOS.Domain.Services.Suppliers;
+using ImporterPOS.Domain.Services.Taxes;
+using ImporterPOS.Domain.Services.Units;
 using ImporterPOS.WPF.Modals;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.Services.Excel;
@@ -30,6 +34,9 @@ namespace ImporterPOS.WPF.ViewModels
         private IGoodService _goodService;
         private ISupplierService _supplierService;
         private IStorageService _storageService;
+        private IUnitService _unitService;
+        private ISubCategoryService _subCategoryService;
+        private ITaxService _taxService;
 
         [ObservableProperty]
         private string pageDescription;
@@ -163,7 +170,7 @@ namespace ImporterPOS.WPF.ViewModels
         private string mappingTitle;
 
 
-        public SettingsViewModel(Notifier notifier, IExcelService excelService, IArticleService articleService, IGoodService goodService, ISupplierService supplierService, IStorageService storageService)
+        public SettingsViewModel(Notifier notifier, IExcelService excelService, IArticleService articleService, IGoodService goodService, ISupplierService supplierService, IStorageService storageService, ISubCategoryService subCategoryService, IUnitService unitService, ITaxService taxService)
         {
             _notifier = notifier;
             _excelService = excelService;
@@ -171,6 +178,9 @@ namespace ImporterPOS.WPF.ViewModels
             _goodService = goodService;
             _supplierService = supplierService;
             _storageService = storageService;
+            _subCategoryService = subCategoryService;
+            _unitService = unitService;
+            _taxService = taxService;
             ToggleButtonColor = Brushes.Gray; // Početna boja toggle buttona (siva)
             MappingTitle = Translations.MappingTitle;
 
@@ -188,37 +198,39 @@ namespace ImporterPOS.WPF.ViewModels
                 // Učitaj dobavljače iz baze
                 if ((SuppliersList == null || SuppliersList.Count == 0) || flag)
                 {
-                    var suppliers = await _supplierService.GetAll();
-                    SuppliersList = suppliers.Select(supplier => supplier.Name).ToList();
+                    var suppliers = _supplierService.Get();
+                    if(suppliers != null)
+                        SuppliersList = suppliers.Select(supplier => supplier.Name).ToList();
+
+
                 }
-
-
 
                 // Učitaj skladišta iz baze
                 if ((StorageList == null || StorageList.Count == 0) || flag)
                 {
-                    var storages = await _storageService.GetAll();
-                    StorageList = storages.Select(storage => storage.Name).ToList();
+                    var storages = _storageService.Get();
+                    if (storages != null)
+                        StorageList = storages.Select(storage => storage.Name).ToList();
                 }
 
                 // Učitaj kategorije iz baze
                 if ((SubcategoryList == null || SubcategoryList.Count == 0) || flag)
                 {
-                    var subcategories = await _articleService.GetAllSubcategories();
+                    var subcategories = _subCategoryService.Get();
                     SubcategoryList = subcategories.Select(storage => storage.Name).ToList();
                 }
 
                 // Učitaj mj. jedinice iz baze
                 if ((UnitsList == null || UnitsList.Count == 0) || flag)
                 {
-                    var units = await _articleService.GetAllMeasureUnits();
+                    var units = _unitService.Get();
                     UnitsList = units.Select(storage => storage.Name).ToList();
                 }
 
                 // Učitaj porez iz baze
                 if ((TaxList == null || TaxList.Count == 0) || flag)
                 {
-                    var taxlist = await _articleService.GetAllTaxes();
+                    var taxlist = _taxService.Get();
                     TaxList = taxlist.Select(storage => storage.Value.ToString()).ToList();
                 }
 
@@ -434,7 +446,9 @@ namespace ImporterPOS.WPF.ViewModels
                     DiscountBarcode,
                     DiscountValue,
                     PriceWithDiscount,
-                    PriceWithoutDiscount
+                    PriceWithoutDiscount,
+                    ArticleName,
+                    ArticleSubCategory
                 };
 
                 string json = JsonSerializer.Serialize(columnNames);

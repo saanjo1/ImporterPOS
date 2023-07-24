@@ -1,7 +1,10 @@
-﻿using ImporterPOS.Domain.EF;
+﻿using AutoMapper;
+using ImporterPOS.Domain.EF;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Models1;
+using ImporterPOS.Domain.SearchObjects;
 using ImporterPOS.Domain.Services.Generic;
+using ImporterPOS.Domain.Services.Rules;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,13 +14,24 @@ using System.Threading.Tasks;
 
 namespace ImporterPOS.Domain.Services.Storages
 {
-    public class StorageService : IStorageService
+    public class StorageService : BaseCRUDService<Storage, StorageSearchObject>, IStorageService
     {
-        private readonly DatabaseContextFactory _factory;
+        public StorageService(DatabaseContextFactory factory) : base(factory)   {
+        }
 
-        public StorageService(DatabaseContextFactory factory)
+        public override ICollection<Storage> Get(StorageSearchObject search = null)
         {
-            _factory = factory;
+            using (DatabaseContext Context = _factory.CreateDbContext())
+            {
+                var entity = Context.Set<Storage>().AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(search?.Name))
+                {
+                    entity = entity.Where(x => x.Name == search.Name);
+                }
+
+                return entity.ToList();
+            }
         }
 
         public async Task<bool> Create(Models1.Storage entity)

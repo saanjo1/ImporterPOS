@@ -1,5 +1,6 @@
 ﻿using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Models1;
+using ImporterPOS.Domain.SearchObjects;
 using ImporterPOS.Domain.Services.Generic;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,8 @@ using System.Threading.Tasks;
 
 namespace ImporterPOS.Domain.Services.Goods
 {
-    public interface IGoodService : BaseInterface<Good>
+    public interface IGoodService : ICRUDService<Good, GoodSearchObject>
     {
-        Guid? FindUnitByName(string unit);
-        Task<Guid> GetGoodByName(string name);
-        Task<decimal> CalculateTotalQuantityOfGoods(Guid goodId, Guid storageId);
+       
     }
 }

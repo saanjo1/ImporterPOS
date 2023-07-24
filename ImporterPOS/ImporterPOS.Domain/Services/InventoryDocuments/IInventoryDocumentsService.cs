@@ -1,5 +1,6 @@
 ﻿using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Models1;
+using ImporterPOS.Domain.SearchObjects;
 using ImporterPOS.Domain.Services.Generic;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,8 @@ using System.Threading.Tasks;
 
 namespace ImporterPOS.Domain.Services.InventoryDocuments
 {
-    public interface IInventoryDocumentsService : BaseInterface<InventoryDocument>
+    public interface IInventoryDocumentsService : ICRUDService<InventoryDocument, InventoryDocumentSearchObject>
     {
         Task<int> GetInventoryOrderNumber();
-
-        Task<decimal> GetTotalInventoryItems(string _documentId);
     }
 }
