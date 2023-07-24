@@ -326,7 +326,7 @@ namespace ImporterPOS.WPF.ViewModels
                                     Id = Guid.NewGuid(),
                                     ArticleId = _article.Id,
                                     RuleId = newRule.Id,
-                                    NewPrice = Helpers.Extensions.GetDecimal(articleList[i].NewPrice.ToString())
+                                    NewPrice = articleList[i].NewPrice
                                 };
 
                                 _ruleItemservice.Create(newRuleItem);

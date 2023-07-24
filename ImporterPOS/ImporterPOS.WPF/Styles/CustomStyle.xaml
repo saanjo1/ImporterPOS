@@ -462,34 +462,14 @@
                                           ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
                                           VerticalAlignment="Center" />
                         </Border>
-              <Button x:Name="toggleButton"
-        Background="Transparent"
-        BorderBrush="{TemplateBinding BorderBrush}"
-        BorderThickness="0"
-        Focusable="False"
-        IsEnabled="{TemplateBinding IsEnabled}"
-        ClickMode="Press">
-    <Button.Template>
-        <ControlTemplate TargetType="Button">
-            <Grid>
-                <Path x:Name="Arrow"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
-                      Data="M0,0 L1,0 1,1 0,1Z"
-                      Fill="{TemplateBinding Foreground}" />
-            </Grid>
-            <ControlTemplate.Triggers>
-                <Trigger Property="IsPressed" Value="True">
-                    <Setter TargetName="Arrow" Property="Data" Value="M1,0 L0,0 0,1 1,1Z" />
-                </Trigger>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter TargetName="Arrow" Property="Fill" Value="#6C7682" />
-                </Trigger>
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
-    </Button.Template>
-</Button>
-
+                        <ToggleButton x:Name="toggleButton"
+                                  Background="Transparent"
+                                  BorderBrush="{TemplateBinding BorderBrush}"
+                                  BorderThickness="0"
+                                  Focusable="False"
+                                  IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                  ClickMode="Press">
+                        </ToggleButton>
                         <Popup x:Name="popup"
                            AllowsTransparency="True"
                            IsOpen="{TemplateBinding IsDropDownOpen}"
@@ -531,7 +511,8 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+
     <Style x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
         <Setter Property="Template">
             <Setter.Value>

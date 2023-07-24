@@ -86,9 +86,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Porez" Binding="{Binding Tax}" IsReadOnly="false" Width="auto"/>
-                <DataGridTextColumn Header="Barkod" Binding="{Binding BarCode}" IsReadOnly="false" Width="auto"/>
-                <DataGridTextColumn Header="Mjera" Binding="{Binding Unit}" IsReadOnly="false" Width="auto"/>
+                <DataGridTextColumn Header="Barkod" Binding="{Binding BarCode}" IsReadOnly="false" Width="0.15*"/>
                 <DataGridTextColumn Header="Količina" Binding="{Binding Quantity}" IsReadOnly="false" Width="auto"/>
                 <DataGridTextColumn Header="Prodajna cijena" Binding="{Binding ArticlePrice}" IsReadOnly="false" Width="auto"/>
                 <DataGridTextColumn Header="Nabavna cijena" Binding="{Binding PricePerUnit}" IsReadOnly="false" Width="auto"/>
