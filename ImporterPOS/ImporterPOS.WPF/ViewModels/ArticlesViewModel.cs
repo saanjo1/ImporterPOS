@@ -194,105 +194,8 @@ namespace ImporterPOS.WPF.ViewModels
             return true;
         }
 
-        private int currentPage = 1;
-        public int CurrentPage
-        {
-            get { return currentPage; }
-            set
-            {
-                currentPage = value;
-                OnPropertyChanged(nameof(CurrentPage));
-                UpdateEnableState();
-            }
-        }
-
-        private int selectedRecord = 15;
-        public int SelectedRecord
-        {
-            get { return selectedRecord; }
-            set
-            {
-                selectedRecord = value;
-                OnPropertyChanged(nameof(SelectedRecord));
-                UpdateRecordCount();
-            }
-        }
-
-        private void UpdateRecordCount()
-        {
-            if (articleList != null)
-            {
-                NumberOfPages = (int)Math.Ceiling((double)articleList.Count / SelectedRecord);
-                NumberOfPages = NumberOfPages == 0 ? 1 : NumberOfPages;
-                UpdateCollection(articleList.Take(SelectedRecord));
-                CurrentPage = 1;
-            }
-        }
-
-        [ObservableProperty]
-        private int numberOfPages = 15;
-
-        [ObservableProperty]
-        private bool isFirstEnabled;
-
-        [ObservableProperty]
-        private bool isPreviousEnabled;
-
-        [ObservableProperty]
-        private bool isNextEnabled;
-
-        [ObservableProperty]
-        private bool isLastEnabled;
 
 
-        public static int RecordStartForm = 0;
-        [RelayCommand]
-        private void PreviousPage(object obj)
-        {
-            CurrentPage--;
-            RecordStartForm = articleList.Count - SelectedRecord * (NumberOfPages - (CurrentPage - 1));
-
-            var recordsToShow = articleList.Skip(RecordStartForm).Take(SelectedRecord);
-
-            UpdateCollection(recordsToShow);
-            UpdateEnableState();
-        }
-
-        [RelayCommand]
-        private void LastPage(object obj)
-        {
-            var recordsToSkip = SelectedRecord * (NumberOfPages - 1);
-            UpdateCollection(articleList.Skip(recordsToSkip));
-            CurrentPage = NumberOfPages;
-            UpdateEnableState();
-        }
-
-
-        [RelayCommand]
-        private void FirstPage(object obj)
-        {
-            UpdateCollection(articleList.Take(SelectedRecord));
-            CurrentPage = 1;
-            UpdateEnableState();
-        }
-
-        [RelayCommand]
-        private void NextPage(object obj)
-        {
-            RecordStartForm = CurrentPage * SelectedRecord;
-            var recordsToShow = articleList.Skip(RecordStartForm).Take(SelectedRecord);
-            UpdateCollection(recordsToShow);
-            CurrentPage++;
-            UpdateEnableState();
-        }
-
-        private void UpdateEnableState()
-        {
-            IsFirstEnabled = CurrentPage > 1;
-            IsPreviousEnabled = CurrentPage > 1;
-            IsNextEnabled = CurrentPage < NumberOfPages;
-            IsLastEnabled = CurrentPage < NumberOfPages;
-        }
 
         private void UpdateCollection(IEnumerable<ExcelArticlesListViewModel> recordsToShow)
         {
@@ -346,29 +249,24 @@ namespace ImporterPOS.WPF.ViewModels
             try
             {
                 ExcelArticlesListViewModel tempVm = new ExcelArticlesListViewModel();
-                articleList = await _excelService.ReadColumnsFromExcel(filePath, ExcelSheetViewModel.SelectedSheet, tempVm);
+                ObservableCollection<ExcelArticlesListViewModel> loadedVm = await _excelService.ReadColumnsFromExcel(filePath, ExcelSheetViewModel.SelectedSheet, tempVm);
 
-                if (vm != null)
+                if (loadedVm != null)
                 {
-                    articleList = vm;
-                    ArticleCollection = CollectionViewSource.GetDefaultView(vm);
+                    ArticleCollection = CollectionViewSource.GetDefaultView(loadedVm);
+                    ArticleList = loadedVm;
                 }
-                //IsMapped = false;
 
-                ArticleCollection = CollectionViewSource.GetDefaultView(ArticlesCollection);
-                UpdateCollection(articlesCollection.Take(SelectedRecord));
-                UpdateRecordCount();
                 Count = ArticleList.Count;
-
                 _notifier.ShowSuccess(Translations.LoadDataSuccess);
-
             }
             catch
             {
                 _notifier.ShowWarning(Translations.ExcelFileError);
+                return;
             }
-
         }
+
 
         [RelayCommand(CanExecute = nameof(CanClick))]
         public void ClearAllData()
@@ -526,33 +424,6 @@ namespace ImporterPOS.WPF.ViewModels
             _notifier.ShowSuccess(Translations.ImportArticlesSuccess);
         }
 
-
-        [RelayCommand]
-        public async void ChangePriceOption()
-        {
-            try
-            {
-                var _filePath = await _excelService.OpenDialog();
-
-                if (_filePath != null)
-                {
-                    ObservableCollection<Article> articles = _excelService.ChangePriceOnArticles(_filePath).Result;
-                    //var chng = _articleService.ChangePrices(articles);
-                    bool result = _articleService.ChangePrices(articles);
-
-                    if (result)
-                        _notifier.ShowSuccess(Translations.Success);
-                    else
-                        _notifier.ShowError(Translations.ErrorMessage);
-                }
-
-            }
-            catch
-            {
-                _notifier.ShowError(Translations.ErrorMessage);
-                throw;
-            }
-        }
         public bool CanClick()
 
         {
@@ -578,8 +449,7 @@ namespace ImporterPOS.WPF.ViewModels
                 _notifier.ShowSuccess(Translations.RemoveArticleSuccess);
                 ArticleCollection = CollectionViewSource.GetDefaultView(articleList);
                 ArticleCollection = CollectionViewSource.GetDefaultView(ArticlesCollection);
-                UpdateCollection(articlesCollection.Take(SelectedRecord));
-                UpdateRecordCount();
+                UpdateCollection(articlesCollection);
                 Count = ArticleList.Count;
             }
             catch (Exception)

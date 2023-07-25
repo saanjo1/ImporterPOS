@@ -38,7 +38,7 @@
                            Panel.ZIndex="1"
                            Visibility="{Binding ElementName=textBoxFilter, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}" Text="Pretraži po barkodu" Height="30" FontSize="20" />
 
-        <TextBox Grid.ColumnSpan="2" Width="300" Grid.Row="0" HorizontalAlignment="Right" FontSize="18"  Name="textBoxFilter" Style="{StaticResource filterTextBox}" Text="{Binding TextToFilter, UpdateSourceTrigger=PropertyChanged}" Height="40"/>
+        <TextBox Grid.ColumnSpan="2" Width="300" Grid.Row="0" HorizontalAlignment="Right" FontSize="24"  Name="textBoxFilter" Style="{StaticResource filterTextBox}" Text="{Binding TextToFilter, UpdateSourceTrigger=PropertyChanged}" Height="40"/>
         <Button Style="{StaticResource optionsBtn}" x:Name="SettingsButton" Grid.Column="1" HorizontalAlignment="Center" Margin="120 0 0 0" Foreground="White" Command="{Binding OpenArticleSettingsCommand}" Height="50" Width="50">
             <StackPanel Orientation="Horizontal">
                 <fa:IconImage Style="{StaticResource controlButtonIcon}" Icon="Gear" Margin="10 0 0 0" Width="30" Height="30"/>
@@ -71,8 +71,7 @@
             </Grid>
         </Border>
 
-
-        <DataGrid  Grid.ColumnSpan="2" Grid.Row="1" Name="ImportGrid" ItemsSource="{Binding ArticleCollection, Mode=TwoWay}" RowStyle="{DynamicResource DataGridRowStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Style="{DynamicResource DataGridStyle1}">
+        <DataGrid Grid.ColumnSpan="2" Grid.Row="1" Name="ImportGrid" ItemsSource="{Binding ArticleCollection, Mode=TwoWay}" RowStyle="{DynamicResource DataGridRowStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Style="{DynamicResource DataGridStyle1}" Margin="0 0 0 70">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Naziv artikla" IsReadOnly="false" Width="0.8*">
                     <DataGridTemplateColumn.CellTemplate>
@@ -108,30 +107,6 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Border Grid.ColumnSpan="2" Grid.Row="2" HorizontalAlignment="Right" Margin="0 20" Background="{StaticResource color11}" CornerRadius="5" Padding="5" BorderThickness="2" BorderBrush="White">
-            <StackPanel  Orientation="Horizontal">
-                <TextBlock Text="Broj zapisa po stranici" Foreground="{StaticResource titleColor1}"  VerticalAlignment="Center" Margin="5"/>
-                <ComboBox Style="{StaticResource comboBoxStyle}" Margin="5"  Width="100" SelectedItem="{Binding SelectedRecord,UpdateSourceTrigger=PropertyChanged}">
-                    <sys:Int32>15</sys:Int32>
-                    <sys:Int32>20</sys:Int32>
-                    <sys:Int32>25</sys:Int32>
-                </ComboBox>
-                <Button Content="&lt;&lt;" Style="{StaticResource pagingButton}" Width="40" IsEnabled="{Binding IsFirstEnabled}"  ToolTip="First page" Margin="5" Command="{Binding FirstPageCommand}" />
-                <Button Content="&lt;" Style="{StaticResource pagingButton}" Width="40" IsEnabled="{Binding IsPreviousEnabled}" Margin="5" ToolTip="Previous page" Command="{Binding PreviousPageCommand}" />
-
-                <TextBlock VerticalAlignment="Center" Foreground="White">
-                    <TextBlock.Text>
-                        <MultiBinding StringFormat="{} {0} of {1}">
-                            <Binding Path="CurrentPage"/>
-                            <Binding Path="NumberOfPages"/>
-                        </MultiBinding>
-                    </TextBlock.Text>
-                </TextBlock>
-
-                <Button Content=">" Style="{StaticResource pagingButton}" Width="40" IsEnabled="{Binding IsNextEnabled}" ToolTip="Next page" Margin="5" Command="{Binding NextPageCommand}"/>
-                <Button Content=">>" Style="{StaticResource pagingButton}" Width="40" IsEnabled="{Binding IsLastEnabled}" ToolTip="Last page" Margin="5" Command="{Binding LastPageCommand}" />
-            </StackPanel>
-        </Border>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" Width="auto" HorizontalAlignment="Left">
             <Button Style="{StaticResource SaveButton}" Command="{Binding LoadDefinedExcelColumnsCommand}" Height="50" Width="190" Margin="5">
