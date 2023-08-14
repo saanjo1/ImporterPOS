@@ -26,6 +26,7 @@ namespace ImporterPOS.WPF.Modals
         private readonly Notifier _notifier;
         private readonly IExcelService _excelService;
         private readonly ArticlesViewModel articlesViewModel;
+        private readonly DiscountViewModel discountViewModel;
         private readonly string filePath;
 
         [ObservableProperty]
@@ -35,6 +36,15 @@ namespace ImporterPOS.WPF.Modals
         {
             _excelService = excelService;
             articlesViewModel = _articlesViewModel;
+            _notifier = notifier;
+            filePath = _filePath;
+            LoadSheet(filePath);
+        }
+
+        public ExcelSheetChooserViewModel(IExcelService excelService, DiscountViewModel _discountViewModel, Notifier notifier, string _filePath)
+        {
+            _excelService = excelService;
+            discountViewModel = _discountViewModel;
             _notifier = notifier;
             filePath = _filePath;
             LoadSheet(filePath);
@@ -68,6 +78,9 @@ namespace ImporterPOS.WPF.Modals
             SelectedSheet = null;
             if(articlesViewModel != null)
                 articlesViewModel.Cancel();
+
+            if (discountViewModel != null)
+                discountViewModel.Close();
         }
 
 
@@ -76,11 +89,21 @@ namespace ImporterPOS.WPF.Modals
         {
             if(SelectedSheet != null)
             {
-                articlesViewModel.LoadData(filePath);
-                articlesViewModel.Cancel();
+                if (articlesViewModel != null)
+                {
+                    articlesViewModel.LoadData(filePath);
+                    articlesViewModel.Cancel();
+                }
+                else if(discountViewModel != null)
+                {
+                    discountViewModel.LoadData(filePath);
+                    discountViewModel.Close();
+                }
             }
             else
                 _notifier.ShowError(Translations.SelectSheetError);
+
+
         }
     }
 }

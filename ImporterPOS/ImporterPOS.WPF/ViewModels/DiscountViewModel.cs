@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DocumentFormat.OpenXml.Drawing;
 using ImporterPOS.Domain.Models;
 using ImporterPOS.Domain.Models1;
 using ImporterPOS.Domain.Services.Articles;
@@ -9,19 +8,17 @@ using ImporterPOS.WPF.Modals;
 using ImporterPOS.WPF.Resources;
 using ImporterPOS.WPF.Services.Excel;
 using System;
-using System.IO;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using ToastNotifications;
 using ToastNotifications.Messages;
 using ImporterPOS.Domain.SearchObjects;
 using ImporterPOS.Domain.Services.RuleItems;
+using System.Collections.Generic;
 
 namespace ImporterPOS.WPF.ViewModels
 {
@@ -49,6 +46,15 @@ namespace ImporterPOS.WPF.ViewModels
         private int count;
 
         private string textToFilter;
+
+
+        [ObservableProperty]
+        private bool isSheetPopupOpened;
+
+        [ObservableProperty]
+        private ExcelSheetChooserViewModel excelSheetViewModel;
+
+
 
         public string TextToFilter
         {
@@ -89,111 +95,6 @@ namespace ImporterPOS.WPF.ViewModels
         [ObservableProperty]
         private ICollectionView articleCollection;
 
-        private int currentPage = 1;
-        public int CurrentPage
-        {
-            get { return currentPage; }
-            set
-            {
-                currentPage = value;
-                OnPropertyChanged(nameof(CurrentPage));
-                UpdateEnableState();
-            }
-        }
-
-        private int selectedRecord = 15;
-        public int SelectedRecord
-        {
-            get { return selectedRecord; }
-            set
-            {
-                selectedRecord = value;
-                OnPropertyChanged(nameof(SelectedRecord));
-                UpdateRecordCount();
-            }
-        }
-
-        private void UpdateRecordCount()
-        {
-            if (articleList != null)
-            {
-                NumberOfPages = (int)Math.Ceiling((double)articleList.Count / SelectedRecord);
-                NumberOfPages = NumberOfPages == 0 ? 1 : NumberOfPages;
-                UpdateCollection(articleList.Take(SelectedRecord));
-                CurrentPage = 1;
-            }
-        }
-
-        [ObservableProperty]
-        private int numberOfPages = 15;
-
-        [ObservableProperty]
-        private bool isFirstEnabled;
-
-        [ObservableProperty]
-        private bool isPreviousEnabled;
-
-        [ObservableProperty]
-        private bool isNextEnabled;
-
-        [ObservableProperty]
-        private bool isLastEnabled;
-
-
-        public static int RecordStartForm = 0;
-        [RelayCommand]
-        private void PreviousPage(object obj)
-        {
-            CurrentPage--;
-            RecordStartForm = articleList.Count - SelectedRecord * (NumberOfPages - (CurrentPage - 1));
-
-            var recordsToShow = articleList.Skip(RecordStartForm).Take(SelectedRecord);
-
-            UpdateCollection(recordsToShow);
-            UpdateEnableState();
-        }
-
-        [RelayCommand]
-        private void LastPage(object obj)
-        {
-            var recordsToSkip = SelectedRecord * (NumberOfPages - 1);
-            UpdateCollection(articleList.Skip(recordsToSkip));
-            CurrentPage = NumberOfPages;
-            UpdateEnableState();
-        }
-        [RelayCommand]
-        private void FirstPage(object obj)
-        {
-            UpdateCollection(articleList.Take(SelectedRecord));
-            CurrentPage = 1;
-            UpdateEnableState();
-        }
-        [RelayCommand]
-        private void NextPage(object obj)
-        {
-            RecordStartForm = CurrentPage * SelectedRecord;
-            var recordsToShow = articleList.Skip(RecordStartForm).Take(SelectedRecord);
-            UpdateCollection(recordsToShow);
-            CurrentPage++;
-            UpdateEnableState();
-        }
-
-        private void UpdateEnableState()
-        {
-            IsFirstEnabled = CurrentPage > 1;
-            IsPreviousEnabled = CurrentPage > 1;
-            IsNextEnabled = CurrentPage < NumberOfPages;
-            IsLastEnabled = CurrentPage < NumberOfPages;
-        }
-
-        private void UpdateCollection(IEnumerable<ArticleDiscountViewModel> recordsToShow)
-        {
-            ArticlesCollection.Clear();
-            foreach (var item in recordsToShow)
-            {
-                ArticlesCollection.Add(item);
-            }
-        }
 
         public DiscountViewModel(IExcelService excelDataService, Notifier notifier, ConcurrentDictionary<string, string> myDictionary, IArticleService articleDataService, IRuleService discountDataService, IRuleItemsService ruleItemservice)
         {
@@ -205,28 +106,20 @@ namespace ImporterPOS.WPF.ViewModels
             _ruleItemservice = ruleItemservice;
         }
 
-        [RelayCommand]
-        public async Task LoadFixedExcelColumns()
+        private void UpdateCollection(IEnumerable<ArticleDiscountViewModel> recordsToShow)
         {
-            try
+            ArticlesCollection.Clear();
+            foreach (var item in recordsToShow)
             {
-                ArticleDiscountViewModel tempVm = new ArticleDiscountViewModel();
-                string filePath = await _excelDataService.OpenDialog();
-
-                if (filePath != null)
-                {
-                    articleList = _excelDataService.ReadDiscountColumns(filePath, tempVm).Result;
-                    LoadData(articleList);
-                    _notifier.ShowInformation(Translations.LoadDataSuccess);
-                }
-
+                ArticlesCollection.Add(item);
             }
-            catch (Exception)
-            {
-                if (articleList == null)
-                    _notifier.ShowError(Translations.WrongDiscountFile);
-            }
+        }
 
+
+        private void ChooseSheet(string filePath)
+        {
+            IsSheetPopupOpened = true;
+            this.ExcelSheetViewModel = new ExcelSheetChooserViewModel(_excelDataService, this, _notifier, filePath);
         }
 
         [RelayCommand(CanExecute = nameof(CanClickOptions))]
@@ -241,6 +134,9 @@ namespace ImporterPOS.WPF.ViewModels
         {
             if (IsOptions)
                 IsOptions = false;
+
+            if (IsSheetPopupOpened)
+                IsSheetPopupOpened = false;
         }
 
 
@@ -259,18 +155,53 @@ namespace ImporterPOS.WPF.ViewModels
             }
         }
 
+
         [RelayCommand]
-        public void LoadData(ObservableCollection<ArticleDiscountViewModel>? vm)
+        public async Task LoadDefinedExcelColumns()
         {
-            if (vm != null)
+            try
             {
-                articleList = vm;
-                ArticleCollection = CollectionViewSource.GetDefaultView(vm);
+                ArticleDiscountViewModel tempVm = new ArticleDiscountViewModel();
+                var filePath = await _excelDataService.OpenDialog();
+                if (filePath != null)
+                {
+                    ChooseSheet(filePath);
+                    articleList = await _excelDataService.ReadDiscountColumns(filePath, ExcelSheetViewModel.SelectedSheet, tempVm);
+                    LoadData(filePath);
+                }
             }
-            ArticleCollection = CollectionViewSource.GetDefaultView(ArticlesCollection);
-            UpdateCollection(articlesCollection.Take(SelectedRecord));
-            UpdateRecordCount();
-            Count = ArticleList.Count;
+            catch (Exception)
+            {
+                if (articleList == null && ExcelSheetViewModel.SelectedSheet != null)
+                    _notifier.ShowError(Translations.ErrorMessage);
+            }
+        }
+
+
+        public async void LoadData(string filepath, ObservableCollection<ArticleDiscountViewModel>? vm = null)
+        {
+
+            try
+            {
+                ArticleDiscountViewModel tempVM = new ArticleDiscountViewModel();
+                ObservableCollection<ArticleDiscountViewModel> loadedVM = await _excelDataService.ReadDiscountColumns(filepath, ExcelSheetViewModel.SelectedSheet, tempVM);
+
+                if (loadedVM != null)
+                {
+                    ArticleCollection = CollectionViewSource.GetDefaultView(loadedVM);
+                    ArticleList = loadedVM;
+                }
+
+                Count = ArticleList.Count;
+                _notifier.ShowWarning(Translations.LoadDataSuccess);
+
+            }
+            catch (Exception)
+            {
+                _notifier.ShowWarning(Translations.ExcelFileError);
+                throw;
+            }
+
 
         }
         [RelayCommand(CanExecute = nameof(CanClickOptions))]
@@ -385,8 +316,7 @@ namespace ImporterPOS.WPF.ViewModels
                 _notifier.ShowSuccess(Translations.RemoveArticleSuccess);
                 ArticleCollection = CollectionViewSource.GetDefaultView(articleList);
                 ArticleCollection = CollectionViewSource.GetDefaultView(ArticlesCollection);
-                UpdateCollection(articlesCollection.Take(SelectedRecord));
-                UpdateRecordCount();
+                UpdateCollection(ArticlesCollection);
                 Count = ArticleList.Count;
             }
             catch (Exception)

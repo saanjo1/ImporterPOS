@@ -51,6 +51,7 @@ namespace ImporterPOS.Domain.Services.Goods
                 entity.UnitId = request.UnitId;
                 entity.Volumen = request.Volumen;
 
+                Context.SaveChanges();
                 return entity;
             }
         }

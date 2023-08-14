@@ -193,7 +193,7 @@ namespace ImporterPOS.WPF.Services.Excel
             return await Task.FromResult(lines);
         }
 
-        public async Task<ObservableCollection<ArticleDiscountViewModel>> ReadDiscountColumns(string path, ArticleDiscountViewModel viewModel)
+        public async Task<ObservableCollection<ArticleDiscountViewModel>> ReadDiscountColumns(string path, string sheetValue, ArticleDiscountViewModel viewModel)
         {
             if (_discountViewModels.Count > 0)
                 _discountViewModels.Clear();
@@ -211,7 +211,7 @@ namespace ImporterPOS.WPF.Services.Excel
 
             Command = new OleDbCommand();
             Command.Connection = _oleDbConnection;
-            Command.CommandText = "select * from [Sheet1$]";
+            Command.CommandText = "select * from [" + sheetValue + "]";
 
             System.Data.Common.DbDataReader Reader = await Command.ExecuteReaderAsync();
             // Učitavanje JSON filea
@@ -227,27 +227,14 @@ namespace ImporterPOS.WPF.Services.Excel
 
                 while (Reader.Read())
                 {
-                    string articleName = columnNames["ArticleName"].ToString();
-                    string[] nameParts = articleName.Split(',');
-                    string name = string.Join(" ", nameParts.Select(part => part.Trim()));
-
-                    List<string> columnValues = new List<string>();
-
-                    foreach (string columnName in nameParts)
-                    {
-                        string columnValue = Reader[columnName].ToString();
-                        columnValues.Add(columnValue);
-                    }
-
-                    string joinedColumnValues = string.Join(" ", columnValues);
 
                     _discountViewModels.Add(new ArticleDiscountViewModel
                     {
-                        Name = joinedColumnValues,
+                        Name = Reader["Description (EN)"].ToString(),
                         BarCode = Reader[columnNames["DiscountBarcode"]].ToString(),
-                        Price = Reader[columnNames["PriceWithoutDiscount"]].ToString(),
-                        Discount = Helpers.Extensions.DisplayDiscountInPercentage(columnNames["DiscountValue"].ToString()),
-                        NewPrice = Math.Round(Helpers.Extensions.GetDecimal(columnNames["PriceWithDiscount"]), 2),
+                        Price = Math.Round(Helpers.Extensions.GetDecimal(Reader[columnNames["PriceWithoutDiscount"]].ToString()), 2),
+                        Discount = Helpers.Extensions.DisplayDiscountInPercentage(Reader[columnNames["DiscountValue"]].ToString()),
+                        NewPrice = Math.Round(Helpers.Extensions.GetDecimal(Reader[columnNames["PriceWithDiscount"]].ToString()), 2)
                     });
                 }
             }
@@ -262,42 +249,6 @@ namespace ImporterPOS.WPF.Services.Excel
             return await Task.FromResult(_discountViewModels);
 
         }
-        public async Task<ObservableCollection<Article>> ChangePriceOnArticles(string filePath)
-        {
-            string _connection =
- @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + filePath + ";" +
- @"Extended Properties='Excel 8.0;HDR=Yes;'";
-
-            ObservableCollection<Article> articles = new ObservableCollection<Article>();
-
-            _oleDbConnection = new OleDbConnection(_connection);
-
-            await _oleDbConnection.OpenAsync();
-
-            Command = new OleDbCommand();
-            Command.Connection = _oleDbConnection;
-            Command.CommandText = "select * from [Sheet1$]";
-
-            System.Data.Common.DbDataReader Reader = await Command.ExecuteReaderAsync();
-
-            while (Reader.Read())
-            {
-
-                var article = new Article()
-                {
-                    Id = new Guid(),
-                    BarCode = Reader["Barcode"].ToString(),
-                    Price = Helpers.Extensions.GetDecimal(Reader["New retail price"].ToString())
-                };
-
-                articles.Add(article);
-            }
-
-            Reader.Close();
-            _oleDbConnection.Close();
-
-            return await Task.FromResult(articles);
-        }
-
+      
     }
 }

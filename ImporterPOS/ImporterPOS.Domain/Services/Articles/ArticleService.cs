@@ -1,17 +1,11 @@
 ﻿using ImporterPOS.Domain.EF;
-using ImporterPOS.Domain.Models;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
 using ImporterPOS.Domain.Models1;
-using System.Xml.Linq;
-using System.Collections.ObjectModel;
 using ImporterPOS.Domain.SearchObjects;
 using ImporterPOS.Domain.Services.Generic;
-using AutoMapper;
 
 namespace ImporterPOS.Domain.Services.Articles
 {
@@ -36,7 +30,7 @@ namespace ImporterPOS.Domain.Services.Articles
 
                     if (!string.IsNullOrWhiteSpace(search?.BarCode))
                     {
-                        entity = entity.Where(x => x.Name == search.BarCode);
+                        entity = entity.Where(x => x.BarCode == search.BarCode);
                     }
 
                     var list = entity.ToList();
@@ -63,6 +57,8 @@ namespace ImporterPOS.Domain.Services.Articles
                 entity.ReturnFee = request.ReturnFee;
                 entity.Code = request.Code;
                 entity.Tag = request.Tag;
+
+                Context.SaveChanges();
 
                 return entity;
             }

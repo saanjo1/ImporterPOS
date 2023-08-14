@@ -304,6 +304,7 @@ namespace ImporterPOS.WPF.ViewModels
             catch
             {
                 _notifier.ShowError(Translations.SettingsError);
+                return;
             }
 
             if (TaxEntity != null && StorageEntity != null && SupplierEntity != null && SubCategoryEntity != null)
@@ -422,6 +423,7 @@ namespace ImporterPOS.WPF.ViewModels
             }
 
             _notifier.ShowSuccess(Translations.ImportArticlesSuccess);
+            ClearAllData();
         }
 
         public bool CanClick()
@@ -449,7 +451,7 @@ namespace ImporterPOS.WPF.ViewModels
                 _notifier.ShowSuccess(Translations.RemoveArticleSuccess);
                 ArticleCollection = CollectionViewSource.GetDefaultView(articleList);
                 ArticleCollection = CollectionViewSource.GetDefaultView(ArticlesCollection);
-                UpdateCollection(articlesCollection);
+                UpdateCollection(ArticlesCollection);
                 Count = ArticleList.Count;
             }
             catch (Exception)

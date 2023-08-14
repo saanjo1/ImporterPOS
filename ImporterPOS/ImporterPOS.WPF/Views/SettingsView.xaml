@@ -106,8 +106,8 @@
                         <TextBox Grid.Row="3" Grid.Column="1" Width="600" Height="40" Text="{Binding PriceWithoutDiscount, Mode=TwoWay}" FontSize="24" Margin="10 0" />
 
                         <StackPanel Grid.Row="4" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Bottom" Grid.Column="1" Margin="-110 5">
-                            <Button Content="Spremi" FontSize="22" Padding="10" Width="120" Style="{StaticResource ImportButton}" Command="{Binding SaveArticleParametersCommand}"   />
-                            <Button Content="Poništi" FontSize="22" Padding="10" Width="120" Style="{StaticResource CancelButton}" Command="{Binding ClearArticleParametersCommand}" Margin="15 0"/>
+                            <Button Content="Spremi" FontSize="22" Padding="10" Width="120" Style="{StaticResource ImportButton}" Command="{Binding SaveDiscountParametersCommand}"   />
+                            <Button Content="Poništi" FontSize="22" Padding="10" Width="120" Style="{StaticResource CancelButton}" Command="{Binding ClearDiscountParametersCommand}" Margin="15 0"/>
                         </StackPanel>
 
                     </Grid>
